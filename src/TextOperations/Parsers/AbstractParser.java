@@ -7,7 +7,7 @@ import java.util.LinkedList;
 public abstract class AbstractParser {
 
     private LinkedList<Token> txt;
-    private int count;
+    private int index;
 
 
     public AbstractParser() {
@@ -19,31 +19,25 @@ public abstract class AbstractParser {
 
     public void setTxt(LinkedList<Token> txt) {
         this.txt = txt;
-        count=0;
+        index=0;
     }
 
     public abstract  void manipulate(Token token);
 
     public void operate() {
         Token toke = null;
-        while (hasNext())
-            toke=getNext();
-        manipulate(toke);
-
+        while (hasNext()) {
+            toke = txt.get(index);
+            ++index;
+            manipulate(toke);
+        }
 
     }
 
     protected boolean hasNext(){
-        return count<txt.size();
+        return index<txt.size();
     }
 
 
-   protected Token getNext(){
-       if(txt!=null) {
-           return txt.get(count);
-       }
-       return null;
-
-   }
 
 }
