@@ -1,10 +1,7 @@
 package TextOperations.Parsers;
 
-import Main.Term;
 import TextOperations.Token;
 
-import java.text.ParseException;
-import java.util.LinkedList;
 import java.util.List;
 
 public class NumberParser extends AbstractParser {
@@ -24,7 +21,7 @@ public class NumberParser extends AbstractParser {
             token = txt.get(i);
             nextToken = txt.get(i + 1);
             if (token.isNumber()) {
-                i++;
+
                 s = convertNumber(token.getString());
                 if (nextToken.isNumber())
                 {
@@ -34,13 +31,17 @@ public class NumberParser extends AbstractParser {
                 else if (nextToken.getString().equals("Thousand")||nextToken.getString().equals("Million")||nextToken.getString().equals("Billion")) {
                         s = s + nextToken.getString().charAt(0);
                         i++;
+
                     }
 
                 else if (nextToken.getString().equals("Trillion")) {
                         s = Double.parseDouble(s) * 1000 + "B";
                         i++;
                 }
+                putInMap(s);
             }
+
+            i++;
         }
 
 
