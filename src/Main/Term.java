@@ -1,7 +1,6 @@
 package Main;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Term {
 

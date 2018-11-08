@@ -9,7 +9,7 @@ public class Token {
         return true;
     }
     //todo getString()
-    public Object getString() {
+    public String getString() {
         return "";
     }
 }
