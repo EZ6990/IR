@@ -1,14 +1,19 @@
 package Main;
 
+import IO.XMLReader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.jsoup.select.Elements;
 
 import javax.swing.text.Document;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 //public class Main extends Application {
 //
@@ -31,22 +36,12 @@ import java.io.FileFilter;
 
 public class Main{
 
-    public static void main(String[] args) {
-        File corpus = new File("d:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
-        File [] corpus_sub_dirs = corpus.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
+    public static void main(String[] args) throws InterruptedException {
 
-        for (File dir : corpus_sub_dirs){
-            File [] file = dir.listFiles(new FileFilter() {
-                public boolean accept(File pathname) {
-                    return !(pathname.isDirectory());
-                }
-            });
-
-        }
-
+        Master splinter = new Master();
+        splinter.start();
+        
     }
+
+
 }
