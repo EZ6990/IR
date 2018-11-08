@@ -9,17 +9,16 @@ public class NumberParser extends AbstractParser {
 
     @Override
     public void manipulate() {
-        List<Token> txt = getTxt();
         int i = 0;
-        int size = txt.size();
+        int size = getTxtSize();
         String s = "";
         Token token;
         Token nextToken;
 
 
         while (i < size - 1) {
-            token = txt.get(i);
-            nextToken = txt.get(i + 1);
+            token =get(i);
+            nextToken =get(i + 1);
             if (token.isNumber()) {
 
                 s = convertNumber(token.getString());
@@ -59,7 +58,6 @@ public class NumberParser extends AbstractParser {
 
         return ""+num;
     }
-
 
 
 }

@@ -20,9 +20,12 @@ public abstract class AbstractParser {
         this.txt = txt;
     }
 
-    public List<Token> getTxt() {
-        return txt;
+
+    public Token get(int i) {
+     return txt.get(i);
     }
+
+
 
     public void setTxt(List<Token> txt) {
         this.txt = txt;
@@ -39,6 +42,11 @@ public abstract class AbstractParser {
         else {
             map.put(s,new Integer(1));
         }
+    }
+
+
+    protected int getTxtSize(){
+        return txt.size();
     }
 
 
