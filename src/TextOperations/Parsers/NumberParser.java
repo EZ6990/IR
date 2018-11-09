@@ -17,25 +17,21 @@ public class NumberParser extends AbstractParser {
 
 
         while (i < size - 1) {
-            token =get(i);
-            nextToken =get(i + 1);
+            token = get(i);
+            nextToken = get(i + 1);
             if (token.isNumber()) {
 
-                s = convertNumber(token.getString());
-                if (nextToken.isNumber())
-                {
-                    //check shever
-                    //i++;
-                }
-                else if (nextToken.getString().equals("Thousand")||nextToken.getString().equals("Million")||nextToken.getString().equals("Billion")) {
-                        s = s + nextToken.getString().charAt(0);
-                        i++;
+                s = convertNumber(token.toString());
+                if (isFraction(nextToken.toString())) {
+                    s=s+" "+nextToken.toString();
+                    i++;
+                } else if (nextToken.toString().equals("Thousand") || nextToken.toString().equals("Million") || nextToken.toString().equals("Billion")) {
+                    s = s + nextToken.toString().charAt(0);
+                    i++;
 
-                    }
-
-                else if (nextToken.getString().equals("Trillion")) {
-                        s = Double.parseDouble(s) * 1000 + "B";
-                        i++;
+                } else if (nextToken.toString().equals("Trillion")) {
+                    s = Double.parseDouble(s) * 1000 + "B";
+                    i++;
                 }
                 putInMap(s);
             }
@@ -46,8 +42,24 @@ public class NumberParser extends AbstractParser {
 
     }
 
+    private boolean isFraction(String string) {
+
+        if (!string.contains("/") || string.charAt(0) == '/' || string.charAt(string.length() - 1) == '/')
+            return false;
+
+        for (int i = 0; i < string.length(); i++)
+            if ((string.charAt(i) < '0' || string.charAt(i) > '9') && string.charAt(i) != '/')
+                return false;
+
+        return true;
+
+
+    }
+
+
+
     private String convertNumber(String string) {
-        //TODO check 3/4
+
         double num = Double.parseDouble(string);
         if (num >= 1000000000)
             return ("" + num / 1000000000 + "B");
@@ -56,7 +68,7 @@ public class NumberParser extends AbstractParser {
         else if (num >= 1000)
             return ("" + num / 1000 + "K");
 
-        return ""+num;
+        else return "" + num;
     }
 
 
