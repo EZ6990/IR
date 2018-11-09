@@ -60,35 +60,62 @@ public class DatesAndRangeParser extends AbstractParser {
 
     @Override
     public void manipulate() {
-        int i = 0;
-        int size = getTxtSize();
+        int i = 0, size = getTxtSize();
         String s = "";
-        Token token;
-        Token nextToken;
+        Token token, nextToken;
+
         while (i < size - 1) {
+            s = "";
             token = get(i);
             nextToken = get(i + 1);
-            if (monthDates.containsKey(token.toString())) {
-                s = s + monthDates.get(token.toString());
-                if (nextToken.isNumber()) {
-                    if (dayDates.containsKey(nextToken.toString()))
-                        s = s + "-" + dayDates.get(nextToken.toString());
+            if (token.toString().contains("-"))
+                putInMap(token.toString());
 
-                    if (nextToken.toString().length() < 5 && !nextToken.toString().contains("."))
-                        putInMap(convertToYear(nextToken.toString()) + "-" + s.substring(0, 2));
-                    i++;
-                }
-            } else if (token.isNumber()) {
-                if ( dayDates.containsKey(token.toString()) && monthDates.containsKey(nextToken.toString()))
-                    s = s +monthDates.get(nextToken.toString())+dayDates.get(token.toString());
+            if(token.toString().equals("between")&& getTxtSize()-i>=4 && nextToken.isNumber() && get(i+2).toString().equals("and")&& get(i+3).isNumber())
+            {
+                s=s+"between "+nextToken.toString()+" and "+ get(i+3).toString();
+                i=i+3;
             }
+
+            else {
+                //first is month
+                if (monthDates.containsKey(token.toString())) {
+                    s = s + monthDates.get(token.toString());
+                    //second is a number
+                    if (nextToken.isNumber()) {
+                        //DD
+                        if (dayDates.containsKey(nextToken.toString()))
+                            s = s + "-" + dayDates.get(nextToken.toString());
+                        //YYYY
+                        if (nextToken.toString().length() < 5 && !nextToken.toString().contains("."))
+                            putInMap(convertToYear(nextToken.toString()) + "-" + s.substring(0, 2));
+                        i++;
+                    }
+
+                    //first is number
+                } else if (token.isNumber()) {
+                    //second is month
+                    if (dayDates.containsKey(token.toString()) && monthDates.containsKey(nextToken.toString())) {
+                        s = s + monthDates.get(nextToken.toString()) + dayDates.get(token.toString());
+                        i++;
+                    }
+                }
+            }
+
+            i++;
         }
     }
 
+    /**
+     * convet a string that represents a number to YYYY
+     *
+     * @param string
+     * @return string size 4 filled with 0 in the left if needed
+     */
     private String convertToYear(String string) {
         String sYear = string;
         while (sYear.length() < 4)
-            sYear = 0 + sYear;
+            sYear = "0" + sYear;
         return sYear;
     }
 }

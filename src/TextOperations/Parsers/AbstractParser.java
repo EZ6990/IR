@@ -21,10 +21,9 @@ public abstract class AbstractParser {
     }
 
 
-    public Token get(int i) {
+    protected Token get(int i) {
      return txt.get(i);
     }
-
 
 
     public void setTxt(List<Token> txt) {
@@ -48,7 +47,6 @@ public abstract class AbstractParser {
     protected int getTxtSize(){
         return txt.size();
     }
-
 
 
 

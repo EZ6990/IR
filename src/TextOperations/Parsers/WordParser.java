@@ -2,29 +2,38 @@ package TextOperations.Parsers;
 
 import TextOperations.Token;
 
-public class PercentAndPriceParser extends AbstractParser {
+public class WordParser extends AbstractParser {
 
 
     @Override
     public void manipulate() {
         int i = 0, size = getTxtSize();
         String s = "";
-        Token token, nextToken;
+        Token token;
 
         while (i < size - 1) {
             s = "";
             token = get(i);
-            nextToken = get(i + 1);
-            if (token.isNumber()) {
-                if (nextToken.toString().equals("percent") && nextToken.toString().equals("percentage")) {
-                    i++;
-                    s = s + token.toString() + "%";
-                }
+            if (!token.isNumber() && !isFraction(token.toString())) {
+                if (token.toString().contains("-") && token.toString().length() > 1)
+                    splitAndAdd(token.toString().split("-"));
+                else putInMap(token.toString());
 
-                if ()
+
             }
+
+            i++;
         }
     }
+
+    private void splitAndAdd(String[] split) {
+        for (int i = 0; i < split.length; i++) {
+            if (split[i].charAt(0) >= 'a' && split[i].charAt(0) <= 'z')
+                putInMap(split[i]);
+        }
+
+    }
+
 
     private boolean isFraction(String string) {
         if (!string.contains("/") || string.charAt(0) == '/' || string.charAt(string.length() - 1) == '/')

@@ -17,6 +17,7 @@ public class NumberParser extends AbstractParser {
 
 
         while (i < size - 1) {
+            s="";
             token = get(i);
             nextToken = get(i + 1);
             if (token.isNumber()) {
