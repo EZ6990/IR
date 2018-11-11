@@ -17,7 +17,9 @@ public class WordParser extends AbstractParser {
             if (!token.isNumber() && !isFraction(token.toString())) {
                 if (token.toString().contains("-") && token.toString().length() > 1)
                     splitAndAdd(token.toString().split("-"));
-                else putInMap(token.toString());
+                    // maybe make a different function and iterate only once
+                else if(!token.toString().contains("%") && !token.toString().contains("$"))
+                    putInMap(token.toString());
 
 
             }
