@@ -19,7 +19,7 @@ public class PercentAndPriceParser extends AbstractParser {
             tokenStr=token.toString();
             nextTokenStr=nextToken.toString();
             if (isNumber(token)) {
-                if (nextTokenStr.equals("percent") && nextTokenStr.equals("percentage")) {
+                if (nextTokenStr.equals("percent") || nextTokenStr.equals("percentage")) {
                     i++;
                     s = s + tokenStr + "%";
                 } else if (nextTokenStr.equals("Dollars")) {
