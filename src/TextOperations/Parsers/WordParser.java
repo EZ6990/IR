@@ -16,7 +16,7 @@ public class WordParser extends AbstractParser {
             strToken = token.toString();
             suffix = strToken.length() - 1;
             prefix = 0;
-            if (!token.isNumber() && !isFraction(token.toString())) {
+            if (!token.isNumber() && !isFraction(strToken)) {
                 while (!(prefix < suffix) || !(suffix < 0)) {
 
 
@@ -34,7 +34,7 @@ public class WordParser extends AbstractParser {
 
 
                 if (strToken.contains("-") && strToken.length() > 1)
-                    splitAndAdd(token.toString().split("-"));
+                    splitAndAdd(strToken.split("-"));
                     // maybe make a different function and iterate only once
                 else putInMap(strToken);
 
