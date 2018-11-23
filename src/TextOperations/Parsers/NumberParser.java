@@ -4,6 +4,8 @@ import TextOperations.Token;
 
 import java.util.List;
 
+
+
 public class NumberParser extends AbstractParser {
 
 
@@ -14,23 +16,25 @@ public class NumberParser extends AbstractParser {
         String s = "";
         Token token;
         Token nextToken;
-
+        String tokenStr,nextTokenStr;
 
         while (i < size - 1) {
-            s="";
+            s = "";
             token = get(i);
             nextToken = get(i + 1);
-            if (token.isNumber()) {
+            tokenStr=token.toString();
+            nextTokenStr=nextToken.toString();
+            if (isNumber(token)) {
 
-                s = convertNumber(token.toString());
-                if (isFraction(nextToken.toString())) {
-                    s=s+" "+nextToken.toString();
+                s = convertNumber(tokenStr);
+                if (isFraction(nextTokenStr)) {
+                    s = s + " " + nextTokenStr;
                     i++;
-                } else if (nextToken.toString().equals("Thousand") || nextToken.toString().equals("Million") || nextToken.toString().equals("Billion")) {
-                    s = s + nextToken.toString().charAt(0);
+                } else if (nextTokenStr.equals("Thousand") || nextTokenStr.equals("Million") || nextTokenStr.equals("Billion")) {
+                    s = s + nextTokenStr.charAt(0);
                     i++;
 
-                } else if (nextToken.toString().equals("Trillion")) {
+                } else if (nextTokenStr.equals("Trillion")) {
                     s = Double.parseDouble(s) * 1000 + "B";
                     i++;
                 }
@@ -41,6 +45,19 @@ public class NumberParser extends AbstractParser {
         }
 
 
+    }
+
+    private boolean isNumber(Token token) {
+        if(token.isNumber())
+            return true;
+        String s=token.toString().replace(",","");
+            try {
+            Double.parseDouble(s);
+        return true;
+        }
+        catch (Exception e){
+            return false;
+        }
     }
 
     private boolean isFraction(String string) {
@@ -58,10 +75,10 @@ public class NumberParser extends AbstractParser {
     }
 
 
-
     private String convertNumber(String string) {
+        String s=string.replace(",","");
 
-        double num = Double.parseDouble(string);
+        double num = Double.parseDouble(s);
         if (num >= 1000000000)
             return ("" + num / 1000000000 + "B");
         else if (num >= 1000000)

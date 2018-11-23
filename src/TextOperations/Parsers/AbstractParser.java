@@ -22,7 +22,7 @@ public abstract class AbstractParser {
 
 
     protected Token get(int i) {
-     return txt.get(i);
+        return txt.get(i);
     }
 
 
@@ -36,24 +36,32 @@ public abstract class AbstractParser {
     protected void putInMap(String s) {
         if (map.contains(s)) {
             Integer tmp = map.get(s);
-          tmp =new Integer(tmp.intValue() + 1);
-        }
-        else {
-            map.put(s,new Integer(1));
+            tmp = new Integer(tmp.intValue() + 1);
+        } else {
+            map.put(s, new Integer(1));
         }
     }
 
 
-    protected int getTxtSize(){
+    protected int getTxtSize() {
         return txt.size();
     }
 
-
-
-    protected boolean hasNext(){
-        return index<txt.size();
+    protected boolean mapContains(String s) {
+        return map.containsKey(
+                s
+        );
     }
 
+    protected void mapRemove(String s) {
+        map.remove(
+                s
+        );
+    }
+
+    protected boolean hasNext() {
+        return index < txt.size();
+    }
 
 
 }
