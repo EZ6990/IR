@@ -1,9 +1,6 @@
-package TextOperations.Parsers;
+package MapReduce.Parsers;
 
 import TextOperations.Token;
-
-import java.util.List;
-
 
 
 public class NumberParser extends AbstractParser {

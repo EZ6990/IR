@@ -1,4 +1,4 @@
-package TextOperations.Parsers;
+package MapReduce.Parsers;
 
 import TextOperations.Token;
 
