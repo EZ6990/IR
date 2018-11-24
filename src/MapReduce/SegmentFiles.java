@@ -10,13 +10,14 @@ public class SegmentFiles implements Runnable {
     private boolean bStop;
     private HashMap<String, TermDocumentInfo> map;
     private int mapCounter;
-    private ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIqueue;
+    private ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue;
     private HashMap<String, Queue<TermDocumentInfo>> postFile;
     private int numOfDocs;
     private SegmentWriter writer;
 
-    public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIqueue) {
-        this.TDIqueue = TDIqueue;
+
+    public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue) {
+        this.TDIQueue = TDIQueue;
         mapCounter = 0;
         numOfDocs = 18;
         postFile = new HashMap<>();
@@ -26,7 +27,7 @@ public class SegmentFiles implements Runnable {
 
     @Override
     public void run() {
-        while ((map = TDIqueue.poll()) != null && !bStop) {
+        while ((map = TDIQueue.poll()) != null && !bStop) {
             for (String s : map.keySet()
 
                     ) {
