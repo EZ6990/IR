@@ -1,6 +1,8 @@
 package MapReduce.Parsers;
 
+import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
+import TextOperations.TokenizedDocument;
 
 import java.util.HashMap;
 
@@ -8,7 +10,8 @@ public class DatesAndRangeParser extends AbstractParser {
     private HashMap<String, String> monthDates;
     private HashMap<String, String> dayDates;
 
-    public DatesAndRangeParser() {
+    public DatesAndRangeParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+        super(map,doc);
         monthDates = new HashMap<>();
         dayDates = new HashMap<>();
 

@@ -1,10 +1,18 @@
 package MapReduce.Parsers;
 
+import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
+import TextOperations.TokenizedDocument;
+
+import java.util.HashMap;
 
 public class WordParser extends AbstractParser {
 
 
+    public WordParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+        super(map,doc);
+
+    }
     @Override
     public void manipulate() {
         int i = 0, size = getTxtSize(), suffix, prefix;

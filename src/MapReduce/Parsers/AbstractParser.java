@@ -1,23 +1,27 @@
 package MapReduce.Parsers;
 
+import Main.Term;
+import MapReduce.PostingDocument;
+import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
+import TextOperations.TokenizedDocument;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractParser {
 
-    private ConcurrentHashMap<String, Integer> map;
+    private HashMap<String, TermDocumentInfo> map;
+    private TokenizedDocument document;
     private List<Token> txt;
     private int index;
 
 
-    public AbstractParser() {
-    }
-
-    public AbstractParser(ConcurrentHashMap<String, Integer> map, List<Token> txt) {
+    public AbstractParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
         this.map = map;
-        this.txt = txt;
+        this.document = doc;
+        this.txt = doc.getTokenizedText();
     }
 
 
@@ -34,11 +38,11 @@ public abstract class AbstractParser {
     public abstract void manipulate();
 
     protected void putInMap(String s) {
-        if (map.contains(s)) {
-            Integer tmp = map.get(s);
-            tmp = new Integer(tmp.intValue() + 1);
+        if (map.containsKey(s)) {
+            TermDocumentInfo tmp = map.get(s);
+            tmp.setFrequency(tmp.getFrequency() + 1);
         } else {
-            map.put(s, new Integer(1));
+            map.put(s, new TermDocumentInfo(new Term(s),1));
         }
     }
 

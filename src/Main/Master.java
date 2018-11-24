@@ -57,7 +57,6 @@ public class Master {
         WaitReaders();
         WaitTextOperators();
 
-
     }
 
     private void StartReaders(){

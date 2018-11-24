@@ -1,10 +1,18 @@
 package MapReduce.Parsers;
 
+import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
+import TextOperations.TokenizedDocument;
+
+import java.util.HashMap;
 
 
 public class NumberParser extends AbstractParser {
 
+
+    public NumberParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+        super(map,doc);
+    }
 
     @Override
     public void manipulate() {
