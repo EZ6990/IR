@@ -1,5 +1,7 @@
 package MapReduce;
 
+import TextOperations.Document;
+
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -12,9 +14,11 @@ public class SegmentFiles implements Runnable {
     private int mapCounter;
     private ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue;
     private HashMap<String, Queue<TermDocumentInfo>> postFile;
-    private HashMap<String, Queue<DocumentTermInfo>> documentPostFile;
+    private HashMap<String, DocumentTermInfo> documentPostFile;
     private int numOfDocs;
-    private SegmentWriter writer;
+    private SegmentWriter sWriter;
+    private DocumentSegmentWriter dWriter;
+
 
 
     public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue) {
@@ -23,13 +27,14 @@ public class SegmentFiles implements Runnable {
         numOfDocs = 18;
         postFile = new HashMap<>();
         bStop = false;
-        writer = new SegmentWriter();
+        sWriter = new SegmentWriter();
+        documentPostFile=new HashMap<>();
     }
 
     @Override
     public void run() {
         while ((map = TDIQueue.poll()) != null && !bStop) {
-          DocumentTermInfo dti=new DocumentTermInfo(((TermDocumentInfo)(map.values().toArray()[0])).getDocumentID());
+            DocumentTermInfo dti= new DocumentTermInfo(((TermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
 
             for (String s : map.keySet()
 
@@ -40,21 +45,27 @@ public class SegmentFiles implements Runnable {
                     postFile.put(s, new PriorityQueue<TermDocumentInfo>());
                 }
 
-                if (map.get(s).getFrequency()==1)
+                if (map.get(s).getFrequency() == 1)
                     dti.addRareCount();
 
-                if(map.get(s).getFrequency()>dti.getMostCommonFreq())
-                {
+                if (map.get(s).getFrequency() > dti.getMostCommonFreq()) {
                     dti.setMostCommonName(s);
                     dti.setMostCommonFreq(map.get(s).getFrequency());
                 }
 
 
-            };
+            }
+
+
+
+            documentPostFile.put(dti.getDocumentName(), dti);
+
             if (++mapCounter == numOfDocs) {
-                writer.write(postFile);
+                sWriter.write(postFile);
+                dWriter.write(documentPostFile);
                 mapCounter = 0;
                 postFile = new HashMap<>();
+                documentPostFile=new HashMap<>();
             }
 
         }

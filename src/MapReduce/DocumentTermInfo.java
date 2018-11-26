@@ -37,4 +37,8 @@ public class DocumentTermInfo {
     public void setMostCommonFreq(int mostCommonFreq) {
         this.mostCommonFreq = mostCommonFreq;
     }
+
+    public String getDocumentName() {
+        return documentName;
+    }
 }
