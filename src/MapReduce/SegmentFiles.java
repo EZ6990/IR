@@ -29,7 +29,8 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         while ((map = TDIQueue.poll()) != null && !bStop) {
-          DocumentTermInfo dti=new DocumentTermInfo();
+          DocumentTermInfo dti=new DocumentTermInfo(((TermDocumentInfo)(map.values().toArray()[0])).getDocumentID());
+
             for (String s : map.keySet()
 
                     ) {
@@ -49,7 +50,7 @@ public class SegmentFiles implements Runnable {
                 }
 
 
-            }
+            };
             if (++mapCounter == numOfDocs) {
                 writer.write(postFile);
                 mapCounter = 0;
