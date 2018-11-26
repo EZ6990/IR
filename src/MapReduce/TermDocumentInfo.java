@@ -26,6 +26,7 @@ public class TermDocumentInfo {
         return documentID;
     }
 
+
     public void setFrequency(int frequency) {
         this.Frequency = frequency;
     }

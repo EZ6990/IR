@@ -9,24 +9,25 @@ public class CityTDI extends TermDocumentInfo {
     private String population;
     private String termLocation;
 
-    public CityTDI(Term term, int documentID,String country,String currency, int termLocation, String population) {
+    public CityTDI(Term term, int documentID, String country, String currency, String population) {
         super(term, documentID);
-        this.country=country;
-        this.currency=currency;
-        this.termLocation=""+termLocation;
-        this.population=population;
+        this.country = country;
+        this.currency = currency;
+        this.termLocation = "";
+        this.population = population;
     }
 
     public void addLocation(int location) {
-
-        termLocation+=","+location;
+        if (termLocation.length() > 0)
+            termLocation += ",";
+        termLocation += location;
     }
 
     public String getCountry() {
         return country;
     }
 
-    public String getCourency() {
+    public String getCurrency() {
         return currency;
     }
 

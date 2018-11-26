@@ -12,6 +12,7 @@ public class SegmentFiles implements Runnable {
     private int mapCounter;
     private ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue;
     private HashMap<String, Queue<TermDocumentInfo>> postFile;
+    private HashMap<String, Queue<DocumentTermInfo>> documentPostFile;
     private int numOfDocs;
     private SegmentWriter writer;
 
@@ -21,13 +22,14 @@ public class SegmentFiles implements Runnable {
         mapCounter = 0;
         numOfDocs = 18;
         postFile = new HashMap<>();
-        bStop=false;
-        writer=new SegmentWriter();
+        bStop = false;
+        writer = new SegmentWriter();
     }
 
     @Override
     public void run() {
         while ((map = TDIQueue.poll()) != null && !bStop) {
+          DocumentTermInfo dti=new DocumentTermInfo();
             for (String s : map.keySet()
 
                     ) {
@@ -37,13 +39,21 @@ public class SegmentFiles implements Runnable {
                     postFile.put(s, new PriorityQueue<TermDocumentInfo>());
                 }
 
-                if (++mapCounter == numOfDocs) {
-                    writer.write(postFile);
-                    mapCounter=0;
-                    postFile=new HashMap<>();
+                if (map.get(s).getFrequency()==1)
+                    dti.addRareCount();
+
+                if(map.get(s).getFrequency()>dti.getMostCommonFreq())
+                {
+                    dti.setMostCommonName(s);
+                    dti.setMostCommonFreq(map.get(s).getFrequency());
                 }
 
 
+            }
+            if (++mapCounter == numOfDocs) {
+                writer.write(postFile);
+                mapCounter = 0;
+                postFile = new HashMap<>();
             }
 
         }
