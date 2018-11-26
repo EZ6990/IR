@@ -1,9 +1,6 @@
 package MapReduce;
 
-import MapReduce.Parsers.DatesAndRangeParser;
-import MapReduce.Parsers.NumberParser;
-import MapReduce.Parsers.PercentAndPriceParser;
-import MapReduce.Parsers.WordParser;
+import MapReduce.Parsers.*;
 import TextOperations.TokenizedDocument;
 
 import java.util.HashMap;
@@ -33,6 +30,8 @@ public class MasterParser implements Runnable{
             new DatesAndRangeParser(map,doc).manipulate();
             new PercentAndPriceParser(map,doc).manipulate();
             new WordParser(map,doc).manipulate();
+
+
 
             tdi_queue.add(map);
 

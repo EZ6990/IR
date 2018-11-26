@@ -29,17 +29,34 @@ public class XMLReader {
 
     public TextOperations.Document getNextDocument() {
 
+        String path = "";
+        String ID = "";
+        String Date = "";
+        String Text = "";
+        String Country = "";
 
-        String path = this.xml_file.getPath();
         Element XMLDocument = this.doc.first();
         Element XMLHeader = (Element)XMLDocument.getElementsByTag("Header").get(0);
-        String ID = XMLDocument.getElementsByTag("DOCNO").text();
-        String Date = XMLHeader.getElementsByTag("DATE1").text();
-        String Text = this.doc.first().getElementsByTag("TEXT").text();
+
+
+        path = this.xml_file.getPath();
+
+
+        if (XMLDocument != null) {
+            Elements FP104 = XMLDocument.getElementsByTag("<F P=104>");
+            ID = XMLDocument.getElementsByTag("DOCNO").text();
+            Text = this.doc.first().getElementsByTag("TEXT").text();
+            if (FP104 != null)
+                Country = FP104.text();
+        }
+        if (XMLHeader != null) {
+            Date = XMLHeader.getElementsByTag("DATE1").text();
+        }
+
         this.doc = this.doc.next();
 
 
-        return new TextOperations.Document(path,ID,"",Date,Text);
+        return new TextOperations.Document(path,ID,Country,Date,Text);
 
     }
 }

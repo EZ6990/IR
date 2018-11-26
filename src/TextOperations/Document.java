@@ -4,16 +4,16 @@ public class Document {
 
     private String path;
     private String ID;
-    private String Header;
+    private String Country;
     private String Date;
     private String Text;
 
 
 
-    public Document(String path, String ID, String Header, String date, String text) {
+    public Document(String path, String ID, String Country, String date, String text) {
         this.path = path;
         this.ID = ID;
-        this.Header = Header;
+        this.Country = Country;
         this.Date = date;
         this.Text = text;
     }
@@ -27,7 +27,7 @@ public class Document {
     }
 
     public String getHeader() {
-        return Header;
+        return Country;
     }
 
     public String getDate() {
