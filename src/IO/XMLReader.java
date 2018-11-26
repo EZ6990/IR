@@ -3,6 +3,7 @@ package IO;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,14 +31,15 @@ public class XMLReader {
 
 
         String path = this.xml_file.getPath();
-        String ID = this.doc.first().getElementsByTag("DOCNO").text();
-        String Header = this.doc.first().getElementsByTag("DOCNO").text();
-        String Date = this.doc.first().getElementsByTag("DOCNO").text();
+        Element XMLDocument = this.doc.first();
+        Element XMLHeader = (Element)XMLDocument.getElementsByTag("Header").get(0);
+        String ID = XMLDocument.getElementsByTag("DOCNO").text();
+        String Date = XMLHeader.getElementsByTag("DATE1").text();
         String Text = this.doc.first().getElementsByTag("TEXT").text();
         this.doc = this.doc.next();
 
 
-        return new TextOperations.Document(path,ID,Header,Date,Text);
+        return new TextOperations.Document(path,ID,"",Date,Text);
 
     }
 }

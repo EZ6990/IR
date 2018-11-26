@@ -1,7 +1,6 @@
 package MapReduce.Parsers;
 
 import Main.Term;
-import MapReduce.PostingDocument;
 import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
