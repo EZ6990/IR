@@ -28,7 +28,7 @@ public class Master {
         this.doc_readers = new Thread[2];
         this.text_operators = new Thread[3];
 
-        LoadDocuments("d:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
+        LoadDocuments("C:\\Users\\talmalu\\Downloads\\corpus\\corpus\\");
     }
 
     private void LoadDocuments(String location){
