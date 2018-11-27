@@ -1,6 +1,5 @@
 package Main;
 
-import java.util.HashMap;
 
 public class Term {
 
@@ -9,4 +8,7 @@ public class Term {
     }
     private String data;
 
+    public String getData() {
+        return data;
+    }
 }

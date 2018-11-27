@@ -2,6 +2,7 @@ package MapReduce;
 
 import TextOperations.Document;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -28,6 +29,7 @@ public class SegmentFiles implements Runnable {
         postFile = new HashMap<>();
         bStop = false;
         sWriter = new SegmentWriter();
+        dWriter=new DocumentSegmentWriter();
         documentPostFile=new HashMap<>();
     }
 
@@ -35,7 +37,6 @@ public class SegmentFiles implements Runnable {
     public void run() {
         while ((map = TDIQueue.poll()) != null && !bStop) {
             DocumentTermInfo dti= new DocumentTermInfo(((TermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
-
             for (String s : map.keySet()
 
                     ) {
@@ -55,8 +56,6 @@ public class SegmentFiles implements Runnable {
 
 
             }
-
-
 
             documentPostFile.put(dti.getDocumentName(), dti);
 

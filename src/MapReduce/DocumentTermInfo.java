@@ -7,11 +7,11 @@ public class DocumentTermInfo {
     private int mostCommonFreq;
     private String documentName;
 
-    public DocumentTermInfo(int documentName) {
+    public DocumentTermInfo(String documentName) {
         this.rareCount = 0;
         this.mostCommonName = "";
         mostCommonFreq = 0;
-        this.documentName=""+documentName;
+        this.documentName=documentName;
     }
 
     public int getRareCount() {

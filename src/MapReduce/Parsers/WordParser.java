@@ -10,9 +10,10 @@ public class WordParser extends AbstractParser {
 
 
     public WordParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
-        super(map,doc);
+        super(map, doc);
 
     }
+
     @Override
     public void manipulate() {
         int i = 0, size = getTxtSize(), suffix, prefix;
@@ -62,7 +63,11 @@ public class WordParser extends AbstractParser {
 
     @Override
     protected void putInMap(String s) {
-        if (mapContains(s.toUpperCase()) && s.charAt(0) >= 'a') {
+
+        if (mapContains(s.toLowerCase()))
+            super.putInMap(s.toLowerCase());
+
+        else if (mapContains(s.toUpperCase()) && s.charAt(0) >= 'a') {
             super.putInMap(s);
             mapRemove(s.toUpperCase());
         } else if (s.charAt(0) <= 'Z')

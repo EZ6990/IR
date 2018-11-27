@@ -39,7 +39,7 @@ public abstract class AbstractParser {
     protected void putInMap(String s) {
         if (map.containsKey(s)) {
             TermDocumentInfo tmp = map.get(s);
-            tmp.setFrequency(tmp.getFrequency() + 1);
+            tmp.addToFrequency(1);
         } else {
             map.put(s, new TermDocumentInfo(new Term(s),this.document.getID()));
         }
@@ -57,9 +57,8 @@ public abstract class AbstractParser {
     }
 
     protected void mapRemove(String s) {
-        map.remove(
-                s
-        );
+       map.get(s).addToFrequency(map.get(s.toUpperCase()).getFrequency());
+       map.remove(s.toUpperCase());
     }
 
     protected boolean hasNext() {

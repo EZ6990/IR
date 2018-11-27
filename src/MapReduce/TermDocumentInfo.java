@@ -6,16 +6,16 @@ public class TermDocumentInfo {
 
     private Term term;
     private String documentID;
-    private int Frequency;
+    private int frequency;
 
-    public TermDocumentInfo(Term term,String documentID){
+    public TermDocumentInfo(Term term, String documentID) {
         this.term = term;
         this.documentID = documentID;
-        this.Frequency = 1;
+        this.frequency = 1;
     }
 
     public int getFrequency() {
-        return this.Frequency;
+        return this.frequency;
     }
 
     public Term getTerm() {
@@ -26,8 +26,11 @@ public class TermDocumentInfo {
         return documentID;
     }
 
+    public void addToFrequency(int frequency) {
+        this.frequency += frequency;
+    }
 
     public void setFrequency(int frequency) {
-        this.Frequency = frequency;
+        this.frequency = frequency;
     }
 }
