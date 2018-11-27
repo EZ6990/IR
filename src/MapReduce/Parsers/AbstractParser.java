@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractParser {
 
-    private HashMap<String, TermDocumentInfo> map;
+    protected HashMap<String, TermDocumentInfo> map;
     protected TokenizedDocument document;
     private List<Token> txt;
     private int index;

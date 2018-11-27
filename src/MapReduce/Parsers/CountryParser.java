@@ -1,18 +1,22 @@
 package MapReduce.Parsers;
 
+import IO.CountryInMemoryDB;
 import IO.HTTPWebRequest;
 import Main.CountryInfo;
+import Main.DataProvider;
 import Main.Term;
 import MapReduce.CityTDI;
 import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.HashMap;
 
 public class CountryParser extends AbstractParser {
 
+    private CountryInfo country = null;
     public CountryParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
         super(map, doc);
     }
@@ -22,32 +26,24 @@ public class CountryParser extends AbstractParser {
         int docSize = getTxtSize();
         int i = 0;
         while (i < docSize){
-            CountryInfo country = null;
+            country = null;
             Token token = get(i);
             if ((country = getCountryInfo((token.toString()))) != null);
                 putInMap(token.toString());
-
-
             }
     }
 
     @Override
     protected void putInMap(String s) {
-        HashMap <
         if (map.containsKey(s)) {
             TermDocumentInfo tmp = map.get(s);
             tmp.setFrequency(tmp.getFrequency() + 1);
         } else {
-            map.put(s, new TermDocumentInfo(new Term(s),this.document.getID()));
+            map.put(s.toUpperCase(), new CityTDI(new Term((this.country.getCapitalName().toUpperCase())),this.document.getID(),this.country));
         }
-        new CityTDI(new Term(country.getCapitalName()), this.document.getID(),country);
     }
 
     private CountryInfo getCountryInfo(String CapitalName){
-        try {
-            return new CountryInfo(CapitalName);
-        } catch (IOException e) {
-            return null;
-        }
+        return DataProvider.getCountryInfo(CapitalName);
     }
 }
