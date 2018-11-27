@@ -44,8 +44,12 @@ public class Main{
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        Master splinter = new Master();
-        splinter.start();
+
+        DataProvider d = new DataProvider("");
+        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
+
+//        Master splinter = new Master();
+//        splinter.start();
         
     }
 

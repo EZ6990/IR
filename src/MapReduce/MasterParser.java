@@ -29,11 +29,10 @@ public class MasterParser implements Runnable{
             new NumberParser(map,doc).manipulate();
             new DatesAndRangeParser(map,doc).manipulate();
             new PercentAndPriceParser(map,doc).manipulate();
+            new CountryParser(map,doc).manipulate();
             new WordParser(map,doc).manipulate();
 
-
-
-            tdi_queue.add(map);
+            this.tdi_queue.add(map);
 
         }
     }
