@@ -5,10 +5,10 @@ import Main.Term;
 public class TermDocumentInfo {
 
     private Term term;
-    private int documentID;
+    private String documentID;
     private int Frequency;
 
-    public TermDocumentInfo(Term term,int documentID){
+    public TermDocumentInfo(Term term,String documentID){
         this.term = term;
         this.documentID = documentID;
         this.Frequency = 1;
@@ -22,7 +22,7 @@ public class TermDocumentInfo {
         return term;
     }
 
-    public int getDocumentID() {
+    public String getDocumentID() {
         return documentID;
     }
 

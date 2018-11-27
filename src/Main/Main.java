@@ -39,13 +39,13 @@ public class Main{
 
     public static void main(String[] args) throws InterruptedException {
 
-        try {
-            CountryInfo c = new CountryInfo("Rome");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        Master splinter = new Master();
-//        splinter.start();
+//        try {
+//            CountryInfo c = new CountryInfo("Jerusalem");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        Master splinter = new Master();
+        splinter.start();
         
     }
 

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractParser {
 
     private HashMap<String, TermDocumentInfo> map;
-    private TokenizedDocument document;
+    protected TokenizedDocument document;
     private List<Token> txt;
     private int index;
 
@@ -41,7 +41,7 @@ public abstract class AbstractParser {
             TermDocumentInfo tmp = map.get(s);
             tmp.setFrequency(tmp.getFrequency() + 1);
         } else {
-            map.put(s, new TermDocumentInfo(new Term(s),1));
+            map.put(s, new TermDocumentInfo(new Term(s),this.document.getID()));
         }
     }
 
