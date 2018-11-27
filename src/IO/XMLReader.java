@@ -4,10 +4,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class XMLReader {
 
@@ -31,12 +33,17 @@ public class XMLReader {
 
         String path = "";
         String ID = "";
-        String Date = "";
+        String date = "";
         String Text = "";
         String Country = "";
 
         Element XMLDocument = this.doc.first();
-        Element XMLHeader = (Element)XMLDocument.getElementsByTag("Header").get(0);
+        Element XMLHeader = null;
+        try {
+            XMLHeader = (Element) XMLDocument.getElementsByTag("HEADER").get(0);
+        }catch(Exception e){
+
+        }
 
 
         path = this.xml_file.getPath();
@@ -50,13 +57,19 @@ public class XMLReader {
                 Country = FP104.text();
         }
         if (XMLHeader != null) {
-            Date = XMLHeader.getElementsByTag("DATE1").text();
+            date = XMLHeader.getElementsByTag("DATE1").text();
+        }
+        else{
+            date = XMLDocument.getElementsByTag("DATE").text();
+//          Date oDate = new Date(Integer.parseInt(DATE.substring(0, 2)), Integer.parseInt(DATE.substring(2, 4)), Integer.parseInt(DATE.substring(4, 6)));
+//          date = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH).format(oDate);
+
         }
 
         this.doc = this.doc.next();
 
 
-        return new TextOperations.Document(path,ID,Country,Date,Text);
+        return new TextOperations.Document(path,ID,Country,date,Text);
 
     }
 }

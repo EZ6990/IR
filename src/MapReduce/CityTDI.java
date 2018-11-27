@@ -10,7 +10,7 @@ public class CityTDI extends TermDocumentInfo {
     private String population;
     private String termLocation;
 
-    public CityTDI(Term term, int documentID, String country, String currency, String population) {
+    public CityTDI(Term term, String documentID, String country, String currency, String population) {
         super(term, documentID);
         this.country = country;
         this.currency = currency;
@@ -18,7 +18,7 @@ public class CityTDI extends TermDocumentInfo {
         this.population = population;
     }
 
-    public CityTDI(Term term, int documentID, CountryInfo info) {
+    public CityTDI(Term term, String documentID, CountryInfo info) {
         super(term, documentID);
         this.country = info.getCountryName();
         this.currency = info.getCurrency();
