@@ -14,20 +14,19 @@ public class SegmentWriter {
         Arrays.sort(str);
         int i = 0;
         try {
-            FileOutputStream fos = new FileOutputStream(Paths.get("").toAbsolutePath().toString() + "/" + i);
+            PrintWriter output = new PrintWriter(new FileWriter(Paths.get("").toAbsolutePath().toString() + "/" + i,true));
             for (Object s : str) {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutput out = null;
+                String line=(String)s;
+                for (TermDocumentInfo tdi :
+                        postFile.get((String) s)) {
+                    line = line + "," + tdi.toString();
+                }
 
-                out = new ObjectOutputStream(bos);
-                out.writeObject(postFile.get((String) s));
-                out.flush();
-                byte[] bytes = bos.toByteArray();
+                output.write(line+"\n");
 
-
-                fos.write(bytes);
-                i++;
             }
+            i++;
+            output.close();
         }catch (IOException ex) {
             System.out.println("afssgasga");
         }

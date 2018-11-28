@@ -36,6 +36,8 @@ public class TermDocumentInfo implements Serializable{
         this.frequency = frequency;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "["+documentID+" "+frequency+"]";
+    }
 }

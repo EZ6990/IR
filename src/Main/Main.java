@@ -15,10 +15,7 @@ import javax.swing.text.Document;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 //public class Main extends Application {
 //
@@ -62,13 +59,13 @@ public class Main {
         ///////////////////////////
         Term term = new Term("kabab");
         TermDocumentInfo tdi = new TermDocumentInfo(term, "D01");
-        PriorityQueue<TermDocumentInfo> que = new PriorityQueue<>();
+        PriorityQueue<TermDocumentInfo> que = new PriorityQueue<>(Comparator.comparing(o->o.getDocumentID()));
         que.add(tdi);
 
         Term term1 = new Term("kababibabi");
         TermDocumentInfo tdi2 = new TermDocumentInfo(term, "D01");
-        PriorityQueue<TermDocumentInfo> que2 = new PriorityQueue<>();
-        que.add(tdi);
+        PriorityQueue<TermDocumentInfo> que2 = new PriorityQueue<>(Comparator.comparing(o->o.getDocumentID()));
+        que2.add(tdi);
         //////////////////////////////
 
 
