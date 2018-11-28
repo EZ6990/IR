@@ -1,20 +1,8 @@
 package Main;
 
-import IO.HTTPWebRequest;
-import IO.XMLReader;
-import MapReduce.SegmentWriter;
+import MapReduce.SegmentTermWriter;
 import MapReduce.TermDocumentInfo;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.jsoup.select.Elements;
 
-import javax.swing.text.Document;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
 import java.util.*;
 
 //public class Main extends Application {
@@ -53,7 +41,7 @@ public class Main {
 //        splinter.start();
 
 
-        SegmentWriter segmentWriter = new SegmentWriter();
+        //SegmentTermWriter segmentWriter = new SegmentTermWriter();
         HashMap<String, PriorityQueue<TermDocumentInfo>> map = new HashMap<>();
 
         ///////////////////////////
@@ -73,7 +61,7 @@ public class Main {
         map.put("kababibabi", que2);
 
         //////////////////////////
-        segmentWriter.write(map);
+        //segmentWriter.write(map);
 
 
     }

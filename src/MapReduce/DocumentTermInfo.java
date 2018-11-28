@@ -41,4 +41,10 @@ public class DocumentTermInfo {
     public String getDocumentName() {
         return documentName;
     }
+
+
+    @Override
+    public String toString() {
+        return documentName+" "+mostCommonFreq+" "+rareCount;
+    }
 }
