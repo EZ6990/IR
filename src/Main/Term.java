@@ -1,7 +1,9 @@
 package Main;
 
 
-public class Term {
+import java.io.Serializable;
+
+public class Term implements Serializable{
 
     public Term(String name){
         this.data = name;

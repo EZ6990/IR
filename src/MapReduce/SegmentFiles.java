@@ -2,7 +2,9 @@ package MapReduce;
 
 import TextOperations.Document;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Array;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -14,7 +16,7 @@ public class SegmentFiles implements Runnable {
     private HashMap<String, TermDocumentInfo> map;
     private int mapCounter;
     private ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue;
-    private HashMap<String, Queue<TermDocumentInfo>> postFile;
+    private HashMap<String, PriorityQueue<TermDocumentInfo>> postFile;
     private HashMap<String, DocumentTermInfo> documentPostFile;
     private int numOfDocs;
     private SegmentWriter sWriter;
@@ -43,7 +45,7 @@ public class SegmentFiles implements Runnable {
                 if (postFile.containsKey(s))
                     postFile.get(s).add(map.get(s));
                 else {
-                    postFile.put(s, new PriorityQueue<TermDocumentInfo>());
+                    postFile.put(s, new PriorityQueue<TermDocumentInfo>(Comparator.comparing(o->o.getDocumentID())));
                 }
 
                 if (map.get(s).getFrequency() == 1)

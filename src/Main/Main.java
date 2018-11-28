@@ -2,6 +2,8 @@ package Main;
 
 import IO.HTTPWebRequest;
 import IO.XMLReader;
+import MapReduce.SegmentWriter;
+import MapReduce.TermDocumentInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,8 +15,10 @@ import javax.swing.text.Document;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 
 //public class Main extends Application {
 //
@@ -35,7 +39,7 @@ import java.util.LinkedList;
 //}
 
 
-public class Main{
+public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -45,12 +49,36 @@ public class Main{
 //            e.printStackTrace();
 //        }
 
-        DataProvider d = new DataProvider("");
-        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
+//        DataProvider d = new DataProvider("");
+//        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
 
 //        Master splinter = new Master();
 //        splinter.start();
-        
+
+
+        SegmentWriter segmentWriter = new SegmentWriter();
+        HashMap<String, PriorityQueue<TermDocumentInfo>> map = new HashMap<>();
+
+        ///////////////////////////
+        Term term = new Term("kabab");
+        TermDocumentInfo tdi = new TermDocumentInfo(term, "D01");
+        PriorityQueue<TermDocumentInfo> que = new PriorityQueue<>();
+        que.add(tdi);
+
+        Term term1 = new Term("kababibabi");
+        TermDocumentInfo tdi2 = new TermDocumentInfo(term, "D01");
+        PriorityQueue<TermDocumentInfo> que2 = new PriorityQueue<>();
+        que.add(tdi);
+        //////////////////////////////
+
+
+        map.put("kabab", que);
+        map.put("kababibabi", que2);
+
+        //////////////////////////
+        segmentWriter.write(map);
+
+
     }
 
 

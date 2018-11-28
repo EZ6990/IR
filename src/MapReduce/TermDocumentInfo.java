@@ -2,7 +2,9 @@ package MapReduce;
 
 import Main.Term;
 
-public class TermDocumentInfo {
+import java.io.Serializable;
+
+public class TermDocumentInfo implements Serializable{
 
     private Term term;
     private String documentID;
@@ -33,4 +35,7 @@ public class TermDocumentInfo {
     public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
+
+
+
 }
