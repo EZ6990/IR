@@ -17,7 +17,4 @@ public class SegmentTerm {
         TDIQ.add(TDI);
         totalDocumentCount++;
     }
-
-
-
 }

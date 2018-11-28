@@ -1,6 +1,10 @@
 package Main;
 
 import IO.DocumentReader;
+import MapReduce.DocumentTermInfo;
+import MapReduce.MasterParser;
+import MapReduce.SegmentFiles;
+import MapReduce.TermDocumentInfo;
 import TextOperations.Document;
 import TextOperations.TextOperations;
 import TextOperations.Tokenize;
@@ -9,6 +13,9 @@ import TextOperations.TokenizedDocument;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Master {
@@ -17,18 +24,45 @@ public class Master {
     private ConcurrentLinkedQueue<File> files_queue;
     private ConcurrentLinkedQueue<Document> document_queue;
     private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
+    private ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue;
+
+    private ConcurrentLinkedQueue<HashMap<String, PriorityQueue<TermDocumentInfo>>> destTermQueue;
+    private ConcurrentLinkedQueue<HashMap<String, DocumentTermInfo>> destDocQueue;
 
     private Thread [] doc_readers;
     private Thread [] text_operators;
+    private Thread [] parsers;
+    private Thread [] segments;
+
+    private Runnable [] runnable_doc_readers;
+    private Runnable [] runnable_text_operators;
+    private Runnable [] runnable_parsers;
+    private Runnable [] runnable_segments;
 
     public Master() {
         this.files_queue = new ConcurrentLinkedQueue<File>();
         this.document_queue = new ConcurrentLinkedQueue<Document>();
         this.tokenized_queue = new ConcurrentLinkedQueue<TokenizedDocument>();
-        this.doc_readers = new Thread[2];
-        this.text_operators = new Thread[3];
+        this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>>();
+        this.destTermQueue = new ConcurrentLinkedQueue<HashMap<String, PriorityQueue<TermDocumentInfo>>>();
+        this.destDocQueue = new ConcurrentLinkedQueue<HashMap<String, DocumentTermInfo>>();
 
-        LoadDocuments("C:\\Users\\talmalu\\Downloads\\corpus\\corpus\\");
+        this.doc_readers = new Thread[4];
+        this.runnable_doc_readers = new Runnable[4];
+
+        this.text_operators = new Thread[4];
+        this.runnable_text_operators = new Runnable[4];
+
+        this.parsers = new Thread[2];
+        this.runnable_parsers = new Runnable[2];
+
+        this.segments = new Thread[1];
+        this.runnable_segments = new Runnable[1];
+
+
+
+
+        LoadDocuments("D:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
     }
 
     private void LoadDocuments(String location){
@@ -52,23 +86,45 @@ public class Master {
 
     public void start() throws InterruptedException {
 
+        System.out.println("Start : " + LocalTime.now());
         StartReaders();
         StartTextOperators();
+        StartParsers();
+        StartSegments();
         WaitReaders();
         WaitTextOperators();
-
+        WaitParsers();
+        WaitSegments();
+        System.out.println("End : " + LocalTime.now());
+//        int size = 0;
+//        for (int i = 0; i < this.runnable_segments.length; i++)
+//            size+=((SegmentFiles)this.runnable_segments[i]).getPostingSize();
+//
+//        System.out.println("Size Of Dictionery : " + size);
     }
 
     private void StartReaders(){
         for (int i = 0; i < this.doc_readers.length ; i++) {
-            this.doc_readers[i] = new Thread(new DocumentReader(this.files_queue,this.document_queue));
+            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue,this.document_queue)));
             this.doc_readers[i].start();
         }
     }
     private void StartTextOperators(){
         for (int i = 0; i < this.text_operators.length ; i++) {
-            this.text_operators[i] = new Thread(new TextOperations(this.document_queue,this.tokenized_queue,new Tokenize(),new StopWords()));
+            this.text_operators[i] = new Thread((this.runnable_text_operators[i] = new TextOperations(this.document_queue,this.tokenized_queue,new Tokenize(),new StopWords())));
             this.text_operators[i].start();
+        }
+    }
+    private void StartParsers() {
+        for (int i = 0; i < this.parsers.length ; i++) {
+            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue)));
+            this.parsers[i].start();
+        }
+    }
+    private void StartSegments() {
+        for (int i = 0; i < this.segments.length ; i++) {
+            this.segments[i] = new Thread((this.runnable_segments[i] = new SegmentFiles(this.tdi_queue,this.destTermQueue,this.destDocQueue)));
+            this.segments[i].start();
         }
     }
 
@@ -76,16 +132,49 @@ public class Master {
         for (int i = 0; i < this.doc_readers.length ; i++) {
             this.doc_readers[i].join();
         }
+        //ReaderFinished();
     }
-
     private void WaitTextOperators() throws InterruptedException {
         for (int i = 0; i < this.text_operators.length ; i++) {
             this.text_operators[i].join();
         }
+        TextOperatorsFinished();
+    }
+    private void WaitParsers() throws InterruptedException {
+        for (int i = 0; i < this.parsers.length ; i++) {
+            this.parsers[i].join();
+        }
+        ParsersFinished();
+    }
+    private void WaitSegments() throws InterruptedException {
+        for (int i = 0; i < this.segments.length ; i++) {
+            this.segments[i].join();
+        }
+        SegmentsFinished();
     }
 
     private void ReaderFinished(){
-        for (int i = 0; i < this.text_operators.length ; i++) {
+        for (int i = 0; i < this.runnable_text_operators.length ; i++) {
+            ((TextOperations)this.runnable_text_operators[i]).Stop();
         }
+        System.out.println("Finished Read Files : " + LocalTime.now());
+    }
+    private void TextOperatorsFinished() {
+        for (int i = 0; i < this.parsers.length ; i++) {
+            ((MasterParser)this.runnable_parsers[i]).Stop();
+        }
+        System.out.println("Finished Text Operations : " + LocalTime.now());
+    }
+    private void ParsersFinished() {
+        for (int i = 0; i < this.runnable_segments.length ; i++) {
+            ((SegmentFiles)this.runnable_segments[i]).Stop();
+        }
+        System.out.println("Finished Parsing : " + LocalTime.now());
+    }
+    private void SegmentsFinished() {
+//        for (int i = 0; i < this.runnable_segments.length ; i++) {
+//            ((SegmentFiles)this.runnable_segments[i]).Stop();
+//        }
+        System.out.println("Finished Segments File : " + LocalTime.now());
     }
 }

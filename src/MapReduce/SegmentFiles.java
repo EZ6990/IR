@@ -19,49 +19,58 @@ public class SegmentFiles implements Runnable {
 
     public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue, ConcurrentLinkedQueue<HashMap<String, PriorityQueue<TermDocumentInfo>>> destTermQueue, ConcurrentLinkedQueue<HashMap<String, DocumentTermInfo>> destDocQueue) {
         this.TDIQueue = TDIQueue;
-        mapCounter = 0;
-        numOfDocs = 18;
-        postFile = new HashMap<>();
-        bStop = false;
-        documentPostFile = new HashMap<>();
+        this.mapCounter = 0;
+        this.numOfDocs = 18;
+        this.postFile = new HashMap<>();
+        this.bStop = false;
+        this.documentPostFile = new HashMap<>();
         this.destTermQueue = destTermQueue;
         this.destDocQueue = destDocQueue;
     }
 
     @Override
     public void run() {
-        while ((map = TDIQueue.poll()) != null && !bStop) {
-            DocumentTermInfo dti = new DocumentTermInfo(((TermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
-            for (String s : map.keySet()
+        while ((this.map = this.TDIQueue.poll()) != null || !this.bStop){
 
-                    ) {
-                if (postFile.containsKey(s))
-                    postFile.get(s).add(map.get(s));
-                else {
-                    postFile.put(s, new PriorityQueue<TermDocumentInfo>(Comparator.comparing(o -> o.getDocumentID())));
+            if (this.map != null) {
+                DocumentTermInfo dti = new DocumentTermInfo(((TermDocumentInfo) (this.map.values().toArray()[0])).getDocumentID());
+                for (String s : this.map.keySet()
+
+                        ) {
+                    if (this.postFile.containsKey(s))
+                        this.postFile.get(s).add(this.map.get(s));
+                    else {
+                        this.postFile.put(s, new PriorityQueue<TermDocumentInfo>(Comparator.comparing(o -> o.getDocumentID())));
+                    }
+
+                    if (this.map.get(s).getFrequency() == 1)
+                        dti.addRareCount();
+
+                    if (this.map.get(s).getFrequency() > dti.getMostCommonFreq()) {
+                        dti.setMostCommonName(s);
+                        dti.setMostCommonFreq(this.map.get(s).getFrequency());
+                    }
                 }
 
-                if (map.get(s).getFrequency() == 1)
-                    dti.addRareCount();
+                this.documentPostFile.put(dti.getDocumentName(), dti);
 
-                if (map.get(s).getFrequency() > dti.getMostCommonFreq()) {
-                    dti.setMostCommonName(s);
-                    dti.setMostCommonFreq(map.get(s).getFrequency());
+                if (++this.mapCounter == this.numOfDocs) {
+                    this.destTermQueue.add(this.postFile);
+                    this.destDocQueue.add(this.documentPostFile);
+                    this.mapCounter = 0;
+                    this.postFile = new HashMap<>();
+                    this.documentPostFile = new HashMap<>();
                 }
-
-
-            }
-
-            documentPostFile.put(dti.getDocumentName(), dti);
-
-            if (++mapCounter == numOfDocs) {
-                destTermQueue.add(postFile);
-                destDocQueue.add(documentPostFile);
-                mapCounter = 0;
-                postFile = new HashMap<>();
-                documentPostFile = new HashMap<>();
             }
 
         }
     }
+
+    public int getPostingSize(){
+        return postFile.size();
+    }
+    public void Stop(){
+        this.bStop = true;
+    }
+
 }

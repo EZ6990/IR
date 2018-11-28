@@ -1,8 +1,10 @@
 package MapReduce;
 
+import Main.DataProvider;
 import MapReduce.Parsers.*;
 import TextOperations.TokenizedDocument;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -23,17 +25,25 @@ public class MasterParser implements Runnable{
     public void run() {
 
         TokenizedDocument doc;
-        while ((doc = tokenized_queue.poll()) != null && !bStop){
-            HashMap<String, TermDocumentInfo> map = new HashMap<String, TermDocumentInfo>();
-            new DatesAndRangeParser(map,doc).manipulate();
-            new NumberParser(map,doc).manipulate();
-            new DatesAndRangeParser(map,doc).manipulate();
-            new PercentAndPriceParser(map,doc).manipulate();
-            new CountryParser(map,doc).manipulate();
-            new WordParser(map,doc).manipulate();
+        while ((doc = tokenized_queue.poll()) != null || !this.bStop){
 
-            this.tdi_queue.add(map);
+            if (doc != null) {
+                HashMap<String, TermDocumentInfo> map = new HashMap<String, TermDocumentInfo>();
+                new DatesAndRangeParser(map, doc).manipulate();
+                new NumberParser(map, doc).manipulate();
+                new PercentAndPriceParser(map, doc).manipulate();
+                new CountryParser(map, doc).manipulate();
+                new WordParser(map, doc).manipulate();
 
+                if (map.size() > 0)
+                    this.tdi_queue.add(map);
+                else
+                    System.out.println("Document with Text Problem: " + doc.getID());
+            }
         }
+    }
+
+    public void Stop(){
+        this.bStop = true;
     }
 }

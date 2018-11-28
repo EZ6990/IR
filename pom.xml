@@ -19,8 +19,6 @@
             </plugin>
         </plugins>
     </build>
-
-
     <dependencies>
     <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
@@ -35,10 +33,5 @@
             <artifactId>json</artifactId>
             <version>20180813</version>
         </dependency>
-
-
     </dependencies>
-
-
-
 </project>

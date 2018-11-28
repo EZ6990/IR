@@ -21,7 +21,6 @@ public class CountryInfo {
         this.CountryName = data.get("name").toString();
         this.CapitalName = data.get("capital").toString();
         this.Population = data.get("population").toString();
-        this.CountryName = data.get("name").toString();
         this.Currency = data.getJSONArray("currencies").getJSONObject(0).get("name").toString();
 
     }
@@ -34,9 +33,7 @@ public class CountryInfo {
     public String getCountryName() {
         return this.CountryName;
     }
-    public String getPopulation() {
-        return this.Population;
-    }
+    public String getPopulation() { return this.Population; }
     public String getCurrency() {
         return this.Currency;
     }

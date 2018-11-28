@@ -37,28 +37,28 @@ public class Main {
 //        DataProvider d = new DataProvider("");
 //        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
 
-//        Master splinter = new Master();
-//        splinter.start();
+        Master splinter = new Master();
+        splinter.start();
 
 
         //SegmentTermWriter segmentWriter = new SegmentTermWriter();
-        HashMap<String, PriorityQueue<TermDocumentInfo>> map = new HashMap<>();
-
-        ///////////////////////////
-        Term term = new Term("kabab");
-        TermDocumentInfo tdi = new TermDocumentInfo(term, "D01");
-        PriorityQueue<TermDocumentInfo> que = new PriorityQueue<>(Comparator.comparing(o->o.getDocumentID()));
-        que.add(tdi);
-
-        Term term1 = new Term("kababibabi");
-        TermDocumentInfo tdi2 = new TermDocumentInfo(term, "D01");
-        PriorityQueue<TermDocumentInfo> que2 = new PriorityQueue<>(Comparator.comparing(o->o.getDocumentID()));
-        que2.add(tdi);
-        //////////////////////////////
-
-
-        map.put("kabab", que);
-        map.put("kababibabi", que2);
+//        HashMap<String, PriorityQueue<TermDocumentInfo>> map = new HashMap<>();
+//
+//        ///////////////////////////
+//        Term term = new Term("kabab");
+//        TermDocumentInfo tdi = new TermDocumentInfo(term, "D01");
+//        PriorityQueue<TermDocumentInfo> que = new PriorityQueue<>(Comparator.comparing(o->o.getDocumentID()));
+//        que.add(tdi);
+//
+//        Term term1 = new Term("kababibabi");
+//        TermDocumentInfo tdi2 = new TermDocumentInfo(term, "D01");
+//        PriorityQueue<TermDocumentInfo> que2 = new PriorityQueue<>(Comparator.comparing(o->o.getDocumentID()));
+//        que2.add(tdi);
+//        //////////////////////////////
+//
+//
+//        map.put("kabab", que);
+//        map.put("kababibabi", que2);
 
         //////////////////////////
         //segmentWriter.write(map);

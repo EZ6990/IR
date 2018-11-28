@@ -23,15 +23,16 @@ public class TextOperations implements Runnable{
     public void run() {
 
         Document doc;
-        while ((doc = document_queue.poll()) != null && !bStop){
-            doc = document_queue.poll();
-            String path = doc.getPath();
-            String ID = doc.getID();
-            List<Token> Text = this.stop_words.filter(this.tokenizer.Tokenize(doc.getText()));
-            List<Token> Date = this.stop_words.filter(this.tokenizer.Tokenize(doc.getDate()));;
-            List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getHeader()));;
+        while ((doc = document_queue.poll()) != null || !this.bStop){
+            if (doc != null) {
+                String path = doc.getPath();
+                String ID = doc.getID();
+                List<Token> Text = this.stop_words.filter(this.tokenizer.Tokenize(doc.getText()));
+                List<Token> Date = this.stop_words.filter(this.tokenizer.Tokenize(doc.getDate()));
+                List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getHeader()));
 
-            tokenized_queue.add(new TokenizedDocument(path,ID,Text,Date,Header));
+                tokenized_queue.add(new TokenizedDocument(path, ID, Text, Date, Header));
+            }
 
         }
     }

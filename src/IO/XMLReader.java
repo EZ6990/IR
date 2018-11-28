@@ -70,6 +70,8 @@ public class XMLReader {
 
 
         return new TextOperations.Document(path,ID,Country,date,Text);
-
+    }
+    public boolean hasNext(){
+        return this.doc.size() > 0;
     }
 }

@@ -28,18 +28,20 @@ public class CountryParser extends AbstractParser {
         while (i < docSize){
             country = null;
             Token token = get(i);
-            if ((country = getCountryInfo((token.toString()))) != null);
+            if ((country = getCountryInfo((token.toString()))) != null)
                 putInMap(token.toString());
-            }
+            i++;
+        }
     }
 
     @Override
     protected void putInMap(String s) {
-        if (map.containsKey(s)) {
-            TermDocumentInfo tmp = map.get(s);
+        String capitalName = s.toUpperCase();
+        if (map.containsKey(capitalName)) {
+            TermDocumentInfo tmp = map.get(capitalName);
             tmp.setFrequency(tmp.getFrequency() + 1);
         } else {
-            map.put(s.toUpperCase(), new CityTDI(new Term((this.country.getCapitalName().toUpperCase())),this.document.getID(),this.country));
+            map.put(capitalName, new CityTDI(new Term((capitalName)),this.document.getID(),this.country));
         }
     }
 

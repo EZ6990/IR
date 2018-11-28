@@ -14,7 +14,7 @@ public class DataProvider {
     public DataProvider(String ConfigFile){
         this.ConfigFilePath = ConfigFile;
         try {
-            this.CountryDB = new CountryInMemoryDB("https://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies");
+            CountryDB = new CountryInMemoryDB("https://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,13 +24,13 @@ public class DataProvider {
         if (CountryDB != null){
             country = CountryDB.getCountryByCapital(CapitalName);
         }
-        if (country == null) {
-            try {
-                country = new CountryInfo(new HTTPWebRequest().post("https://restcountries.eu/rest/v2/Capital" + CapitalName + "?fields=name;capital;population;currencies"));
-            } catch (IOException e) {
-                country = null;
-            }
-        }
+//        if (country == null) {
+//            try {
+//                country = new CountryInfo(new HTTPWebRequest().post("https://restcountries.eu/rest/v2/Capital" + CapitalName + "?fields=name;capital;population;currencies"));
+//            } catch (IOException e) {
+//                country = null;
+//            }
+//        }
         return country;
     }
 

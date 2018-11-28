@@ -23,8 +23,10 @@ public class DocumentReader implements Runnable {
         while ((f = files_queue.poll()) != null){
             try {
                 reader = new XMLReader(f);
-                Document document = reader.getNextDocument();
-                document_queue.add(document);
+                while(reader.hasNext()) {
+                    Document document = reader.getNextDocument();
+                    document_queue.add(document);
+                }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
