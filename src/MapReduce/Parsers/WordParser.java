@@ -25,28 +25,37 @@ public class WordParser extends AbstractParser {
             strToken = token.toString();
             suffix = strToken.length() - 1;
             prefix = 0;
+            boolean bSuff = true;
+            boolean bPreff = true;
             if (!token.isNumber() && !isFraction(strToken)) {
-                putInMap(strToken);
-//                while (!(prefix < suffix) || !(suffix < 0)) {
-//
-//
-//                    char cSuff = strToken.charAt(suffix);
-//                    char cpreff = strToken.charAt(prefix);
-//
-//                    if (!(cSuff <= 'z' && cSuff >= 'a') && !(cSuff <= 'Z' && cSuff >= 'A'))
-//                        --suffix;
-//
-//                    if (!(cpreff <= 'z' && cpreff >= 'a') && !(cpreff <= 'Z' && cpreff >= 'A'))
-//                        ++prefix;
-//                }
-//
-//                strToken = strToken.substring(prefix, suffix + 1);
-//
-//
-//                if (strToken.contains("-") && strToken.length() > 1)
-//                    splitAndAdd(strToken.split("-"));
-//                    // maybe make a different function and iterate only once
-//                else putInMap(strToken);
+                while (prefix < suffix) {
+
+
+                    char cSuff = strToken.charAt(suffix);
+                    char cPreff = strToken.charAt(prefix);
+
+                    if (!(cSuff <= 'z' && cSuff >= 'a') && !(cSuff <= 'Z' && cSuff >= 'A')) {
+                        --suffix;
+                        bSuff = true;
+                    } else
+                        bSuff = false;
+
+                    if (!(cPreff <= 'z' && cPreff >= 'a') && !(cPreff <= 'Z' && cPreff >= 'A')) {
+                        ++prefix;
+                        bPreff = true;
+                    } else
+                        bPreff = false;
+                }
+
+                strToken = strToken.substring(prefix, suffix + 1);
+
+
+                if (strToken.contains("-") && strToken.length() > 1)
+                    splitAndAdd(strToken.split("-"));
+                    // maybe make a different function and iterate only once
+                else putInMap(strToken);
+
+
             }
 
             i++;
