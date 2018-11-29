@@ -40,7 +40,7 @@ public class NumberParser extends AbstractParser {
                     i++;
 
                 } else if (nextTokenStr.equals("Trillion")) {
-                    s = Double.parseDouble(s) * 1000 + "B";
+                    //s = Double.parseDouble(s) * 1000 + "B";
                     i++;
                 }
                 putInMap(s);

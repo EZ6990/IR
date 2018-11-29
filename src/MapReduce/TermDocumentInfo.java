@@ -12,7 +12,7 @@ public class TermDocumentInfo implements Serializable{
 
     public TermDocumentInfo(Term term, String documentID) {
         this.term = term;
-        this.documentID = documentID;
+        this.documentID = documentID.trim();
         this.frequency = 1;
     }
 
