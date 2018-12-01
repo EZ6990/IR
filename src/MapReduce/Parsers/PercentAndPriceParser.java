@@ -33,18 +33,28 @@ public class PercentAndPriceParser extends AbstractParser {
                     i++;
                     s = s + theNumber.doubleValue() + "%";
                 } else if (nextTokenStr.equals("Dollars")) {
-                    s = s + convertNumber((theNumber.doubleValue() + ""), false) + "Dollars";
+                    s = s + convertNumber((theNumber.doubleValue() + ""), false) + " Dollars";
                     i++;
                 } else if (nextTokenStr.contains("illion") && size >= (i + 3) && get(i + 2).toString().equals("U.S.") && get(i + 3).toString().equals("dollars")) {
                     if (nextTokenStr.equals("billion") || nextTokenStr.equals("Billion") || nextTokenStr.equals("BILLION")) {
-                        s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + "Dollars";
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + " Dollars";
                         i = i + 3;
                     } else if (nextTokenStr.equals("million") || nextTokenStr.equals("Million") || nextTokenStr.equals("MILLION")) {
-                        s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + "Dollars";
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + " Dollars";
                         i = i + 3;
                     } else if (nextTokenStr.equals("trillion") || nextTokenStr.equals("Trillion") || nextTokenStr.equals("TRILLION")) {
-                        s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + "Dollars";
+                        s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + " Dollars";
                         i = i + 3;
+                    } else if (size >= (i + 2) && get(i + 2).toString().equals("Dollars")) {
+                        if (nextTokenStr.equals("bn")) {
+                            s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + " Dollars";
+                            i = i + 2;
+                        } else if (nextTokenStr.equals("m")) {
+                            s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + " Dollars";
+                            i = i + 2;
+                        }
+                    } else if (isFraction(nextTokenStr) && size >= (i + 2) && get(i + 2).toString().equals("Dollars")) {
+                        s = convertNumber(theNumber + "", false) + nextTokenStr + " Dollars";
                     }
 
                 }
@@ -56,17 +66,17 @@ public class PercentAndPriceParser extends AbstractParser {
             } else if (tokenStr.charAt(0) == '$' && (theNumber = isNumber(new Token(tokenStr.substring(1)))) != null)
                 if (nextTokenStr.contains("illion")) {
                     if (nextTokenStr.equals("billion") || nextTokenStr.equals("Billion") || nextTokenStr.equals("BILLION")) {
-                        s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + "Dollars";
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + " Dollars";
                         i++;
                     } else if (nextTokenStr.equals("million") || nextTokenStr.equals("Million") || nextTokenStr.equals("MILLION")) {
-                        s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + "Dollars";
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + " Dollars";
                         i++;
                     }
                 } else if (nextTokenStr.equals("trillion") || nextTokenStr.equals("Trillion") || nextTokenStr.equals("TRILLION")) {
-                    s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + "Dollars";
+                    s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + " Dollars";
                     i++;
                 } else {
-                    s = s + convertNumber(theNumber.doubleValue()+"",false) + "Dollars";
+                    s = s + convertNumber(theNumber.doubleValue() + "", false) + " Dollars";
                 }
             i++;
         }
@@ -90,9 +100,9 @@ public class PercentAndPriceParser extends AbstractParser {
     private String convertNumber(String s, boolean isTrilion) {
         double d = Double.parseDouble(s);
         if (isTrilion)
-            return d / 1000 + " M ";
+            return d / 1000 + " M";
         else if (d > 1000000)
-            return d / 1000000 + " M ";
+            return d / 1000000 + " M";
         else return d + "";
     }
 
