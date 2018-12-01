@@ -20,7 +20,7 @@ public class WordParser extends AbstractParser {
         String strToken;
         Token token;
 
-        while (i < size - 1) {
+        while (i < size ) {
             token = get(i);
             strToken = token.toString();
             suffix = strToken.length() - 1;
@@ -50,7 +50,7 @@ public class WordParser extends AbstractParser {
                 strToken = strToken.substring(prefix, suffix + 1);
 
 
-                if (strToken.contains("-") && strToken.length() > 1)
+                if (strToken.contains("-") && strToken.charAt(0) !='-')
                     splitAndAdd(strToken.split("-"));
                     // maybe make a different function and iterate only once
                 else putInMap(strToken);
@@ -85,14 +85,21 @@ public class WordParser extends AbstractParser {
     }
 
     private boolean isFraction(String string) {
-        if (!string.contains("/") || string.charAt(0) == '/' || string.charAt(string.length() - 1) == '/')
+        if (string.charAt(0) == '/' || string.charAt(string.length() - 1) == '/' || !string.contains("/"))
             return false;
 
-        for (int i = 0; i < string.length(); i++)
-            if ((string.charAt(i) < '0' || string.charAt(i) > '9') && string.charAt(i) != '/')
+        int count = 0;
+        char c;
+        for (int i = 0; i < string.length(); i++) {
+            c = string.charAt(i);
+            if ((c < '0' || c > '9') && c != '/')
                 return false;
+            else if (c == '/')
+                count++;
+        }
 
-        return true;
+        return count == 1;
+
 
     }
 }

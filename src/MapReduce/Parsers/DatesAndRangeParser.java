@@ -11,7 +11,7 @@ public class DatesAndRangeParser extends AbstractParser {
     private HashMap<String, String> dayDates;
 
     public DatesAndRangeParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
-        super(map,doc);
+        super(map, doc);
         monthDates = new HashMap<>();
         dayDates = new HashMap<>();
 
@@ -66,44 +66,42 @@ public class DatesAndRangeParser extends AbstractParser {
         int i = 0, size = getTxtSize();
         String s = "";
         Token token, nextToken;
-        String tokenStr,nextTokenStr;
-
+        String tokenStr, nextTokenStr;
+        Double theNumber;
         while (i < size - 1) {
             s = "";
             token = get(i);
             nextToken = get(i + 1);
-            tokenStr=token.toString();
-            nextTokenStr=nextToken.toString();
+            tokenStr = token.toString();
+            nextTokenStr = nextToken.toString();
 
-            if (tokenStr.contains("-"))
+            if (tokenStr.contains("-")&& tokenStr.charAt(0)!='-')
                 putInMap(tokenStr);
 
-            if(tokenStr.equals("between")&& getTxtSize()-i>=4 && nextToken.isNumber() && get(i+2).toString().equals("and")&& get(i+3).isNumber())
-            {
-                s=s+"between "+nextTokenStr+" and "+ get(i+3).toString();
-                i=i+3;
-            }
-
-            else {
+            if ((tokenStr.equals("Between")||tokenStr.equals("between")) && getTxtSize() - i >= 4 && isNumber(nextToken)!=null
+                    && get(i + 2).toString().equals("and") && isNumber(get(i + 3))!=null) {
+                s = s + "between " + isNumber(nextToken).doubleValue() + " and " + isNumber(get(i + 3)).doubleValue();
+                i = i + 3;
+            } else {
                 //first is month
                 if (monthDates.containsKey(tokenStr)) {
                     s = s + monthDates.get(tokenStr);
                     //second is a number
-                    if (nextToken.isNumber()) {
+                    if ((theNumber=isNumber(nextToken))!=null) {
                         //DD
-                        if (dayDates.containsKey(nextTokenStr))
-                            s = s + "-" + dayDates.get(nextTokenStr);
+                        if (dayDates.containsKey(theNumber.intValue()))
+                            s = s + "-" + dayDates.get(theNumber.intValue());
                         //YYYY
                         if (nextTokenStr.length() < 5 && !nextTokenStr.contains("."))
-                            putInMap(convertToYear(nextTokenStr) + "-" + s.substring(0, 2));
+                            putInMap(convertToYear(theNumber.intValue()+"") + "-" + s.substring(0, 2));
                         i++;
                     }
 
                     //first is number
-                } else if (token.isNumber()) {
+                } else if ((theNumber=isNumber(token))!=null) {
                     //second is month
-                    if (dayDates.containsKey(tokenStr) && monthDates.containsKey(nextTokenStr)) {
-                        s = s + monthDates.get(nextTokenStr) + dayDates.get(tokenStr);
+                    if (dayDates.containsKey(theNumber.intValue()+"") && monthDates.containsKey(nextTokenStr)) {
+                        s = s + monthDates.get(nextTokenStr) + dayDates.get(theNumber.intValue()+"");
 
                     }
                 }
@@ -126,4 +124,20 @@ public class DatesAndRangeParser extends AbstractParser {
             sYear = "0" + sYear;
         return sYear;
     }
+
+    private Double isNumber(Token token) {
+        if (token.isNumber())
+            return new Double(Double.parseDouble(token.toString()));
+        String s = token.toString().replace(",", "");
+        while (s.charAt(s.length() - 1) == '.')
+            s = s.substring(0, s.length() - 1);
+        try {
+            return Double.parseDouble(s);
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
 }
