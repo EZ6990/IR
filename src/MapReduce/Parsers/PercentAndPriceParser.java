@@ -10,7 +10,7 @@ public class PercentAndPriceParser extends AbstractParser {
 
 
     public PercentAndPriceParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
-        super(map,doc);
+        super(map, doc);
     }
 
     @Override
@@ -18,88 +18,82 @@ public class PercentAndPriceParser extends AbstractParser {
         int i = 0, size = getTxtSize();
         String s = "";
         Token token, nextToken;
-        String tokenStr,nextTokenStr;
+        String tokenStr, nextTokenStr;
 
         while (i < size - 1) {
             s = "";
             token = get(i);
             nextToken = get(i + 1);
-            tokenStr=token.toString();
-            nextTokenStr=nextToken.toString();
-            if (isNumber(token)) {
+            tokenStr = token.toString();
+            nextTokenStr = nextToken.toString();
+            Double theNumber;
+
+            if ((theNumber = isNumber(token)) != null) {
                 if (nextTokenStr.equals("percent") || nextTokenStr.equals("percentage")) {
                     i++;
-                    s = s + tokenStr + "%";
+                    s = s + theNumber.doubleValue() + "%";
                 } else if (nextTokenStr.equals("Dollars")) {
-                    s = s + convertNumber(tokenStr) + "Dollars";
+                    s = s + convertNumber((theNumber.doubleValue() + ""), false) + "Dollars";
                     i++;
                 } else if (nextTokenStr.contains("illion") && size >= (i + 3) && get(i + 2).toString().equals("U.S.") && get(i + 3).toString().equals("dollars")) {
-                    if (nextTokenStr.contains("billion")) {
-                        s = s + convertNumber(tokenStr + "000000000") + "Dollars";
-                    i=i+3;
-                    }
-                    else if (nextTokenStr.contains("million")) {
-                        s = s + convertNumber(tokenStr + "000000") + "Dollars";
-                        i=i+3;
-                    }
-                    else if (nextTokenStr.contains("trillion")) {
-                        s = s + convertNumber(tokenStr + "000000000000") + "Dollars";
-                        i=i+3;
+                    if (nextTokenStr.equals("billion") || nextTokenStr.equals("Billion") || nextTokenStr.equals("BILLION")) {
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + "Dollars";
+                        i = i + 3;
+                    } else if (nextTokenStr.equals("million") || nextTokenStr.equals("Million") || nextTokenStr.equals("MILLION")) {
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + "Dollars";
+                        i = i + 3;
+                    } else if (nextTokenStr.equals("trillion") || nextTokenStr.equals("Trillion") || nextTokenStr.equals("TRILLION")) {
+                        s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + "Dollars";
+                        i = i + 3;
                     }
 
                 }
 
 
-            }
-
-            else if (tokenStr.contains("%") && (isFraction(tokenStr) || isNumber(token)))
-            {
-                s=s+tokenStr;
-            }
-
-            else if (tokenStr.charAt(0)=='$' && (isFraction(tokenStr) || isNumber(token)))
+            } else if (tokenStr.charAt(tokenStr.length() - 1) == '%' &&
+                    (theNumber = isNumber(new Token(tokenStr.substring(0, tokenStr.length() - 1)))) != null) {
+                s = theNumber + "%";
+            } else if (tokenStr.charAt(0) == '$' && (theNumber = isNumber(new Token(tokenStr.substring(1)))) != null)
                 if (nextTokenStr.contains("illion")) {
-                    if (nextTokenStr.contains("billion")) {
-                        s = s + convertNumber(tokenStr.substring(1) + "000000000") + "Dollars";
+                    if (nextTokenStr.equals("billion") || nextTokenStr.equals("Billion") || nextTokenStr.equals("BILLION")) {
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000000) + ""), false) + "Dollars";
+                        i++;
+                    } else if (nextTokenStr.equals("million") || nextTokenStr.equals("Million") || nextTokenStr.equals("MILLION")) {
+                        s = s + convertNumber(((theNumber.doubleValue() * 1000000) + ""), false) + "Dollars";
                         i++;
                     }
-                    else if (nextTokenStr.contains("million")){
-                        s = s + convertNumber(tokenStr.substring(1) + "0000000") + "Dollars";
-                        i++;
-                    }
-                }
-                else{
-                    s = s + convertNumber(tokenStr.substring(1)) + "Dollars";
+                } else if (nextTokenStr.equals("trillion") || nextTokenStr.equals("Trillion") || nextTokenStr.equals("TRILLION")) {
+                    s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + "Dollars";
+                    i++;
+                } else {
+                    s = s + convertNumber(theNumber.doubleValue()+"",false) + "Dollars";
                 }
             i++;
         }
     }
 
-    private boolean isNumber(Token token) {
-        if(token.isNumber())
-            return true;
-        String s=token.toString().replace(",","");
+    private Double isNumber(Token token) {
+        if (token.isNumber())
+            return new Double(Double.parseDouble(token.toString()));
+        String s = token.toString().replace(",", "");
+        while (s.charAt(s.length() - 1) == '.')
+            s = s.substring(0, s.length() - 1);
         try {
-            Double.parseDouble(s);
-            return true;
-        }
-        catch (Exception e){
-            return false;
+            return Double.parseDouble(s);
+
+        } catch (Exception e) {
+            return null;
         }
     }
 
     //function knows regular numbers and 1,000,000
-    private String convertNumber(String s) {
-        try {
-            double d = Double.parseDouble(s);
-            if (d > 1000000)
-                return d / 1000000 + " M ";
-            else return d + "";
-
-        } catch (final Exception e) {
-            String newString = s.replace(",", "");
-            return convertNumber(newString);
-        }
+    private String convertNumber(String s, boolean isTrilion) {
+        double d = Double.parseDouble(s);
+        if (isTrilion)
+            return d / 1000 + " M ";
+        else if (d > 1000000)
+            return d / 1000000 + " M ";
+        else return d + "";
     }
 
 
