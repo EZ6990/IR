@@ -11,7 +11,7 @@ public class NumberParser extends AbstractParser {
 
 
     public NumberParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
-        super(map,doc);
+        super(map, doc);
     }
 
     @Override
@@ -20,79 +20,142 @@ public class NumberParser extends AbstractParser {
         int size = getTxtSize();
         String s = "";
         Token token;
-        Token nextToken;
-        String tokenStr,nextTokenStr;
-
+        Token nextToken=null;
+        String tokenStr, nextTokenStr;
+        Double theNumber;
+        boolean isTrillion;
+        double valueNumber;
         while (i < size - 1) {
+
             s = "";
             token = get(i);
             nextToken = get(i + 1);
-            tokenStr=token.toString();
-            nextTokenStr=nextToken.toString();
-            if (isNumber(token)) {
+            tokenStr = token.toString();
+            nextTokenStr = nextToken.toString();
 
-                s = convertNumber(tokenStr);
+            isTrillion = false;
+
+            if ((theNumber = isNumber(token)) != null) {
+                valueNumber = theNumber.doubleValue();
+                s = "" + valueNumber;
+
                 if (isFraction(nextTokenStr)) {
-                    s = s + " " + nextTokenStr;
+                    s = convertNumber(s, isTrillion) + " " + nextTokenStr;
                     i++;
-                } else if (nextTokenStr.equals("Thousand") || nextTokenStr.equals("Million") || nextTokenStr.equals("Billion")) {
-                    s = s + nextTokenStr.charAt(0);
-                    i++;
+                } else {
+                    if (nextTokenStr.equals("Thousand") || nextTokenStr.equals("THOUSAND") || nextTokenStr.equals("thousand")) {
+                        valueNumber = valueNumber * 1000;
+                        i++;
 
-                } else if (nextTokenStr.equals("Trillion")) {
-                    //s = Double.parseDouble(s) * 1000 + "B";
-                    i++;
+                    } else if (nextTokenStr.equals("Million") || nextTokenStr.equals("MILLION") || nextTokenStr.equals("million")) {
+                        valueNumber = valueNumber * 1000000;
+                        i++;
+                    } else if (nextTokenStr.equals("Billion") || nextTokenStr.equals("BILLION") || nextTokenStr.equals("billion")) {
+                        valueNumber = valueNumber * 1000000000;
+                        i++;
+                    } else if (nextTokenStr.equals("Trillion") || nextTokenStr.equals("TRILLION") || nextTokenStr.equals("trillion")) {
+                        valueNumber = valueNumber * 1000000000;
+                        isTrillion = true;
+                        i++;
+                    } else if (valueNumber < 1000 && isFraction(nextTokenStr)) {
+                        s = valueNumber + nextTokenStr;
+                        i++;
+                    }
+                    s = convertNumber(s, isTrillion);
                 }
                 putInMap(s);
             }
 
             i++;
         }
+        if (((theNumber = isNumber(nextToken)) != null)) {
+            valueNumber = theNumber.doubleValue();
+            s = "" + valueNumber;
+            putInMap(convertNumber(s,false));
+        }
 
 
     }
 
-    private boolean isNumber(Token token) {
-        if(token.isNumber())
-            return true;
-        String s=token.toString().replace(",","");
-            try {
-            Double.parseDouble(s);
-        return true;
-        }
-        catch (Exception e){
-            return false;
+    private Double isNumber(Token token) {
+        if (token.isNumber())
+            return new Double(Double.parseDouble(token.toString()));
+        String s = token.toString().replace(",", "");
+        while (s.charAt(s.length() - 1) == '.')
+            s = s.substring(0, s.length() - 1);
+        try {
+            return Double.parseDouble(s);
+
+        } catch (Exception e) {
+            return null;
         }
     }
 
     private boolean isFraction(String string) {
 
-        if (!string.contains("/") || string.charAt(0) == '/' || string.charAt(string.length() - 1) == '/')
+        if (string.charAt(0) == '/' || string.charAt(string.length() - 1) == '/' || !string.contains("/"))
             return false;
 
-        for (int i = 0; i < string.length(); i++)
-            if ((string.charAt(i) < '0' || string.charAt(i) > '9') && string.charAt(i) != '/')
+        int count = 0;
+        char c;
+        for (int i = 0; i < string.length(); i++) {
+            c = string.charAt(i);
+            if ((c < '0' || c > '9') && c != '/')
                 return false;
+            else if (c == '/')
+                count++;
+        }
 
-        return true;
+        return count == 1;
 
 
     }
 
 
-    private String convertNumber(String string) {
-        String s=string.replace(",","");
+    private String convertNumber(String string, Boolean isTrillion) {
 
-        double num = Double.parseDouble(s);
-        if (num >= 1000000000)
-            return ("" + num / 1000000000 + "B");
-        else if (num >= 1000000)
-            return ("" + num / 1000000 + "M");
-        else if (num >= 1000)
-            return ("" + num / 1000 + "K");
+        double num = Double.parseDouble(string);
+        if (num >= 1000000000) {
+            if (isTrillion) {
+                num = num / 1000000;
+            } else num = num / 1000000000;
 
-        else return "" + num;
+            if (num % 1 > 0) {
+                String s = num + "";
+                if (s.indexOf('.') < s.length() - 3)
+                    return (s.substring(0, s.indexOf('.') + 3) + "B");
+                else
+                    return s + "B";
+            } else return string.substring(0, string.indexOf('.')) + "B";
+        } else if (num >= 1000000) {
+            num = num / 1000000;
+            if (num % 1 > 0) {
+                String s = num + "";
+                if (s.indexOf('.') < s.length() - 3)
+                    return (s.substring(0, s.indexOf('.') + 3) + "M");
+                else
+                    return s + "M";
+            } else return string.substring(0, string.indexOf('.')) + "M";
+
+        } else if (num >= 1000) {
+            num = num / 1000;
+            if (num % 1 > 0) {
+                String s = num + "";
+                if (s.indexOf('.') < s.length() - 3)
+                    return (s.substring(0, s.indexOf('.') + 3) + "K");
+                else
+                    return s + "K";
+            } else return string.substring(0, string.indexOf('.')) + "K";
+        } else {
+            if (num % 1 > 0) {
+                String s = num + "";
+                if (s.indexOf('.') < s.length() - 3)
+                    return (s.substring(0, s.indexOf('.') + 3));
+                else
+                    return s;
+
+            } else return string.substring(0, string.indexOf('.'));
+        }
     }
-
 
 }

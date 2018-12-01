@@ -104,7 +104,7 @@ public class DatesAndRangeParser extends AbstractParser {
                     //second is month
                     if (dayDates.containsKey(tokenStr) && monthDates.containsKey(nextTokenStr)) {
                         s = s + monthDates.get(nextTokenStr) + dayDates.get(tokenStr);
-                        i++;
+
                     }
                 }
             }
