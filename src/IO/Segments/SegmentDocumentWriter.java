@@ -14,6 +14,7 @@ public class SegmentDocumentWriter implements SegmentWriter {
     @Override
     public void write(String path,HashMap<String, List<Info>> data) {
 
+
         try {
             BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
             StringBuilder chunk = new StringBuilder();
