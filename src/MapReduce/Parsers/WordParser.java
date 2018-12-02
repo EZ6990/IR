@@ -10,10 +10,10 @@ import java.util.HashMap;
 
 public class WordParser extends AbstractParser {
 
-    private RulesWords rules;
+
     public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
         super(map, doc);
-        rules = new RulesWords();
+
     }
 
     @Override
@@ -22,53 +22,28 @@ public class WordParser extends AbstractParser {
         String strToken;
         Token token;
 
-        while (i < size ) {
+        while (i < size) {
             token = get(i);
             strToken = token.toString();
-            suffix = strToken.length() - 1;
-            prefix = 0;
-            boolean bSuff = true;
-            boolean bPreff = true;
 
-            if (rules.contains(token)){
-                i++;
-                continue;
+
+            while (strToken.charAt(strToken.length() - 1) == '.')
+                strToken = strToken.substring(0, strToken.length() - 1);
+            if (!new Token(strToken).isNumber() && !isFraction(strToken)) {
+                if (strToken.contains("-") && strToken.charAt(0) != '-')
+                    splitAndAdd(strToken.split("-"));
             }
-//            if (!token.isNumber() && !isFraction(strToken)) {
-//                while (prefix < suffix) {
-//
-//
-//                    char cSuff = strToken.charAt(suffix);
-//                    char cPreff = strToken.charAt(prefix);
-//
-//                    if (!(cSuff <= 'z' && cSuff >= 'a') && !(cSuff <= 'Z' && cSuff >= 'A')) {
-//                        --suffix;
-//                        bSuff = true;
-//                    } else
-//                        bSuff = false;
-//
-//                    if (!(cPreff <= 'z' && cPreff >= 'a') && !(cPreff <= 'Z' && cPreff >= 'A')) {
-//                        ++prefix;
-//                        bPreff = true;
-//                    } else
-//                        bPreff = false;
-//                }
-//
-//                strToken = strToken.substring(prefix, suffix + 1);
-//
-//
-//                if (strToken.contains("-") && strToken.charAt(0) !='-')
-//                    splitAndAdd(strToken.split("-"));
-//                    // maybe make a different function and iterate only once
-//                else putInMap(strToken);
-                    putInMap(strToken);
 
 
-            //}
+            // maybe make a different function and iterate only once
+            else putInMap(strToken);
 
             i++;
         }
+
+
     }
+
 
     private void splitAndAdd(String[] split) {
         for (int i = 0; i < split.length; i++) {
