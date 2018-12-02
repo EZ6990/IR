@@ -8,6 +8,7 @@ import TextOperations.Tokenize;
 import TextOperations.StopWords;
 import TextOperations.TokenizedDocument;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileFilter;
 import java.time.LocalTime;
@@ -21,7 +22,7 @@ public class Master {
     private ConcurrentLinkedQueue<File> files_queue;
     private ConcurrentLinkedQueue<Document> document_queue;
     private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
-    private ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue;
+    private ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue;
 
     private ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue;
 
@@ -53,7 +54,7 @@ public class Master {
         this.files_queue = new ConcurrentLinkedQueue<File>();
         this.document_queue = new ConcurrentLinkedQueue<Document>();
         this.tokenized_queue = new ConcurrentLinkedQueue<TokenizedDocument>();
-        this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>>();
+        this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
         this.destSegmentFilesQueue = new ConcurrentLinkedQueue<SegmentFile>();
 
         this.doc_readers = new Thread[1];
@@ -68,8 +69,8 @@ public class Master {
         this.segments = new Thread[2];
         this.runnable_segments = new Runnable[2];
 
-        this.segment_posting= new Thread[3];
-        this.runnable_segment_posting = new Runnable[3];
+        this.segment_posting= new Thread[1];
+        this.runnable_segment_posting = new Runnable[1];
 
 
         this.document_reader_producer = new Semaphore(5000,true);
@@ -82,8 +83,9 @@ public class Master {
         this.segment_writer_consumer = new Semaphore(0,true);
 
 
+        DataProvider data = new DataProvider("");
 
-        LoadDocuments("D:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
+        LoadDocuments("d:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
     }
 
     private void LoadDocuments(String location){
@@ -143,6 +145,7 @@ public class Master {
     private void StartSegments() {
         for (int i = 0; i < this.segments.length ; i++) {
             this.segments[i] = new Thread((this.runnable_segments[i] = new SegmentFiles(this.tdi_queue,this.destSegmentFilesQueue,this.master_parser_producer,this.segment_file_consumer,this.segment_file_producer,this.segment_writer_consumer)));
+            ((SegmentFiles)this.runnable_segments[i]).setThreadID((int)this.segments[i].getId());
             this.segments[i].start();
         }
     }

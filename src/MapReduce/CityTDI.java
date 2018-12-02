@@ -3,7 +3,7 @@ package MapReduce;
 import Main.CountryInfo;
 import Main.Term;
 
-public class CityTDI extends TermDocumentInfo {
+public class CityTDI extends AbstractTermDocumentInfo{
 
     private String country;
     private String currency;
@@ -47,4 +47,11 @@ public class CityTDI extends TermDocumentInfo {
     public String getTermLocation() {
         return termLocation;
     }
+
+
+    @Override
+    public String toString() {
+        return getTerm().getData() + "," + this.country + "," + this.currency + "," + this.getPopulation();
+    }
+
 }

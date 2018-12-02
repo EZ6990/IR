@@ -13,7 +13,7 @@ public class TermSegmentFile extends SegmentFile {
 
     @Override
     public void add(String key,Info item) {
-        if (item instanceof TermSegmentFile && !(item instanceof CityTDI)) {
+        if (item instanceof TermDocumentInfo && !(item instanceof CityTDI)) {
             List lst = data.get(key);
             if (lst == null)
                 data.put(key,(lst = new ArrayList()));

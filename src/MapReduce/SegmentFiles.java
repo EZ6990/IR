@@ -4,6 +4,8 @@ import IO.Segments.SegmentCityWriter;
 import IO.Segments.SegmentDocumentWriter;
 import IO.Segments.SegmentTermWriter;
 
+import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -11,21 +13,30 @@ import java.util.concurrent.Semaphore;
 public class SegmentFiles implements Runnable {
 
     private boolean bStop;
-    private ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue;
+    private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> TDIQueue;
     private int numOfDocs;
     private ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue;
+    private int index;
+
+    public void setThreadID(int threadID) {
+        this.ThreadID = threadID;
+    }
+
+    private int ThreadID;
 
     private Semaphore master_parser_producer;
     private Semaphore segments_file_consumer;
     private Semaphore segment_file_term_producer;
     private Semaphore segment_writer_consumer;
 
-    public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, TermDocumentInfo>> TDIQueue, ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue,
+    public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> TDIQueue, ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue,
                         Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
         this.numOfDocs = 40000;
         this.bStop = false;
+        this.index = 0;
+        this.ThreadID = 0;
 
         this.destSegmentFilesQueue = destSegmentFilesQueue;
         this.master_parser_producer = master_parser_producer;
@@ -39,9 +50,9 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         int mapCounter = 0;
-        DocumentSegmentFile dsf = new DocumentSegmentFile("",new SegmentDocumentWriter());
-        CitySegmentFile csf = new CitySegmentFile("",new SegmentCityWriter());
-        TermSegmentFile tsf = new TermSegmentFile("",new SegmentTermWriter());
+        DocumentSegmentFile dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter());
+        CitySegmentFile csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
+        TermSegmentFile tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter());
         while (!this.bStop || !this.TDIQueue.isEmpty()){
             try {
                 //System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
@@ -49,13 +60,13 @@ public class SegmentFiles implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            HashMap<String, TermDocumentInfo> map = this.TDIQueue.poll();
+            HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
             //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
             this.master_parser_producer.release();
-            DocumentTermInfo dti = new DocumentTermInfo(((TermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
+            DocumentTermInfo dti = new DocumentTermInfo(((AbstractTermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
             //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             for (String s : map.keySet()) {
-                TermDocumentInfo tdi = map.get(s);
+                AbstractTermDocumentInfo tdi = map.get(s);
                 if (tdi instanceof CityTDI)
                     csf.add(s,tdi);
                 tsf.add(s,tdi);
@@ -73,7 +84,7 @@ public class SegmentFiles implements Runnable {
             if (++mapCounter == this.numOfDocs) {
                 try {
                     //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
-                    //System.out.println("Term Writer Consumer : " + this.term_writer_consumer.availablePermits());
+                    //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
                     this.segment_file_term_producer.acquire();
                     this.destSegmentFilesQueue.add(tsf);
                     this.segment_writer_consumer.release();
@@ -89,9 +100,9 @@ public class SegmentFiles implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                dsf = new DocumentSegmentFile("",new SegmentDocumentWriter());
-                csf = new CitySegmentFile("",new SegmentCityWriter());
-                tsf = new TermSegmentFile("",new SegmentTermWriter());
+                dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter());
+                //csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
+                tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_"+ (this.index++) +".txt",new SegmentTermWriter());
                 mapCounter = 0;
             }
         }

@@ -12,14 +12,14 @@ import java.util.concurrent.Semaphore;
 public class MasterParser implements Runnable{
 
     private ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue;
-    private ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue;
+    private ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue;
     private boolean bStop;
     private Semaphore text_operation_producer;
     private Semaphore master_parser_consumer;
     private Semaphore master_parser_producer;
     private Semaphore segment_file_consumer;
 
-    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer){
+    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer){
         this.tokennized_queue = tokennized_queue;
         this.tdi_queue = tdi_queue;
         this.bStop = false;
@@ -34,16 +34,16 @@ public class MasterParser implements Runnable{
     public void run() {
 
 
-        while (!this.bStop){
+        while (!this.bStop || !this.tokennized_queue.isEmpty()){
             try {
                 this.master_parser_consumer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            TokenizedDocument doc = tokennized_queue.poll();
+            TokenizedDocument doc = this.tokennized_queue.poll();
             //System.out.println("Start ID: " + doc.getID() + "  Time:" + LocalTime.now());
             this.text_operation_producer.release();
-            HashMap<String, TermDocumentInfo> map = new HashMap<String, TermDocumentInfo>();
+            HashMap<String, AbstractTermDocumentInfo> map = new HashMap<String, AbstractTermDocumentInfo>();
             new DatesAndRangeParser(map, doc).manipulate();
             new NumberParser(map, doc).manipulate();
             new PercentAndPriceParser(map, doc).manipulate();
@@ -58,7 +58,7 @@ public class MasterParser implements Runnable{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-               // System.out.println("END ID: " + doc.getID() + "  Time:" + LocalTime.now());
+               //System.out.println("END ID: " + doc.getID() + "  Time:" + LocalTime.now());
             }
             else
                 System.out.println("Document with Text Problem: " + doc.getID());

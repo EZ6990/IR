@@ -5,6 +5,7 @@ import IO.HTTPWebRequest;
 import Main.CountryInfo;
 import Main.DataProvider;
 import Main.Term;
+import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.CityTDI;
 import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 public class CountryParser extends AbstractParser {
 
     private CountryInfo country = null;
-    public CountryParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+    public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
         super(map, doc);
     }
 
@@ -38,7 +39,7 @@ public class CountryParser extends AbstractParser {
     protected void putInMap(String s) {
         String capitalName = s.toUpperCase();
         if (map.containsKey(capitalName)) {
-            TermDocumentInfo tmp = map.get(capitalName);
+            AbstractTermDocumentInfo tmp = map.get(capitalName);
             tmp.setFrequency(tmp.getFrequency() + 1);
         } else {
             map.put(capitalName, new CityTDI(new Term((capitalName)),this.document.getID(),this.country));

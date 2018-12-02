@@ -12,7 +12,7 @@ public class DocumentSegmentFile extends SegmentFile {
 
     @Override
     public void add(String key,Info item) {
-        if (item instanceof DocumentSegmentFile) {
+        if (item instanceof DocumentTermInfo) {
             List lst = data.get(key);
             if (lst == null)
                 data.put(key, (lst = new ArrayList()));

@@ -22,9 +22,8 @@ public class SegmentCityWriter implements SegmentWriter {
             for (Object s : str) {
                 chunk.append(s);
                 for (Info tdi : data.get((String) s)) {
-                    chunk.append("," + tdi.toString());
+                    chunk.append("," + tdi.toString()).append("\n");
                 }
-                chunk.append("\n");
             }
             output.write(chunk.toString());
             output.close();

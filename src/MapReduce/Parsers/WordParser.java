@@ -1,6 +1,8 @@
 package MapReduce.Parsers;
 
+import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.TermDocumentInfo;
+import TextOperations.RulesWords;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 
@@ -8,10 +10,10 @@ import java.util.HashMap;
 
 public class WordParser extends AbstractParser {
 
-
-    public WordParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+    private RulesWords rules;
+    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
         super(map, doc);
-
+        rules = new RulesWords();
     }
 
     @Override
@@ -27,36 +29,42 @@ public class WordParser extends AbstractParser {
             prefix = 0;
             boolean bSuff = true;
             boolean bPreff = true;
-            if (!token.isNumber() && !isFraction(strToken)) {
-                while (prefix < suffix) {
 
-
-                    char cSuff = strToken.charAt(suffix);
-                    char cPreff = strToken.charAt(prefix);
-
-                    if (!(cSuff <= 'z' && cSuff >= 'a') && !(cSuff <= 'Z' && cSuff >= 'A')) {
-                        --suffix;
-                        bSuff = true;
-                    } else
-                        bSuff = false;
-
-                    if (!(cPreff <= 'z' && cPreff >= 'a') && !(cPreff <= 'Z' && cPreff >= 'A')) {
-                        ++prefix;
-                        bPreff = true;
-                    } else
-                        bPreff = false;
-                }
-
-                strToken = strToken.substring(prefix, suffix + 1);
-
-
-                if (strToken.contains("-") && strToken.charAt(0) !='-')
-                    splitAndAdd(strToken.split("-"));
-                    // maybe make a different function and iterate only once
-                else putInMap(strToken);
-
-
+            if (rules.contains(token)){
+                i++;
+                continue;
             }
+//            if (!token.isNumber() && !isFraction(strToken)) {
+//                while (prefix < suffix) {
+//
+//
+//                    char cSuff = strToken.charAt(suffix);
+//                    char cPreff = strToken.charAt(prefix);
+//
+//                    if (!(cSuff <= 'z' && cSuff >= 'a') && !(cSuff <= 'Z' && cSuff >= 'A')) {
+//                        --suffix;
+//                        bSuff = true;
+//                    } else
+//                        bSuff = false;
+//
+//                    if (!(cPreff <= 'z' && cPreff >= 'a') && !(cPreff <= 'Z' && cPreff >= 'A')) {
+//                        ++prefix;
+//                        bPreff = true;
+//                    } else
+//                        bPreff = false;
+//                }
+//
+//                strToken = strToken.substring(prefix, suffix + 1);
+//
+//
+//                if (strToken.contains("-") && strToken.charAt(0) !='-')
+//                    splitAndAdd(strToken.split("-"));
+//                    // maybe make a different function and iterate only once
+//                else putInMap(strToken);
+                    putInMap(strToken);
+
+
+            //}
 
             i++;
         }

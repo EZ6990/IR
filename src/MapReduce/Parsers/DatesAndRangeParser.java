@@ -1,5 +1,6 @@
 package MapReduce.Parsers;
 
+import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
@@ -10,7 +11,7 @@ public class DatesAndRangeParser extends AbstractParser {
     private HashMap<String, String> monthDates;
     private HashMap<String, String> dayDates;
 
-    public DatesAndRangeParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+    public DatesAndRangeParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
         super(map, doc);
         monthDates = new HashMap<>();
         dayDates = new HashMap<>();
@@ -129,7 +130,7 @@ public class DatesAndRangeParser extends AbstractParser {
         if (token.isNumber())
             return new Double(Double.parseDouble(token.toString()));
         String s = token.toString().replace(",", "");
-        while (s.charAt(s.length() - 1) == '.')
+        while (s.length() > 0 && s.charAt(s.length() - 1) == '.')
             s = s.substring(0, s.length() - 1);
         try {
             return new Double(Double.parseDouble(s));

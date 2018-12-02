@@ -9,12 +9,12 @@ public class SegmentTerm {
     private int totalDocumentCount;
 
     public SegmentTerm() {
-        TDIQ=new PriorityQueue((o1, o2) -> (((TermDocumentInfo)o1).getTerm().getData().compareTo(((TermDocumentInfo)o2).getTerm().getData())));
-        totalDocumentCount =0;
+        this.TDIQ=new PriorityQueue((o1, o2) -> (((TermDocumentInfo)o1).getTerm().getData().compareTo(((TermDocumentInfo)o2).getTerm().getData())));
+        this.totalDocumentCount = 0;
     }
 
     public void add(TermDocumentInfo TDI){
-        TDIQ.add(TDI);
-        totalDocumentCount++;
+        this.TDIQ.add(TDI);
+        this.totalDocumentCount++;
     }
 }

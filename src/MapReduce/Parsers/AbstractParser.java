@@ -1,6 +1,7 @@
 package MapReduce.Parsers;
 
 import Main.Term;
+import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
@@ -11,13 +12,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractParser {
 
-    protected HashMap<String, TermDocumentInfo> map;
+    protected HashMap<String, AbstractTermDocumentInfo> map;
     protected TokenizedDocument document;
     private List<Token> txt;
     private int index;
 
 
-    public AbstractParser(HashMap<String, TermDocumentInfo> map, TokenizedDocument doc) {
+    public AbstractParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
         this.map = map;
         this.document = doc;
         this.txt = doc.getTokenizedText();
@@ -38,7 +39,7 @@ public abstract class AbstractParser {
 
     protected void putInMap(String s) {
         if (map.containsKey(s)) {
-            TermDocumentInfo tmp = map.get(s);
+            AbstractTermDocumentInfo tmp = map.get(s);
             tmp.addToFrequency(1);
         } else {
             map.put(s, new TermDocumentInfo(new Term(s),this.document.getID()));

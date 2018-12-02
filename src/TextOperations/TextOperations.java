@@ -32,7 +32,7 @@ public class TextOperations implements Runnable{
     @Override
     public void run() {
 
-        while (!this.bStop){
+        while (!this.bStop || !this.document_queue.isEmpty()){
             try {
                 this.text_operation_consumer.acquire();
             } catch (InterruptedException e) {
