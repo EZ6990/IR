@@ -54,8 +54,14 @@ public class PercentAndPriceParser extends AbstractParser {
                             i = i + 2;
                         }
                     } else if (isFraction(nextTokenStr) && size >= (i + 2) && get(i + 2).toString().equals("Dollars")) {
-                        s = convertNumber(theNumber + "", false) + nextTokenStr + " Dollars";
+                        if (theNumber.doubleValue() > 1000000)
+                            s = convertNumber(theNumber + "", false) + nextTokenStr + " Dollars";
+                        else
+                            s = convertNumberLessthanMill(tokenStr) + nextTokenStr + " Dollars";
+                        i+=2;
+
                     }
+
 
                 }
 
@@ -76,10 +82,20 @@ public class PercentAndPriceParser extends AbstractParser {
                     s = s + convertNumber((theNumber.doubleValue() * 1000000000) + "", true) + " Dollars";
                     i++;
                 } else {
-                    s = s + convertNumber(theNumber.doubleValue() + "", false) + " Dollars";
+                    if (theNumber.doubleValue() > 1000000)
+                        s = s + convertNumber(theNumber.doubleValue() + "", false) + " Dollars";
+                    else
+                        s = s + convertNumberLessthanMill(tokenStr) + " Dollars";
                 }
             i++;
         }
+    }
+
+    private String convertNumberLessthanMill(String tokenStr) {
+        String s = tokenStr;
+        while (s.charAt(s.length() - 1) == '.')
+            s = s.substring(0, s.length() - 1);
+        return s;
     }
 
     private Double isNumber(Token token) {
@@ -89,7 +105,7 @@ public class PercentAndPriceParser extends AbstractParser {
         while (s.charAt(s.length() - 1) == '.')
             s = s.substring(0, s.length() - 1);
         try {
-            return Double.parseDouble(s);
+            return new Double(Double.parseDouble(s));
 
         } catch (Exception e) {
             return null;

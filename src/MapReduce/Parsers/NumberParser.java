@@ -20,8 +20,8 @@ public class NumberParser extends AbstractParser {
         int size = getTxtSize();
         String s = "";
         Token token;
-        Token nextToken=null;
-        String tokenStr, nextTokenStr;
+        Token nextToken = null;
+        String tokenStr="", nextTokenStr="";
         Double theNumber;
         boolean isTrillion;
         double valueNumber;
@@ -39,7 +39,7 @@ public class NumberParser extends AbstractParser {
                 valueNumber = theNumber.doubleValue();
                 s = "" + valueNumber;
 
-                if (isFraction(nextTokenStr)) {
+                if (isFraction(nextTokenStr) && valueNumber < 1000000) {
                     s = convertNumber(s, isTrillion) + " " + nextTokenStr;
                     i++;
                 } else {
@@ -64,15 +64,17 @@ public class NumberParser extends AbstractParser {
                     s = convertNumber(s, isTrillion);
                 }
                 putInMap(s);
-            }
-
+            } else if (isFraction(tokenStr))
+                putInMap(tokenStr);
             i++;
         }
         if (((theNumber = isNumber(nextToken)) != null)) {
             valueNumber = theNumber.doubleValue();
             s = "" + valueNumber;
-            putInMap(convertNumber(s,false));
+            putInMap(convertNumber(s, false));
         }
+        else if (isFraction(nextTokenStr))
+            putInMap(tokenStr);
 
 
     }
@@ -84,7 +86,7 @@ public class NumberParser extends AbstractParser {
         while (s.charAt(s.length() - 1) == '.')
             s = s.substring(0, s.length() - 1);
         try {
-            return Double.parseDouble(s);
+            return new Double(Double.parseDouble(s));
 
         } catch (Exception e) {
             return null;

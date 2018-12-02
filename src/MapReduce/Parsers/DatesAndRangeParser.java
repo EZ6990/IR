@@ -78,8 +78,8 @@ public class DatesAndRangeParser extends AbstractParser {
             if (tokenStr.contains("-")&& tokenStr.charAt(0)!='-')
                 putInMap(tokenStr);
 
-            if ((tokenStr.equals("Between")||tokenStr.equals("between")) && getTxtSize() - i >= 4 && isNumber(nextToken)!=null
-                    && get(i + 2).toString().equals("and") && isNumber(get(i + 3))!=null) {
+            if ((tokenStr.equals("Between")||tokenStr.equals("between")||tokenStr.equals("BETWEEN")) && getTxtSize() - i >= 4 && isNumber(nextToken)!=null
+                    && (get(i + 2).toString().equals("and")|| get(i + 2).toString().equals("AND"))&& isNumber(get(i + 3))!=null) {
                 s = s + "between " + isNumber(nextToken).doubleValue() + " and " + isNumber(get(i + 3)).doubleValue();
                 i = i + 3;
             } else {
@@ -132,7 +132,7 @@ public class DatesAndRangeParser extends AbstractParser {
         while (s.charAt(s.length() - 1) == '.')
             s = s.substring(0, s.length() - 1);
         try {
-            return Double.parseDouble(s);
+            return new Double(Double.parseDouble(s));
 
         } catch (Exception e) {
             return null;
