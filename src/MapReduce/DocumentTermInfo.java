@@ -1,6 +1,6 @@
 package MapReduce;
 
-public class DocumentTermInfo {
+public class DocumentTermInfo implements Info{
 
     private int rareCount;
     private String mostCommonName;
@@ -10,7 +10,7 @@ public class DocumentTermInfo {
     public DocumentTermInfo(String documentName) {
         this.rareCount = 0;
         this.mostCommonName = "";
-        mostCommonFreq = 0;
+        this.mostCommonFreq = 0;
         this.documentName=documentName;
     }
 

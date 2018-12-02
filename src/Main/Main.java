@@ -1,10 +1,5 @@
 package Main;
 
-import MapReduce.SegmentTermWriter;
-import MapReduce.TermDocumentInfo;
-
-import java.util.*;
-
 //public class Main extends Application {
 //
 //    @Override

@@ -11,7 +11,7 @@ import java.util.concurrent.Semaphore;
 
 public class MasterParser implements Runnable{
 
-    private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
+    private ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue;
     private ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue;
     private boolean bStop;
     private Semaphore text_operation_producer;
@@ -19,8 +19,8 @@ public class MasterParser implements Runnable{
     private Semaphore master_parser_producer;
     private Semaphore segment_file_consumer;
 
-    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue,ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer){
-        this.tokenized_queue = tokenized_queue;
+    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,TermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer){
+        this.tokennized_queue = tokennized_queue;
         this.tdi_queue = tdi_queue;
         this.bStop = false;
         this.text_operation_producer = text_operation_producer;
@@ -40,7 +40,7 @@ public class MasterParser implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            TokenizedDocument doc = tokenized_queue.poll();
+            TokenizedDocument doc = tokennized_queue.poll();
             //System.out.println("Start ID: " + doc.getID() + "  Time:" + LocalTime.now());
             this.text_operation_producer.release();
             HashMap<String, TermDocumentInfo> map = new HashMap<String, TermDocumentInfo>();

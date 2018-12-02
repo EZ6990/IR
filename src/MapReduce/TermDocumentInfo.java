@@ -4,7 +4,7 @@ import Main.Term;
 
 import java.io.Serializable;
 
-public class TermDocumentInfo implements Serializable{
+public class TermDocumentInfo implements Info{
 
     private Term term;
     private String documentID;
