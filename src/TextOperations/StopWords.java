@@ -15,11 +15,15 @@ public class StopWords implements IFilter {
 
         this.tokenized_stop_words = new ArrayList<Token>();
 
+        for (String stop_word : this.stop_words) {
+            this.tokenized_stop_words.add(new Token(stop_word));
+            this.tokenized_stop_words.add(new Token(stop_word.toUpperCase()));
+            this.tokenized_stop_words.add(new Token(stop_word.toLowerCase()));
+            this.tokenized_stop_words.add(new Token(stop_word.substring(0,1).toUpperCase() + stop_word.substring(1)));
+        }
+
         IFilter filter = new RulesWords();
         this.tokenized_stop_words = filter.filter(this.tokenized_stop_words);
-
-        for (String stop_word : this.stop_words)
-            this.tokenized_stop_words.add(new Token(stop_word));
     }
 
 

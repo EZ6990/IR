@@ -33,7 +33,7 @@ public class SegmentFiles implements Runnable {
                         Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
-        this.numOfDocs = 40000;
+        this.numOfDocs = 1000;
         this.bStop = false;
         this.index = 0;
         this.ThreadID = 0;

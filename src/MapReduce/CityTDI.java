@@ -27,9 +27,9 @@ public class CityTDI extends AbstractTermDocumentInfo{
     }
 
     public void addLocation(int location) {
-        if (termLocation.length() > 0)
-            termLocation += ",";
-        termLocation += location;
+        if (this.termLocation.length() > 0)
+            this.termLocation += ",";
+        this.termLocation += location;
     }
 
     public String getCountry() {
@@ -51,7 +51,7 @@ public class CityTDI extends AbstractTermDocumentInfo{
 
     @Override
     public String toString() {
-        return getTerm().getData() + "," + this.country + "," + this.currency + "," + this.getPopulation();
+        return getTerm().getData() + "," + this.country + "," + this.currency + "," + this.population + "," + this.termLocation;
     }
 
 }

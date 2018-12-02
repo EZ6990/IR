@@ -11,7 +11,7 @@ public class RulesWords implements IFilter {
 
 
     public RulesWords(){
-        this.stop_words = new String [] {"Thousand","Million","Billion","Trillion","%","$","percent","percentage","Dollars","U.S.","January","February","March","April","May","June","July","August","September","October","November","December","Jan","Feb","Mar","Apr","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+        this.stop_words = new String [] {"Thousand","Million","Billion","Trillion","%","$","Percent","Percentage","Dollars","U.S.","January","February","March","April","May","June","July","August","September","October","November","December","Jan","Feb","Mar","Apr","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
         this.tokenized_stop_stop_words = new ArrayList<Token>();
 
