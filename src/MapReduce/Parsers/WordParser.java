@@ -1,11 +1,8 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
-import MapReduce.TermDocumentInfo;
-import TextOperations.RulesWords;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
-
 import java.util.HashMap;
 
 public class WordParser extends AbstractParser {
@@ -18,30 +15,45 @@ public class WordParser extends AbstractParser {
 
     @Override
     public void manipulate() {
-        int i = 0, size = getTxtSize(), suffix, prefix;
+        int i = 0, size = getTxtSize();
         String strToken;
         Token token;
 
         while (i < size) {
             token = get(i);
             strToken = token.toString();
+            Double d;
+            char c = strToken.charAt(0);
 
-
-            while (strToken.charAt(strToken.length() - 1) == '.')
+            while (strToken.charAt(strToken.length() - 1) == '.' || strToken.charAt(strToken.length() - 1) == ',')
                 strToken = strToken.substring(0, strToken.length() - 1);
-            if (!new Token(strToken).isNumber() && !isFraction(strToken)) {
-                if (strToken.contains("-") && strToken.charAt(0) != '-')
-                    splitAndAdd(strToken.split("-"));
+            Token newToken = new Token(strToken);
+            if (strToken.length() == 0 || (strToken.length() == 1 && ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')))
+                    || (c == '$') || strToken.charAt(strToken.length() - 1) == '%' || isFraction(strToken)
+                    || strToken.contains("-") || ((isNumber(newToken)) != null)) {
+                i++;
+                continue;
             }
-
-
-            // maybe make a different function and iterate only once
             else putInMap(strToken);
 
             i++;
         }
 
 
+    }
+
+    private Double isNumber(Token token) {
+        if (token.isNumber())
+            return new Double(Double.parseDouble(token.toString()));
+        String s = token.toString().replace(",", "");
+        while (s.length() > 0 && s.charAt(s.length() - 1) == '.')
+            s = s.substring(0, s.length() - 1);
+        try {
+            return new Double(Double.parseDouble(s));
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 

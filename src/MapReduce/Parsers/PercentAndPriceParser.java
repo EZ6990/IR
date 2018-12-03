@@ -1,10 +1,8 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
-import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
-
 import java.util.HashMap;
 
 public class PercentAndPriceParser extends AbstractParser {

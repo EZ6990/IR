@@ -1,18 +1,12 @@
 package MapReduce.Parsers;
 
-import IO.CountryInMemoryDB;
-import IO.HTTPWebRequest;
 import Main.CountryInfo;
 import Main.DataProvider;
 import Main.Term;
 import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.CityTDI;
-import MapReduce.TermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
-
-import javax.xml.crypto.Data;
-import java.io.IOException;
 import java.util.HashMap;
 
 public class CountryParser extends AbstractParser {

@@ -6,7 +6,7 @@ package Main;
 //    public void start(Stage primaryStage) throws Exception{
 //
 //
-//        Parent root = FXMLLoader.load(getClass().getResource("Main/sample.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("Main/MainView.fxml"));
 //        primaryStage.setTitle("Hello World");
 //        primaryStage.setScene(new Scene(root, 300, 275));
 //        primaryStage.show();
@@ -31,10 +31,10 @@ public class Main {
 
 //        DataProvider d = new DataProvider("");
 //        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
-
-        Master splinter = new Master();
-        splinter.start();
-
+//
+//        Master splinter = new Master();
+//        splinter.start();
+        System.out.println(164686.12%0.1);
 
         //SegmentTermWriter segmentWriter = new SegmentTermWriter();
 //        HashMap<String, PriorityQueue<TermDocumentInfo>> map = new HashMap<>();

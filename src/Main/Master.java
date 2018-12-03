@@ -7,8 +7,6 @@ import TextOperations.TextOperations;
 import TextOperations.Tokenize;
 import TextOperations.StopWords;
 import TextOperations.TokenizedDocument;
-
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileFilter;
 import java.time.LocalTime;
