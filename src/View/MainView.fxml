@@ -1,8 +1,55 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<GridPane fx:controller="View.View"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.View">
+   <children>
+      <Pane prefHeight="800.0" prefWidth="800.0">
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <SplitPane dividerPositions="0.29797979797979796" prefHeight="160.0" prefWidth="600.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="-42.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Label text="Initial Data Path" />
+                                    <Label text="Inverted Index Path" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="300.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="300.0">
+                                 <children>
+                                    <TextField />
+                                    <TextField />
+                                 </children>
+                              </VBox>
+                              <Button alignment="TOP_RIGHT" mnemonicParsing="false" text="Button" />
+                           </children></AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </Pane>
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+         </children></Pane>
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
 </GridPane>
