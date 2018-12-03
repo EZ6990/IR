@@ -19,6 +19,10 @@ package Main;
 //}
 
 
+import Index.Indexer;
+
+import java.util.HashMap;
+
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
@@ -34,7 +38,13 @@ public class Main {
 //
 //        Master splinter = new Master();
 //        splinter.start();
-        System.out.println(164686.12%0.1);
+        //System.out.println(164686.12%0.1);
+
+        Indexer indexer = new Indexer();
+        indexer.CreatePostFiles("C:\\est");
+
+
+
 
         //SegmentTermWriter segmentWriter = new SegmentTermWriter();
 //        HashMap<String, PriorityQueue<TermDocumentInfo>> map = new HashMap<>();

@@ -1,6 +1,7 @@
 package Main;
 
 import IO.DocumentReader;
+import Index.Indexer;
 import MapReduce.*;
 import TextOperations.Document;
 import TextOperations.TextOperations;
@@ -83,7 +84,7 @@ public class Master {
 
         DataProvider data = new DataProvider("");
 
-        LoadDocuments("d:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
+        LoadDocuments("C:\\Users\\user\\Downloads\\corpus");
     }
 
     private void LoadDocuments(String location){
@@ -118,6 +119,9 @@ public class Master {
         WaitParsers();
         WaitSegments();
         WaitSegmentFilesPosting();
+
+        Indexer indexer = new Indexer();
+        indexer.CreatePostFiles("D:\\");
 
     }
 

@@ -33,7 +33,7 @@ public class SegmentFiles implements Runnable {
                         Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
-        this.numOfDocs = 1000;
+        this.numOfDocs = 40000;
         this.bStop = false;
         this.index = 0;
         this.ThreadID = 0;
@@ -50,9 +50,9 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         int mapCounter = 0;
-        DocumentSegmentFile dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter());
-        CitySegmentFile csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
-        TermSegmentFile tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter());
+        DocumentSegmentFile dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter(),null);
+        CitySegmentFile csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter(),null);
+        TermSegmentFile tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
         while (!this.bStop || !this.TDIQueue.isEmpty()){
             try {
                 //System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
@@ -100,10 +100,28 @@ public class SegmentFiles implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter());
+                dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter(),null);
                 //csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
-                tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_"+ (this.index++) +".txt",new SegmentTermWriter());
+                tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_"+ (this.index++) +".txt",new SegmentTermWriter(),null);
                 mapCounter = 0;
+            }
+            try {
+                //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
+                //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
+                this.segment_file_term_producer.acquire();
+                this.destSegmentFilesQueue.add(tsf);
+                this.segment_writer_consumer.release();
+
+                this.segment_file_term_producer.acquire();
+                this.destSegmentFilesQueue.add(dsf);
+                this.segment_writer_consumer.release();
+
+                this.segment_file_term_producer.acquire();
+                this.destSegmentFilesQueue.add(csf);
+                this.segment_writer_consumer.release();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

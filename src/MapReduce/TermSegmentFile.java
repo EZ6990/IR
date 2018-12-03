@@ -1,5 +1,6 @@
 package MapReduce;
 
+import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
 
 import java.util.ArrayList;
@@ -7,8 +8,8 @@ import java.util.List;
 
 public class TermSegmentFile extends SegmentFile {
 
-    public TermSegmentFile(String path, SegmentWriter writer) {
-        super(path, writer);
+    public TermSegmentFile(String path, SegmentWriter writer,SegmentReader reader) {
+        super(path, writer,reader);
     }
 
     @Override

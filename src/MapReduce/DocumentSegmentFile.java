@@ -1,13 +1,14 @@
 package MapReduce;
 
+import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DocumentSegmentFile extends SegmentFile {
-    public DocumentSegmentFile(String path, SegmentWriter writer) {
-        super(path, writer);
+    public DocumentSegmentFile(String path, SegmentWriter writer, SegmentReader reader) {
+        super(path, writer,reader);
     }
 
     @Override

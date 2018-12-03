@@ -2,6 +2,7 @@ package IO.Segments;
 
 
 import MapReduce.Info;
+import MapReduce.TermDocumentInfo;
 
 import javax.print.DocFlavor;
 import java.io.*;
@@ -19,10 +20,13 @@ public class SegmentTermWriter implements SegmentWriter {
             BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
             StringBuilder chunk = new StringBuilder();
             for (Object s : lst) {
-                chunk.append(s);
+                chunk.append(s).append(";");
+                int sum = 0;
                 for (Info tdi : data.get((String) s)) {
-                    chunk.append("|" + tdi.toString());
+                    sum +=((TermDocumentInfo)tdi).getFrequency();
+                    chunk.append(tdi.toString()).append("|");
                 }
+                chunk.deleteCharAt(chunk.length() - 1).append("?").append(sum);
                 chunk.append("\n");
             }
             output.write(chunk.toString());

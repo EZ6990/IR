@@ -10,6 +10,6 @@ public class TermDocumentInfo extends AbstractTermDocumentInfo{
 
     @Override
     public String toString() {
-        return "["+getDocumentID()+" "+getFrequency()+"]";
+        return getDocumentID()+" "+getFrequency();
     }
 }

@@ -13,31 +13,25 @@ import java.util.List;
 public class SegmentTermReader implements SegmentReader {
 
     @Override
-    public HashMap<String,List<Info>> read(String path, String Letter) {
+    public Long read(String path, String Letter,HashMap<String,String> data,Long position) {
 
-        HashMap<String,List<Info>> data = new HashMap<String,List<Info>>();
         try {
-            BufferedReader input = new BufferedReader(new FileReader(path));
+            //BufferedReader input = new BufferedReader(new FileReader(path));
+            RandomAccessFile input = new RandomAccessFile(path,"r");
             String line = "";
-            char lowerLetter = line.substring(0,1).toLowerCase().charAt(0);
-            char upperLetter = line.substring(0,1).toUpperCase().charAt(0);
+            char lowerLetter = Letter.substring(0,1).toLowerCase().charAt(0);
+            char upperLetter = Letter.substring(0,1).toUpperCase().charAt(0);
+            input.seek(position);
             while ((line = input.readLine()) != null && (line.charAt(0) == lowerLetter || line.charAt(0) == upperLetter)){
-                String [] termData = line.split("|");
-                List lst = null;
-                data.put(termData[0],(lst = new ArrayList<>()));
-                for (int i = 1; i < termData.length; i++) {
-                    lst.add(new TermDocumentInfo(new Term(termData[0]), termData[i]));
-                }
+                position += line.length() + 2;
+                String [] termData = line.split(";");
+                data.put(termData[0],termData[1].trim());
             }
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        return null;
+        return position;
     }
 }
