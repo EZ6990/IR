@@ -67,13 +67,17 @@ public class NumberParser extends AbstractParser {
                 putInMap(tokenStr);
             i++;
         }
-        if (((theNumber = isNumber(nextToken)) != null)) {
-            valueNumber = theNumber.doubleValue();
-            s = "" + valueNumber;
-            putInMap(convertNumber(s, false));
+        try {
+            if (((theNumber = isNumber(nextToken)) != null)) {
+                valueNumber = theNumber.doubleValue();
+                s = "" + valueNumber;
+                putInMap(convertNumber(s, false));
+            } else if (isFraction(nextTokenStr))
+                putInMap(tokenStr);
+        } catch (Exception e){
+            System.out.println("Document with Text Problem ID: " + document.getID() + " size : " + getTxtSize());
         }
-        else if (isFraction(nextTokenStr))
-            putInMap(tokenStr);
+
 
 
     }
@@ -127,7 +131,7 @@ public class NumberParser extends AbstractParser {
                     return (s.substring(0, s.indexOf('.') + 3) + "B");
                 else
                     return s + "B";
-            } else return string.substring(0, string.indexOf('.')) + "B";
+            } else return string.indexOf('.') == -1 ? (string=num+ "") : (string=num+ "").substring(0, string.indexOf('.')) + "B";
         } else if (num >= 1000000) {
             num = num / 1000000;
             if (num % 1 > 0) {

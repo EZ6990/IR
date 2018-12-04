@@ -36,12 +36,12 @@ public class Main {
 //        DataProvider d = new DataProvider("");
 //        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
 //
-//        Master splinter = new Master();
-//        splinter.start();
+        Master splinter = new Master();
+        splinter.start();
         //System.out.println(164686.12%0.1);
 
-        Indexer indexer = new Indexer();
-        indexer.CreatePostFiles("C:\\est");
+//        Indexer indexer = new Indexer();
+//        indexer.CreatePostFiles("C:\\est");
 
 
 

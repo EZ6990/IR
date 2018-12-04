@@ -33,7 +33,7 @@ public class Indexer {
         for (int i = 0; i < filePositions.length; i++) {
             filePositions[i] = new Long(0);
         }
-        for (char i = 'a' ; i <= 'z' ; i++) {
+        for (char i = 1 ; i <= 255 ; i++) {
             HashMap<String, String> data = null;
             int j = 0;
             for (File termSegmentFile : segment_sub_dirs) {
@@ -63,7 +63,7 @@ public class Indexer {
                     //Collections.sort(lst, String.CASE_INSENSITIVE_ORDER);
                     try {
                         int k = 0;
-                        String path = "C:\\est\\Result\\" + i;
+                        String path = "d:\\documents\\users\\talmalu\\Documents\\Tal\\PostFiles\\" + i;
                         BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
                         StringBuilder chunk = new StringBuilder();
                         for (String s : this.termIndex.keySet()) {

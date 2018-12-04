@@ -9,7 +9,7 @@ public class Tokenize {
 
 
     public Tokenize(){
-        this.seperators = new String [] {" ","\t","\n","\r"};
+        this.seperators = new String [] {" ","\t","\n","\r","\\{","\\}","\\(","\\)","\\[","\\]","\\!","\\?","\\\"","\\|",";"};
     }
 
     public List<Token> Tokenize(String text){
@@ -17,7 +17,8 @@ public class Tokenize {
         String [] splited_text = text.split(String.join("|",this.seperators));
 
         for (String word : splited_text) {
-            tokenized_text.add(new Token(word));
+            if(word.length() > 0)
+                tokenized_text.add(new Token(word));
         }
 
         return tokenized_text;

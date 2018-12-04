@@ -84,7 +84,7 @@ public class Master {
 
         DataProvider data = new DataProvider("");
 
-        LoadDocuments("C:\\Users\\user\\Downloads\\corpus");
+        LoadDocuments("d:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
     }
 
     private void LoadDocuments(String location){
@@ -119,9 +119,9 @@ public class Master {
         WaitParsers();
         WaitSegments();
         WaitSegmentFilesPosting();
-
+        System.out.println("Start indexing: " + LocalTime.now());
         Indexer indexer = new Indexer();
-        indexer.CreatePostFiles("D:\\");
+        indexer.CreatePostFiles("d:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles");
 
     }
 
@@ -199,12 +199,14 @@ public class Master {
         for (int i = 0; i < this.parsers.length ; i++) {
             ((MasterParser)this.runnable_parsers[i]).Stop();
         }
+        this.master_parser_consumer.release(this.tokenized_queue.size()+this.parsers.length);
         System.out.println("Finished Text Operations : " + LocalTime.now());
     }
     private void ParsersFinished() {
         for (int i = 0; i < this.runnable_segments.length ; i++) {
             ((SegmentFiles)this.runnable_segments[i]).Stop();
         }
+        this.segment_file_consumer.release(this.destSegmentFilesQueue.size()+this.runnable_segments.length);
         System.out.println("Finished Parsing : " + LocalTime.now());
     }
     private void SegmentsFinished() {

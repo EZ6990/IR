@@ -7,6 +7,7 @@ import MapReduce.TermDocumentInfo;
 import javax.print.DocFlavor;
 import java.io.*;
 import java.lang.reflect.Array;
+import java.time.LocalTime;
 import java.util.*;
 
 public class SegmentTermWriter implements SegmentWriter {

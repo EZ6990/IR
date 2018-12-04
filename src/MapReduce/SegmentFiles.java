@@ -33,7 +33,7 @@ public class SegmentFiles implements Runnable {
                         Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
-        this.numOfDocs = 40000;
+        this.numOfDocs = 30000;
         this.bStop = false;
         this.index = 0;
         this.ThreadID = 0;
@@ -50,9 +50,9 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         int mapCounter = 0;
-        DocumentSegmentFile dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter(),null);
-        CitySegmentFile csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter(),null);
-        TermSegmentFile tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
+        DocumentSegmentFile dsf = new DocumentSegmentFile("d:\\documents\\users\\talmalu\\Documents\\Tal\\DocFiles\\docs.txt",new SegmentDocumentWriter(),null);
+        CitySegmentFile csf = new CitySegmentFile("d:\\documents\\users\\talmalu\\Documents\\Tal\\CityFiles\\city.txt",new SegmentCityWriter(),null);
+        TermSegmentFile tsf = new TermSegmentFile("d:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
         while (!this.bStop || !this.TDIQueue.isEmpty()){
             try {
                 //System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
@@ -61,68 +61,69 @@ public class SegmentFiles implements Runnable {
                 e.printStackTrace();
             }
             HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
-            //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
-            this.master_parser_producer.release();
-            DocumentTermInfo dti = new DocumentTermInfo(((AbstractTermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
-            //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
-            for (String s : map.keySet()) {
-                AbstractTermDocumentInfo tdi = map.get(s);
-                if (tdi instanceof CityTDI)
-                    csf.add(s,tdi);
-                tsf.add(s,tdi);
+            if (map != null) {
+                //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
+                this.master_parser_producer.release();
+                DocumentTermInfo dti = new DocumentTermInfo(((AbstractTermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
+                //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
+                for (String s : map.keySet()) {
+                    AbstractTermDocumentInfo tdi = map.get(s);
+                    if (tdi instanceof CityTDI)
+                        csf.add(s, tdi);
+                    tsf.add(s, tdi);
 
-                if (map.get(s).getFrequency() == 1)
-                    dti.addRareCount();
+                    if (map.get(s).getFrequency() == 1)
+                        dti.addRareCount();
 
-                if (map.get(s).getFrequency() > dti.getMostCommonFreq()) {
-                    dti.setMostCommonName(s);
-                    dti.setMostCommonFreq(map.get(s).getFrequency());
+                    if (map.get(s).getFrequency() > dti.getMostCommonFreq()) {
+                        dti.setMostCommonName(s);
+                        dti.setMostCommonFreq(map.get(s).getFrequency());
+                    }
+                }
+                dsf.add(dti.getDocumentName(), dti);
+                if (++mapCounter == this.numOfDocs) {
+                    try {
+                        //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
+                        //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
+                        this.segment_file_term_producer.acquire();
+                        this.destSegmentFilesQueue.add(tsf);
+                        this.segment_writer_consumer.release();
+
+                        this.segment_file_term_producer.acquire();
+                        this.destSegmentFilesQueue.add(dsf);
+                        this.segment_writer_consumer.release();
+
+                        this.segment_file_term_producer.acquire();
+                        this.destSegmentFilesQueue.add(csf);
+                        this.segment_writer_consumer.release();
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dsf = new DocumentSegmentFile("d:\\documents\\users\\talmalu\\Documents\\Tal\\DocFiles\\docs.txt", new SegmentDocumentWriter(), null);
+                    //csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
+                    tsf = new TermSegmentFile("d:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\" + this.ThreadID + "_term_" + (this.index++) + ".txt", new SegmentTermWriter(), null);
+                    mapCounter = 0;
                 }
             }
-            dsf.add(dti.getDocumentName(), dti);
+        }
+        try {
+            //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
+            //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
+            this.segment_file_term_producer.acquire();
+            this.destSegmentFilesQueue.add(tsf);
+            this.segment_writer_consumer.release();
 
-            if (++mapCounter == this.numOfDocs) {
-                try {
-                    //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
-                    //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
-                    this.segment_file_term_producer.acquire();
-                    this.destSegmentFilesQueue.add(tsf);
-                    this.segment_writer_consumer.release();
+            this.segment_file_term_producer.acquire();
+            this.destSegmentFilesQueue.add(dsf);
+            this.segment_writer_consumer.release();
 
-                    this.segment_file_term_producer.acquire();
-                    this.destSegmentFilesQueue.add(dsf);
-                    this.segment_writer_consumer.release();
+            this.segment_file_term_producer.acquire();
+            this.destSegmentFilesQueue.add(csf);
+            this.segment_writer_consumer.release();
 
-                    this.segment_file_term_producer.acquire();
-                    this.destSegmentFilesQueue.add(csf);
-                    this.segment_writer_consumer.release();
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                dsf = new DocumentSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\docs.txt",new SegmentDocumentWriter(),null);
-                //csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
-                tsf = new TermSegmentFile(Paths.get("").toAbsolutePath().toString() + "\\"+ this.ThreadID +"_term_"+ (this.index++) +".txt",new SegmentTermWriter(),null);
-                mapCounter = 0;
-            }
-            try {
-                //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
-                //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
-                this.segment_file_term_producer.acquire();
-                this.destSegmentFilesQueue.add(tsf);
-                this.segment_writer_consumer.release();
-
-                this.segment_file_term_producer.acquire();
-                this.destSegmentFilesQueue.add(dsf);
-                this.segment_writer_consumer.release();
-
-                this.segment_file_term_producer.acquire();
-                this.destSegmentFilesQueue.add(csf);
-                this.segment_writer_consumer.release();
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
     public void Stop(){

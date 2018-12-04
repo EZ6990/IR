@@ -3,6 +3,7 @@ package MapReduce.Parsers;
 import MapReduce.AbstractTermDocumentInfo;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
+
 import java.util.HashMap;
 
 public class WordParser extends AbstractParser {
@@ -22,21 +23,21 @@ public class WordParser extends AbstractParser {
         while (i < size) {
             token = get(i);
             strToken = token.toString();
-//            Double d;
-//            char c = strToken.charAt(0);
-//
-//            while (strToken.charAt(strToken.length() - 1) == '.' || strToken.charAt(strToken.length() - 1) == ',')
-//                strToken = strToken.substring(0, strToken.length() - 1);
-//            Token newToken = new Token(strToken);
-//            if (strToken.length() == 0 || (strToken.length() == 1 && ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')))
-//                    || (c == '$') || strToken.charAt(strToken.length() - 1) == '%' || isFraction(strToken)
-//                    || strToken.contains("-") || ((isNumber(newToken)) != null)) {
-//                i++;
-//                continue;
-//            }
-//            else putInMap(strToken);
+            Double d;
+            char c = strToken.charAt(0);
 
-                putInMap(strToken);
+            while (strToken.length() > 0 && (strToken.charAt(strToken.length() - 1) == '.' || strToken.charAt(strToken.length() - 1) == ','))
+                strToken = strToken.substring(0, strToken.length() - 1);
+
+            Token newToken = new Token(strToken);
+            if (strToken.length() == 0 || (strToken.length() == 1 && ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')))
+                    || (c == '$') || strToken.charAt(strToken.length() - 1) == '%' || isFraction(strToken)
+                    || strToken.contains("-") || ((isNumber(newToken)) != null)) {
+                i++;
+                continue;
+            } else putInMap(strToken);
+
+            putInMap(strToken);
             i++;
         }
 
