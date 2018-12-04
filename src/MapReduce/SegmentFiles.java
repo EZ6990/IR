@@ -16,7 +16,6 @@ public class SegmentFiles implements Runnable {
     private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> TDIQueue;
     private int numOfDocs;
     private ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue;
-    private int index;
 
     public void setThreadID(int threadID) {
         this.ThreadID = threadID;
@@ -33,9 +32,8 @@ public class SegmentFiles implements Runnable {
                         Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
-        this.numOfDocs = 300;
+        this.numOfDocs = 10000;
         this.bStop = false;
-        this.index = 0;
         this.ThreadID = 0;
 
         this.destSegmentFilesQueue = destSegmentFilesQueue;
@@ -56,11 +54,9 @@ public class SegmentFiles implements Runnable {
                 "\\","^","_","`","~"
         };
         HashMap<String,TermSegmentFile> tsfa =new HashMap<String,TermSegmentFile>();
-        int i=0;
-
+        int index = 0;
         for (String s : Letters) {
-            tsfa[i]=new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +Letters[i] + (this.index++) + ".txt",new SegmentTermWriter(),null);
-            i++;
+            tsfa.put(s,new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
         }
 
         DocumentSegmentFile dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
@@ -88,8 +84,8 @@ public class SegmentFiles implements Runnable {
                 if (tdi instanceof CityTDI)
                     csf.add(s, tdi);
 
-                if ()
-                tsf.add(s, tdi);
+                if(tsfa.containsKey(s.substring(0,1).toLowerCase()))
+                    tsfa.get(s.substring(0,1).toLowerCase()).add(s,tdi);
 
                 if (map.get(s).getFrequency() == 1)
                     dti.addRareCount();
@@ -104,9 +100,14 @@ public class SegmentFiles implements Runnable {
                 try {
                     //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
                     //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
-                    this.segment_file_term_producer.acquire();
-                    this.destSegmentFilesQueue.add(tsf);
-                    this.segment_writer_consumer.release();
+                    for (int i = 0; i < Letters.length; i++) {
+                        TermSegmentFile tsf = tsfa.get(Letters[i]);
+                        if (tsf.data.size() > 0) {
+                            this.segment_file_term_producer.acquire();
+                            this.destSegmentFilesQueue.add(tsf);
+                            this.segment_writer_consumer.release();
+                        }
+                    }
 
                     this.segment_file_term_producer.acquire();
                     this.destSegmentFilesQueue.add(dsf);
@@ -119,20 +120,31 @@ public class SegmentFiles implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-               // dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt", new SegmentDocumentWriter(), null);
-                //csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
-             //  tsf = new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\" + this.ThreadID + "_term_" + (this.index++) + ".txt", new SegmentTermWriter(), null);
+                index = 0;
+                for (String s : Letters) {
+                    tsfa.put(s,new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
+                }
+
+                dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
                 mapCounter = 0;
             }
         }
         try {
             //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
-            System.out.println("IM Here");
-            System.out.println(tsf.getPath() + " " + tsf.data.size());
-            this.segment_file_term_producer.acquire();
-            this.destSegmentFilesQueue.add(tsf);
-            this.segment_writer_consumer.release();
+            //System.out.println("IM Here");
+            //System.out.println(tsf.getPath() + " " + tsf.data.size());
+            for (int i = 0; i < Letters.length; i++) {
+                TermSegmentFile tsf = tsfa.get(Letters[i]);
+                if (tsf.data.size() > 0) {
+                    this.segment_file_term_producer.acquire();
+                    this.destSegmentFilesQueue.add(tsf);
+                    this.segment_writer_consumer.release();
+                }
+            }
+//            this.segment_file_term_producer.acquire();
+//            this.destSegmentFilesQueue.add(tsf);
+//            this.segment_writer_consumer.release();
 
             this.segment_file_term_producer.acquire();
             this.destSegmentFilesQueue.add(dsf);

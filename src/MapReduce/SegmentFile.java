@@ -30,12 +30,12 @@ public abstract class SegmentFile{
         this.writer.write(this.path,this.data);
     }
 
-    public Long read(String Letter,HashMap<String,String> data,Long position) {
-        return this.reader.read(this.path,Letter,data,position);
+    public List<String> read() {
+        return this.reader.read(this.path);
     }
 
     public String getPath() {
-        return path;
+        return this.path;
     }
 
 }
