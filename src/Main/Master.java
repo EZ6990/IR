@@ -156,7 +156,7 @@ public class Master {
     }
     private void StartParsers() {
         for (int i = 0; i < this.parsers.length ; i++) {
-            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer)));
+            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer,null)));
             this.parsers[i].start();
         }
     }

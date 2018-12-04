@@ -3,6 +3,7 @@ package MapReduce.Parsers;
 import Main.Term;
 import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.TermDocumentInfo;
+import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 
@@ -16,12 +17,14 @@ public abstract class AbstractParser {
     protected TokenizedDocument document;
     private List<Token> txt;
     private int index;
+    protected Stemmer stemmer;
 
 
-    public AbstractParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
+    public AbstractParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc,Stemmer stemmer) {
         this.map = map;
         this.document = doc;
         this.txt = doc.getTokenizedText();
+        this.stemmer = stemmer;
     }
 
 
@@ -42,7 +45,7 @@ public abstract class AbstractParser {
             AbstractTermDocumentInfo tmp = map.get(s);
             tmp.addToFrequency(1);
         } else {
-            map.put(s, new TermDocumentInfo(new Term(s),this.document.getID()));
+            map.put(s, new TermDocumentInfo(new Term(s,this.stemmer),this.document.getID()));
         }
     }
 

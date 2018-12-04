@@ -1,6 +1,7 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
+import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 import java.util.HashMap;
@@ -8,8 +9,8 @@ import java.util.HashMap;
 public class PercentAndPriceParser extends AbstractParser {
 
 
-    public PercentAndPriceParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
-        super(map, doc);
+    public PercentAndPriceParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+        super(map, doc,stemmer);
     }
 
     @Override

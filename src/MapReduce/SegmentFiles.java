@@ -3,6 +3,8 @@ package MapReduce;
 import IO.Segments.SegmentCityWriter;
 import IO.Segments.SegmentDocumentWriter;
 import IO.Segments.SegmentTermWriter;
+import Main.Term;
+import TextOperations.Stemmer;
 
 import java.nio.file.Paths;
 import java.time.LocalTime;
@@ -48,6 +50,7 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         int mapCounter = 0;
+        Stemmer stemmer = new Stemmer();
         String [] Letters = {
                 "#","$","%","&","'","*","+",",","-",".","/","0","1","2","3","4","5","6","7","8","9","<","=",">","@",
                 "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -81,11 +84,13 @@ public class SegmentFiles implements Runnable {
             //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             for (String s : map.keySet()) {
                 AbstractTermDocumentInfo tdi = map.get(s);
-                if (tdi instanceof CityTDI)
-                    csf.add(s, tdi);
+                String termWord = tdi.getTerm().getData();
 
-                if(tsfa.containsKey(s.substring(0,1).toLowerCase()))
-                    tsfa.get(s.substring(0,1).toLowerCase()).add(s,tdi);
+                if (tdi instanceof CityTDI)
+                    csf.add(termWord, tdi);
+
+                if(tsfa.containsKey(termWord.substring(0,1).toLowerCase()))
+                    tsfa.get(termWord.substring(0,1).toLowerCase()).add(termWord,tdi);
 
                 if (map.get(s).getFrequency() == 1)
                     dti.addRareCount();

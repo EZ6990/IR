@@ -5,6 +5,7 @@ import Main.DataProvider;
 import Main.Term;
 import MapReduce.AbstractTermDocumentInfo;
 import MapReduce.CityTDI;
+import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 import java.util.HashMap;
@@ -12,8 +13,8 @@ import java.util.HashMap;
 public class CountryParser extends AbstractParser {
 
     private CountryInfo country = null;
-    public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
-        super(map, doc);
+    public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+        super(map, doc,stemmer);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class CountryParser extends AbstractParser {
             AbstractTermDocumentInfo tmp = map.get(capitalName);
             tmp.setFrequency(tmp.getFrequency() + 1);
         } else {
-            map.put(capitalName, new CityTDI(new Term((capitalName)),this.document.getID(),this.country));
+            map.put(capitalName, new CityTDI(new Term(capitalName,this.stemmer),this.document.getID(),this.country));
         }
     }
 

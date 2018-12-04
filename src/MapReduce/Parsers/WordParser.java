@@ -1,6 +1,7 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
+import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 
@@ -9,9 +10,8 @@ import java.util.HashMap;
 public class WordParser extends AbstractParser {
 
 
-    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
-        super(map, doc);
-
+    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+        super(map, doc,stemmer);
     }
 
     @Override

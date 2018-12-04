@@ -1,16 +1,21 @@
 package Main;
 
 
-import java.io.Serializable;
+import TextOperations.Stemmer;
 
-public class Term implements Serializable{
+public class Term{
 
-    public Term(String name){
-        this.data = name;
-    }
     private String data;
+    private Stemmer stemmer;
+
+    public Term(String name,Stemmer stemmer){
+        this.data = name;
+        this.stemmer = stemmer;
+    }
 
     public String getData() {
-        return data.trim();
+        if (this.stemmer != null)
+            return this.stemmer.stemString(this.data);
+        return this.data.trim();
     }
 }
