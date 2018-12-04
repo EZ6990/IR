@@ -75,7 +75,7 @@ public class NumberParser extends AbstractParser {
             } else if (isFraction(nextTokenStr))
                 putInMap(tokenStr);
         } catch (Exception e){
-            System.out.println("Document with Text Problem ID: " + document.getID() + " size : " + getTxtSize());
+            //System.out.println("Document with Text Problem ID: " + document.getID() + " size : " + getTxtSize());
         }
 
 

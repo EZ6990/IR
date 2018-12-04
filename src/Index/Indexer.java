@@ -14,7 +14,7 @@ public class Indexer {
 
 
     public Indexer(){
-        this.termIndex = new HashMap<>();
+        this.termIndex = null;
     }
 
 
@@ -33,13 +33,19 @@ public class Indexer {
         for (int i = 0; i < filePositions.length; i++) {
             filePositions[i] = new Long(0);
         }
-        for (char i = 1 ; i <= 255 ; i++) {
+        String [] Letters = {
+                                "#","$","%","&","'","*","+","-",".","/","0","1","2","3","4","5","6","7","8","9","<","@",
+                                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+                                "\\","^","_","`","~"
+                            };
+
+        for (int i = 0 ; i < Letters.length ; i++) {
             HashMap<String, String> data = null;
             int j = 0;
             for (File termSegmentFile : segment_sub_dirs) {
                 data = new HashMap<>();
                 TermSegmentFile termFile = new TermSegmentFile(termSegmentFile.getAbsolutePath(),new SegmentTermWriter(),new SegmentTermReader());
-                filePositions[j] = termFile.read(i + "",data,filePositions[j]);
+                filePositions[j] = termFile.read(Letters[i],data,filePositions[j]);
                     if (this.termIndex == null)
                         this.termIndex = data;
                     else{
@@ -63,16 +69,16 @@ public class Indexer {
                     //Collections.sort(lst, String.CASE_INSENSITIVE_ORDER);
                     try {
                         int k = 0;
-                        String path = "d:\\documents\\users\\talmalu\\Documents\\Tal\\PostFiles\\" + i;
+                        String path = "C:\\Users\\talmalu\\Documents\\Tal\\PostFiles\\" + Letters[i];
                         BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
                         StringBuilder chunk = new StringBuilder();
                         for (String s : this.termIndex.keySet()) {
-                            if (s.toLowerCase().charAt(0) == i) {
+                            if (s.toLowerCase().substring(0,1).equals(Letters[i])) {
                                 String[] forgodsake = this.termIndex.get(s).split("\\?");
                                 String num = forgodsake[1];
                                 chunk.append(s).append(";").append(forgodsake[0]);
                                 chunk.append("\n");
-                                data.replace(s, i + " " + k + " " + num);
+                                data.replace(s, Letters[i] + " " + k + " " + num);
                             }
                         }
                         output.write(chunk.toString());

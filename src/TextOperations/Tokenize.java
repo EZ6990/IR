@@ -9,7 +9,7 @@ public class Tokenize {
 
 
     public Tokenize(){
-        this.seperators = new String [] {" ","\t","\n","\r","\\{","\\}","\\(","\\)","\\[","\\]","\\!","\\?","\\\"","\\|",";"};
+        this.seperators = new String [] {" ","\t","\n","\r","\\{","\\}","\\(","\\)","\\[","\\]","\\!","\\?","\\\"","\\|",";",":"};
     }
 
     public List<Token> Tokenize(String text){

@@ -34,4 +34,8 @@ public abstract class SegmentFile{
         return this.reader.read(this.path,Letter,data,position);
     }
 
+    public String getPath() {
+        return path;
+    }
+
 }

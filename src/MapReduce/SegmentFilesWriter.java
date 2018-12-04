@@ -22,13 +22,18 @@ public class SegmentFilesWriter implements Runnable {
 
     @Override
     public void run() {
-        while (!this.bStop || !this.filesQueue.isEmpty()) {
+        while (true) {
             try {
                 this.segment_writer_consumer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             SegmentFile file = filesQueue.poll();
+            if (file.getPath().equals("DannyAndTalSendTheirRegardsYouFucker")){
+                this.filesQueue.add(file);
+                this.segment_writer_consumer.release();
+                break;
+            }
             this.segment_file_term_producer.release();
             file.write();
         }

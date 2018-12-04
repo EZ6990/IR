@@ -37,7 +37,7 @@ public class DocumentReader implements Runnable {
                     this.text_operation_consumer.release();
                 }
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                //System.out.println(e.getMessage());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

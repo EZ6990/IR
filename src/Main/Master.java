@@ -59,11 +59,11 @@ public class Master {
         this.doc_readers = new Thread[1];
         this.runnable_doc_readers = new Runnable[1];
 
-        this.text_operators = new Thread[3];
-        this.runnable_text_operators = new Runnable[3];
+        this.text_operators = new Thread[4];
+        this.runnable_text_operators = new Runnable[4];
 
-        this.parsers = new Thread[5];
-        this.runnable_parsers = new Runnable[5];
+        this.parsers = new Thread[16];
+        this.runnable_parsers = new Runnable[16];
 
         this.segments = new Thread[2];
         this.runnable_segments = new Runnable[2];
@@ -76,7 +76,7 @@ public class Master {
         this.text_operation_consumer=  new Semaphore(0,true);
         this.text_operation_producer = new Semaphore(5000,true);
         this.master_parser_consumer = new Semaphore(0,true);
-        this.master_parser_producer = new Semaphore(50000,true);
+        this.master_parser_producer = new Semaphore(60000,true);
         this.segment_file_consumer = new Semaphore(0,true);
         this.segment_file_producer = new Semaphore(30,true);
         this.segment_writer_consumer = new Semaphore(0,true);
@@ -84,7 +84,7 @@ public class Master {
 
         DataProvider data = new DataProvider("");
 
-        LoadDocuments("d:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
+        LoadDocuments("C:\\Users\\talmalu\\Downloads\\corpus\\corpus");
     }
 
     private void LoadDocuments(String location){
@@ -108,20 +108,20 @@ public class Master {
 
     public void start() throws InterruptedException {
 
-        System.out.println("Start : " + LocalTime.now());
-        StartReaders();
-        StartTextOperators();
-        StartParsers();
-        StartSegments();
-        StartSegmentFilesPosting();
-        WaitReaders();
-        WaitTextOperators();
-        WaitParsers();
-        WaitSegments();
-        WaitSegmentFilesPosting();
+//        System.out.println("Start : " + LocalTime.now());
+//        StartReaders();
+//        StartTextOperators();
+//        StartParsers();
+//        StartSegments();
+//        StartSegmentFilesPosting();
+//        WaitReaders();
+//        WaitTextOperators();
+//        WaitParsers();
+//        WaitSegments();
+//        WaitSegmentFilesPosting();
         System.out.println("Start indexing: " + LocalTime.now());
         Indexer indexer = new Indexer();
-        indexer.CreatePostFiles("d:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles");
+        indexer.CreatePostFiles("C:\\Users\\talmalu\\Documents\\Tal\\SegmentFiles");
 
     }
 
@@ -193,26 +193,34 @@ public class Master {
         for (int i = 0; i < this.runnable_text_operators.length ; i++) {
             ((TextOperations)this.runnable_text_operators[i]).Stop();
         }
+        this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker","","","",""));
+        this.text_operation_consumer.release();
         System.out.println("Finished Read Files : " + LocalTime.now());
     }
     private void TextOperatorsFinished() {
         for (int i = 0; i < this.parsers.length ; i++) {
             ((MasterParser)this.runnable_parsers[i]).Stop();
         }
-        this.master_parser_consumer.release(this.tokenized_queue.size()+this.parsers.length);
+        this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker","",null,null,null));
+        this.master_parser_consumer.release();
         System.out.println("Finished Text Operations : " + LocalTime.now());
     }
     private void ParsersFinished() {
         for (int i = 0; i < this.runnable_segments.length ; i++) {
             ((SegmentFiles)this.runnable_segments[i]).Stop();
         }
-        this.segment_file_consumer.release(this.destSegmentFilesQueue.size()+this.runnable_segments.length);
+        HashMap<String,AbstractTermDocumentInfo> temp = new HashMap<String,AbstractTermDocumentInfo>();
+        temp.put("DannyAndTalSendTheirRegardsYouFucker",null);
+        this.tdi_queue.add(temp);
+        this.segment_file_consumer.release();
         System.out.println("Finished Parsing : " + LocalTime.now());
     }
     private void SegmentsFinished() {
         for (int i = 0; i < this.runnable_segment_posting.length ; i++) {
             ((SegmentFilesWriter)this.runnable_segment_posting[i]).Stop();
         }
+        this.destSegmentFilesQueue.add(new TermSegmentFile("DannyAndTalSendTheirRegardsYouFucker",null,null));
+        this.segment_writer_consumer.release();
         System.out.println("Finished Segments File : " + LocalTime.now());
     }
     private void SegmentFilesPostingFinished() { System.out.println("Finished Segment Posting : " + LocalTime.now()); }

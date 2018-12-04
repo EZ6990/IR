@@ -32,13 +32,20 @@ public class TextOperations implements Runnable{
     @Override
     public void run() {
 
-        while (!this.bStop || !this.document_queue.isEmpty()){
+        while (true){
             try {
                 this.text_operation_consumer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+
             }
-            Document doc = document_queue.poll();
+            Document doc = this.document_queue.poll();
+            if (doc.getPath().equals("DannyAndTalSendTheirRegardsYouFucker")){
+                this.document_queue.add(doc);
+                this.text_operation_consumer.release();
+                break;
+            }
+
             this.documnet_reader_producer.release();
             String path = doc.getPath();
             String ID = doc.getID();
