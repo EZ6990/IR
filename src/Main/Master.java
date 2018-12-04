@@ -59,8 +59,8 @@ public class Master {
         this.doc_readers = new Thread[1];
         this.runnable_doc_readers = new Runnable[1];
 
-        this.text_operators = new Thread[4];
-        this.runnable_text_operators = new Runnable[4];
+        this.text_operators = new Thread[16];
+        this.runnable_text_operators = new Runnable[16];
 
         this.parsers = new Thread[16];
         this.runnable_parsers = new Runnable[16];
@@ -70,21 +70,35 @@ public class Master {
 
         this.segment_posting= new Thread[1];
         this.runnable_segment_posting = new Runnable[1];
-
+//
+//        this.doc_readers = new Thread[1];
+//        this.runnable_doc_readers = new Runnable[1];
+//
+//        this.text_operators = new Thread[1];
+//        this.runnable_text_operators = new Runnable[1];
+//
+//        this.parsers = new Thread[1];
+//        this.runnable_parsers = new Runnable[1];
+//
+//        this.segments = new Thread[1];
+//        this.runnable_segments = new Runnable[1];
+//
+//        this.segment_posting= new Thread[1];
+//        this.runnable_segment_posting = new Runnable[1];
 
         this.document_reader_producer = new Semaphore(5000,true);
         this.text_operation_consumer=  new Semaphore(0,true);
         this.text_operation_producer = new Semaphore(5000,true);
         this.master_parser_consumer = new Semaphore(0,true);
-        this.master_parser_producer = new Semaphore(60000,true);
+        this.master_parser_producer = new Semaphore(30000,true);
         this.segment_file_consumer = new Semaphore(0,true);
-        this.segment_file_producer = new Semaphore(30,true);
+        this.segment_file_producer = new Semaphore(1000,true);
         this.segment_writer_consumer = new Semaphore(0,true);
 
 
         DataProvider data = new DataProvider("");
 
-        LoadDocuments("C:\\Users\\talmalu\\Downloads\\corpus\\corpus");
+        LoadDocuments("D:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
     }
 
     private void LoadDocuments(String location){
@@ -119,9 +133,10 @@ public class Master {
 //        WaitParsers();
 //        WaitSegments();
 //        WaitSegmentFilesPosting();
+
         System.out.println("Start indexing: " + LocalTime.now());
         Indexer indexer = new Indexer();
-        indexer.CreatePostFiles("C:\\Users\\talmalu\\Documents\\Tal\\SegmentFiles");
+        indexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles");
 
     }
 

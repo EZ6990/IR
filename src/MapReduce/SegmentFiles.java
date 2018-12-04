@@ -33,7 +33,7 @@ public class SegmentFiles implements Runnable {
                         Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
-        this.numOfDocs = 20000;
+        this.numOfDocs = 300;
         this.bStop = false;
         this.index = 0;
         this.ThreadID = 0;
@@ -50,9 +50,22 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         int mapCounter = 0;
-        DocumentSegmentFile dsf = new DocumentSegmentFile("C:\\Users\\talmalu\\Documents\\Tal\\DocumentFiles\\docs.txt",new SegmentDocumentWriter(),null);
-        CitySegmentFile csf = new CitySegmentFile("C:\\Users\\talmalu\\Documents\\Tal\\CityFiles\\city.txt",new SegmentCityWriter(),null);
-        TermSegmentFile tsf = new TermSegmentFile("C:\\Users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
+        String [] Letters = {
+                "#","$","%","&","'","*","+",",","-",".","/","0","1","2","3","4","5","6","7","8","9","<","=",">","@",
+                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
+                "\\","^","_","`","~"
+        };
+        HashMap<String,TermSegmentFile> tsfa =new HashMap<String,TermSegmentFile>();
+        int i=0;
+
+        for (String s : Letters) {
+            tsfa[i]=new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +Letters[i] + (this.index++) + ".txt",new SegmentTermWriter(),null);
+            i++;
+        }
+
+        DocumentSegmentFile dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
+        CitySegmentFile csf = new CitySegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city.txt",new SegmentCityWriter(),null);
+       // TermSegmentFile tsf = new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
         while (true){
             try {
                 //System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
@@ -74,6 +87,8 @@ public class SegmentFiles implements Runnable {
                 AbstractTermDocumentInfo tdi = map.get(s);
                 if (tdi instanceof CityTDI)
                     csf.add(s, tdi);
+
+                if ()
                 tsf.add(s, tdi);
 
                 if (map.get(s).getFrequency() == 1)
@@ -104,9 +119,9 @@ public class SegmentFiles implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                dsf = new DocumentSegmentFile("C:\\Users\\talmalu\\Documents\\Tal\\DocumentFiles\\docs.txt", new SegmentDocumentWriter(), null);
+               // dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt", new SegmentDocumentWriter(), null);
                 //csf = new CitySegmentFile(Paths.get("").toAbsolutePath().toString() + "\\city.txt",new SegmentCityWriter());
-                tsf = new TermSegmentFile("C:\\Users\\talmalu\\Documents\\Tal\\SegmentFiles\\" + this.ThreadID + "_term_" + (this.index++) + ".txt", new SegmentTermWriter(), null);
+             //  tsf = new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\" + this.ThreadID + "_term_" + (this.index++) + ".txt", new SegmentTermWriter(), null);
                 mapCounter = 0;
             }
         }

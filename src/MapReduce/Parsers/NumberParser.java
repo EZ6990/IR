@@ -37,9 +37,10 @@ public class NumberParser extends AbstractParser {
             if ((theNumber = isNumber(token)) != null) {
                 valueNumber = theNumber.doubleValue();
                 s = "" + valueNumber;
+                s=convertNumber(s,false);
 
                 if (isFraction(nextTokenStr) && valueNumber < 1000000) {
-                    s = convertNumber(s, isTrillion) + " " + nextTokenStr;
+                    s = s + " " + nextTokenStr;
                     i++;
                 } else {
                     if (nextTokenStr.equals("Thousand") || nextTokenStr.equals("THOUSAND") || nextTokenStr.equals("thousand")) {
@@ -57,9 +58,10 @@ public class NumberParser extends AbstractParser {
                         isTrillion = true;
                         i++;
                     } else if (valueNumber < 1000 && isFraction(nextTokenStr)) {
-                        s = valueNumber + nextTokenStr;
+                        s = valueNumber +" "+ nextTokenStr;
                         i++;
                     }
+                    s=valueNumber+"";
                     s = convertNumber(s, isTrillion);
                 }
                 putInMap(s);
@@ -123,8 +125,13 @@ public class NumberParser extends AbstractParser {
         if (num >= 1000000000) {
             if (isTrillion) {
                 num = num / 1000000;
-            } else num = num / 1000000000;
 
+            } else {
+                num = num / 1000000000;
+
+
+            }
+            string = num +"";
             if (num % 1 > 0) {
                 String s = num + "";
                 if (s.indexOf('.') < s.length() - 3)
@@ -134,6 +141,7 @@ public class NumberParser extends AbstractParser {
             } else return string.indexOf('.') == -1 ? (string=num+ "") : (string=num+ "").substring(0, string.indexOf('.')) + "B";
         } else if (num >= 1000000) {
             num = num / 1000000;
+            string = num +"";
             if (num % 1 > 0) {
                 String s = num + "";
                 if (s.indexOf('.') < s.length() - 3)
@@ -144,6 +152,7 @@ public class NumberParser extends AbstractParser {
 
         } else if (num >= 1000) {
             num = num / 1000;
+            string = num +"";
             if (num % 1 > 0) {
                 String s = num + "";
                 if (s.indexOf('.') < s.length() - 3)
