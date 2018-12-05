@@ -2,6 +2,7 @@ package MapReduce;
 
 import Main.CountryInfo;
 import Main.Term;
+import MapReduce.Parsers.NumberParser;
 
 public class CityTDI extends AbstractTermDocumentInfo{
 
@@ -23,6 +24,7 @@ public class CityTDI extends AbstractTermDocumentInfo{
         this.country = info.getCountryName();
         this.currency = info.getCurrency();
         this.population = info.getPopulation();
+        NumberParser.convertNumber(this.population,false);
         this.termLocation = "";
     }
 
@@ -51,9 +53,7 @@ public class CityTDI extends AbstractTermDocumentInfo{
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder(getTerm().getData());
-
-        return builder.append(";").append(this.country).append(" ") + this.currency + "," + this.population + "," + this.termLocation;
+        return getTerm().getData() + "," + this.country + "," + this.currency + "," + this.population + "," + this.termLocation;
     }
 
 }

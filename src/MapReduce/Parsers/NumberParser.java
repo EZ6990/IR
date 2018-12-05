@@ -1,17 +1,17 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
-import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
+
 import java.util.HashMap;
 
 
 public class NumberParser extends AbstractParser {
 
 
-    public NumberParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
-        super(map, doc, stemmer);
+    public NumberParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
+        super(map, doc);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class NumberParser extends AbstractParser {
         String s = "";
         Token token;
         Token nextToken = null;
-        String tokenStr="", nextTokenStr="";
+        String tokenStr = "", nextTokenStr = "";
         Double theNumber;
         boolean isTrillion;
         double valueNumber;
@@ -38,7 +38,7 @@ public class NumberParser extends AbstractParser {
             if ((theNumber = isNumber(token)) != null) {
                 valueNumber = theNumber.doubleValue();
                 s = "" + valueNumber;
-                s=convertNumber(s,false);
+                s = convertNumber(s, false);
 
                 if (isFraction(nextTokenStr) && valueNumber < 1000000) {
                     s = s + " " + nextTokenStr;
@@ -59,10 +59,10 @@ public class NumberParser extends AbstractParser {
                         isTrillion = true;
                         i++;
                     } else if (valueNumber < 1000 && isFraction(nextTokenStr)) {
-                        s = valueNumber +" "+ nextTokenStr;
+                        s = valueNumber + " " + nextTokenStr;
                         i++;
                     }
-                    s=valueNumber+"";
+                    s = valueNumber + "";
                     s = convertNumber(s, isTrillion);
                 }
                 putInMap(s);
@@ -77,10 +77,9 @@ public class NumberParser extends AbstractParser {
                 putInMap(convertNumber(s, false));
             } else if (isFraction(nextTokenStr))
                 putInMap(tokenStr);
-        } catch (Exception e){
+        } catch (Exception e) {
             //System.out.println("Document with Text Problem ID: " + document.getID() + " size : " + getTxtSize());
         }
-
 
 
     }
@@ -120,7 +119,7 @@ public class NumberParser extends AbstractParser {
     }
 
 
-    private String convertNumber(String string, Boolean isTrillion) {
+    public static String convertNumber(String string, Boolean isTrillion) {
 
         double num = Double.parseDouble(string);
         if (num >= 1000000000) {
@@ -132,44 +131,19 @@ public class NumberParser extends AbstractParser {
 
 
             }
-            string = num +"";
-            if (num % 1 > 0) {
-                String s = num + "";
-                if (s.indexOf('.') < s.length() - 3)
-                    return (s.substring(0, s.indexOf('.') + 3) + "B");
-                else
-                    return s + "B";
-            } else return string.indexOf('.') == -1 ? (string=num+ "") : (string=num+ "").substring(0, string.indexOf('.')) + "B";
+            string = num + "";
+            return string.indexOf('.') == -1 ? (string = num + "") : (string = num + "").substring(0, string.indexOf('.')) + "B";
         } else if (num >= 1000000) {
             num = num / 1000000;
-            string = num +"";
-            if (num % 1 > 0) {
-                String s = num + "";
-                if (s.indexOf('.') < s.length() - 3)
-                    return (s.substring(0, s.indexOf('.') + 3) + "M");
-                else
-                    return s + "M";
-            } else return string.substring(0, string.indexOf('.')) + "M";
+            string = num + "";
+            return string.substring(0, string.indexOf('.')) + "M";
 
         } else if (num >= 1000) {
             num = num / 1000;
-            string = num +"";
-            if (num % 1 > 0) {
-                String s = num + "";
-                if (s.indexOf('.') < s.length() - 3)
-                    return (s.substring(0, s.indexOf('.') + 3) + "K");
-                else
-                    return s + "K";
-            } else return string.substring(0, string.indexOf('.')) + "K";
+            string = num + "";
+            return string.substring(0, string.indexOf('.')) + "K";
         } else {
-            if (num % 1 > 0) {
-                String s = num + "";
-                if (s.indexOf('.') < s.length() - 3)
-                    return (s.substring(0, s.indexOf('.') + 3));
-                else
-                    return s;
-
-            } else return string.substring(0, string.indexOf('.'));
+            return string.substring(0, string.indexOf('.'));
         }
     }
 

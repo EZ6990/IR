@@ -1,7 +1,6 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
-import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 import java.util.HashMap;
@@ -10,8 +9,8 @@ public class DatesAndRangeParser extends AbstractParser {
     private HashMap<String, String> monthDates;
     private HashMap<String, String> dayDates;
 
-    public DatesAndRangeParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
-        super(map, doc,stemmer);
+    public DatesAndRangeParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc) {
+        super(map, doc);
         monthDates = new HashMap<>();
         dayDates = new HashMap<>();
 
@@ -78,22 +77,33 @@ public class DatesAndRangeParser extends AbstractParser {
             if (tokenStr.contains("-")&& tokenStr.charAt(0)!='-')
                 putInMap(tokenStr);
 
-            if ((tokenStr.equals("Between")||tokenStr.equals("between")||tokenStr.equals("BETWEEN")) && getTxtSize() - i >= 4 && isNumber(nextToken)!=null
+            else if ((tokenStr.equals("Between")||tokenStr.equals("between")||tokenStr.equals("BETWEEN")) && size - i >= 4 && isNumber(nextToken)!=null
                     && (get(i + 2).toString().equals("and")|| get(i + 2).toString().equals("AND"))&& isNumber(get(i + 3))!=null) {
                 s = s + "between " + isNumber(nextToken).doubleValue() + " and " + isNumber(get(i + 3)).doubleValue();
+                putInMap(s);
                 i = i + 3;
-            } else {
+            }
+            else if ((tokenStr.equals("From")||tokenStr.equals("from")||tokenStr.equals("FROM")) && getTxtSize() - i >= 4 && isNumber(nextToken)!=null
+                        && (get(i + 2).toString().equals("to")|| get(i + 2).toString().equals("TO"))&& isNumber(get(i + 3))!=null) {
+                    s = s + "from " + isNumber(nextToken).doubleValue() + " to " + isNumber(get(i + 3)).doubleValue();
+                putInMap(s);
+                    i = i + 3;
+            }
+            else {
                 //first is month
                 if (monthDates.containsKey(tokenStr)) {
                     s = s + monthDates.get(tokenStr);
                     //second is a number
                     if ((theNumber=isNumber(nextToken))!=null) {
                         //DD
-                        if (dayDates.containsKey(theNumber.intValue()))
+                        if (dayDates.containsKey(theNumber.intValue())) {
                             s = s + "-" + dayDates.get(theNumber.intValue());
+                            putInMap(s);
+                        }
                         //YYYY
-                        if (nextTokenStr.length() < 5 && !nextTokenStr.contains("."))
+                        else if (nextTokenStr.length() < 5 && !nextTokenStr.contains("."))
                             putInMap(convertToYear(theNumber.intValue()+"") + "-" + s.substring(0, 2));
+
                         i++;
                     }
 
@@ -102,9 +112,10 @@ public class DatesAndRangeParser extends AbstractParser {
                     //second is month
                     if (dayDates.containsKey(theNumber.intValue()+"") && monthDates.containsKey(nextTokenStr)) {
                         s = s + monthDates.get(nextTokenStr) + dayDates.get(theNumber.intValue()+"");
-
+                        putInMap(s);
                     }
                 }
+
             }
 
             i++;

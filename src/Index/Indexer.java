@@ -79,9 +79,12 @@ public class Indexer {
                         for (String s : chunkTermIndex.keySet()) {
                             String[] forgodsake = chunkTermIndex.get(s).split("\\?");
                             String num = forgodsake[1];
+                           String[] splitToCount=forgodsake[0].split("|");
+                            int numOfDocs=splitToCount.length;
                             chunk.append(s).append(";").append(forgodsake[0]);
                             chunk.append("\n");
-                            chunkTermIndex.replace(s, i + " " + k + " " + num);
+                            chunkTermIndex.replace(s, i + " " + k + " " + num+" "+numOfDocs);
+                        k++;
                         }
                         output.write(chunk.toString());
                         output.close();
