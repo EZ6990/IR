@@ -31,6 +31,7 @@ public class SegmentTermWriter implements SegmentWriter {
                 chunk.append("\n");
             }
             output.write(chunk.toString());
+            output.flush();
             output.close();
         } catch (IOException e) {
         }

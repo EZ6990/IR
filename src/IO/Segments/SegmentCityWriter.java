@@ -18,12 +18,12 @@ public class SegmentCityWriter implements SegmentWriter {
             BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
             StringBuilder chunk = new StringBuilder();
             for (Object s : lst) {
-                chunk.append(s);
                 for (Info tdi : data.get((String) s)) {
-                    chunk.append("," + tdi.toString()).append("\n");
+                    chunk.append(tdi.toString()).append("\n");
                 }
             }
             output.write(chunk.toString());
+            output.flush();
             output.close();
         } catch (IOException e) {
         }
