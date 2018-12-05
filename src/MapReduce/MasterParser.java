@@ -53,20 +53,20 @@ public class MasterParser implements Runnable{
                 this.master_parser_consumer.release();
                 break;
             }
-            //System.out.println("Start ID: " + doc.getID() + "  Time:" + LocalTime.now());
+            System.out.println("Start ID: " + doc.getID() + "  Time:" + LocalTime.now());
             this.text_operation_producer.release();
             HashMap<String, AbstractTermDocumentInfo> map = new HashMap<String, AbstractTermDocumentInfo>();
-            //System.out.println("Start Date" + doc.getID());
+           System.out.println("Start Date" + doc.getID());
             new DatesAndRangeParser(map, doc,this.stemmer).manipulate();
-            //System.out.println("Start Number" + doc.getID());
+            System.out.println("Start Number" + doc.getID());
             new NumberParser(map, doc,this.stemmer).manipulate();
-            //System.out.println("Start Price" + doc.getID());
+            System.out.println("Start Price" + doc.getID());
             new PercentAndPriceParser(map, doc,this.stemmer).manipulate();
-            //System.out.println("Start Country" + doc.getID());
+            System.out.println("Start Country" + doc.getID());
             new CountryParser(map, doc,this.stemmer).manipulate();
-            //System.out.println("Start Word" + doc.getID());
+           System.out.println("Start Word" + doc.getID());
             new WordParser(map, doc,this.stemmer,this.howdareyou).manipulate();
-            //System.out.println("Finish Word" + doc.getID());
+            System.out.println("Finish Word" + doc.getID());
 
             if (map.size() > 0) {
                 try {

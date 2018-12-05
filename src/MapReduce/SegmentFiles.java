@@ -64,7 +64,7 @@ public class SegmentFiles implements Runnable {
        // TermSegmentFile tsf = new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
         while (true){
             try {
-                //System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
+                System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
                 this.segments_file_consumer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
