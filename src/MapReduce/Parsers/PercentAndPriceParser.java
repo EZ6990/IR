@@ -4,13 +4,14 @@ import MapReduce.AbstractTermDocumentInfo;
 import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
+
 import java.util.HashMap;
 
 public class PercentAndPriceParser extends AbstractParser {
 
 
     public PercentAndPriceParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
-        super(map, doc,stemmer);
+        super(map, doc, stemmer);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class PercentAndPriceParser extends AbstractParser {
                             s = convertNumber(theNumber + "", false) + nextTokenStr + " Dollars";
                         else
                             s = convertNumberLessthanMill(tokenStr) + nextTokenStr + " Dollars";
-                        i+=2;
+                        i += 2;
 
                     }
 
@@ -87,6 +88,7 @@ public class PercentAndPriceParser extends AbstractParser {
                     else
                         s = s + convertNumberLessthanMill(tokenStr) + " Dollars";
                 }
+            if (s.length() > 0)
                 putInMap(s);
             i++;
         }

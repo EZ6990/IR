@@ -62,8 +62,8 @@ public class Master {
         this.text_operators = new Thread[16];
         this.runnable_text_operators = new Runnable[16];
 
-        this.parsers = new Thread[16];
-        this.runnable_parsers = new Runnable[16];
+        this.parsers = new Thread[8];
+        this.runnable_parsers = new Runnable[8];
 
         this.segments = new Thread[2];
         this.runnable_segments = new Runnable[2];
@@ -88,7 +88,7 @@ public class Master {
 
         this.document_reader_producer = new Semaphore(5000,true);
         this.text_operation_consumer=  new Semaphore(0,true);
-        this.text_operation_producer = new Semaphore(5000,true);
+        this.text_operation_producer = new Semaphore(10000,true);
         this.master_parser_consumer = new Semaphore(0,true);
         this.master_parser_producer = new Semaphore(30000,true);
         this.segment_file_consumer = new Semaphore(0,true);

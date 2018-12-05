@@ -62,17 +62,17 @@ public class SegmentFiles implements Runnable {
         }
 
         DocumentSegmentFile dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
-        CitySegmentFile csf = new CitySegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city.txt",new SegmentCityWriter(),null);
+        //CitySegmentFile csf = new CitySegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city.txt",new SegmentCityWriter(),null);
        // TermSegmentFile tsf = new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
         while (true){
             try {
-                System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
+              //  System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
                 this.segments_file_consumer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
-            //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
+           System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
             if (map.containsKey("DannyAndTalSendTheirRegardsYouFucker")){
                 this.TDIQueue.add(map);
                 this.segments_file_consumer.release();
@@ -85,8 +85,8 @@ public class SegmentFiles implements Runnable {
                 AbstractTermDocumentInfo tdi = map.get(s);
                 String termWord = tdi.getTerm().getData();
 
-                if (tdi instanceof CityTDI)
-                    csf.add(termWord, tdi);
+//                if (tdi instanceof CityTDI)
+//                    csf.add(termWord, tdi);
 
                 if(tsfa.containsKey(termWord.substring(0,1).toLowerCase()))
                     tsfa.get(termWord.substring(0,1).toLowerCase()).add(termWord,tdi);
@@ -117,9 +117,9 @@ public class SegmentFiles implements Runnable {
                     this.destSegmentFilesQueue.add(dsf);
                     this.segment_writer_consumer.release();
 
-                    this.segment_file_term_producer.acquire();
-                    this.destSegmentFilesQueue.add(csf);
-                    this.segment_writer_consumer.release();
+//                    this.segment_file_term_producer.acquire();
+//                    this.destSegmentFilesQueue.add(csf);
+//                    this.segment_writer_consumer.release();
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -154,9 +154,9 @@ public class SegmentFiles implements Runnable {
             this.destSegmentFilesQueue.add(dsf);
             this.segment_writer_consumer.release();
 
-            this.segment_file_term_producer.acquire();
-            this.destSegmentFilesQueue.add(csf);
-            this.segment_writer_consumer.release();
+//            this.segment_file_term_producer.acquire();
+//            this.destSegmentFilesQueue.add(csf);
+//            this.segment_writer_consumer.release();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
