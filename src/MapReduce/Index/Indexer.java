@@ -1,11 +1,9 @@
-package Index;
+package MapReduce.Index;
 
 import IO.Segments.SegmentTermReader;
-import IO.Segments.SegmentTermWriter;
-import MapReduce.TermSegmentFile;
+import MapReduce.Segment.TermSegmentFile;
 
 import java.io.*;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,7 +71,7 @@ public class Indexer {
                     try {
 //                        System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
                         int k = 0;
-                        String path = "d:\\documents\\users\\talmalu\\Documents\\Tal\\PostFile\\Collect2\\" + i;
+                        String path = "d:\\documents\\users\\talmalu\\Documents\\Tal\\PostFiles\\" + i;
                         BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
                         StringBuilder chunk = new StringBuilder();
                         for (String s : chunkTermIndex.keySet()) {
@@ -90,6 +88,7 @@ public class Indexer {
                         output.flush();
                         output.close();
                     } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     this.termIndex.putAll(chunkTermIndex);
 //                    System.out.println(LocalTime.now() + " Done Write Data To Disk On Letter:" + Letters[i]);

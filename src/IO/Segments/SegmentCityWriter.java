@@ -1,6 +1,6 @@
 package IO.Segments;
 
-import MapReduce.Info;
+import MapReduce.Parse.Info;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -26,6 +26,7 @@ public class SegmentCityWriter implements SegmentWriter {
             output.flush();
             output.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

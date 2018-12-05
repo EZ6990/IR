@@ -1,13 +1,12 @@
-package MapReduce;
+package MapReduce.Segment;
 
 import IO.Segments.SegmentCityWriter;
 import IO.Segments.SegmentDocumentWriter;
 import IO.Segments.SegmentTermWriter;
-import Main.Term;
-import TextOperations.Stemmer;
+import MapReduce.Parse.AbstractTermDocumentInfo;
+import MapReduce.Parse.CityTDI;
+import MapReduce.Parse.DocumentTermInfo;
 
-import java.nio.file.Paths;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -62,8 +61,8 @@ public class SegmentFiles implements Runnable {
         }
 
         DocumentSegmentFile dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
-        //CitySegmentFile csf = new CitySegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city.txt",new SegmentCityWriter(),null);
-       // TermSegmentFile tsf = new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_term_" + (this.index++) + ".txt",new SegmentTermWriter(),null);
+        CitySegmentFile csf = new CitySegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city.txt",new SegmentCityWriter(),null);
+
         while (true){
             try {
               //  System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
@@ -72,7 +71,7 @@ public class SegmentFiles implements Runnable {
                 e.printStackTrace();
             }
             HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
-           System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
+           //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
             if (map.containsKey("DannyAndTalSendTheirRegardsYouFucker")){
                 this.TDIQueue.add(map);
                 this.segments_file_consumer.release();
@@ -80,25 +79,24 @@ public class SegmentFiles implements Runnable {
             }
             this.master_parser_producer.release();
             DocumentTermInfo dti = new DocumentTermInfo(((AbstractTermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
+            dti.setNumOfDifferentWords(map.size());
             //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
+            long start = System.currentTimeMillis();
             for (String s : map.keySet()) {
                 AbstractTermDocumentInfo tdi = map.get(s);
                 String termWord = tdi.getTerm().getData();
 
-//                if (tdi instanceof CityTDI)
-//                    csf.add(termWord, tdi);
-
+                if (tdi instanceof CityTDI)
+                    csf.add(termWord, tdi);
                 if(tsfa.containsKey(termWord.substring(0,1).toLowerCase()))
                     tsfa.get(termWord.substring(0,1).toLowerCase()).add(termWord,tdi);
-
-                if (map.get(s).getFrequency() == 1)
-                    dti.addRareCount();
 
                 if (map.get(s).getFrequency() > dti.getMostCommonFreq()) {
                     dti.setMostCommonName(s);
                     dti.setMostCommonFreq(map.get(s).getFrequency());
                 }
             }
+            //System.out.println("END ID: " + dti.getDocumentName() + "  Took : " + (System.currentTimeMillis() - start));
             dsf.add(dti.getDocumentName(), dti);
             if (++mapCounter == this.numOfDocs) {
                 try {
@@ -117,9 +115,9 @@ public class SegmentFiles implements Runnable {
                     this.destSegmentFilesQueue.add(dsf);
                     this.segment_writer_consumer.release();
 
-//                    this.segment_file_term_producer.acquire();
-//                    this.destSegmentFilesQueue.add(csf);
-//                    this.segment_writer_consumer.release();
+                    this.segment_file_term_producer.acquire();
+                    this.destSegmentFilesQueue.add(csf);
+                    this.segment_writer_consumer.release();
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -146,17 +144,14 @@ public class SegmentFiles implements Runnable {
                     this.segment_writer_consumer.release();
                 }
             }
-//            this.segment_file_term_producer.acquire();
-//            this.destSegmentFilesQueue.add(tsf);
-//            this.segment_writer_consumer.release();
 
             this.segment_file_term_producer.acquire();
             this.destSegmentFilesQueue.add(dsf);
             this.segment_writer_consumer.release();
 
-//            this.segment_file_term_producer.acquire();
-//            this.destSegmentFilesQueue.add(csf);
-//            this.segment_writer_consumer.release();
+            this.segment_file_term_producer.acquire();
+            this.destSegmentFilesQueue.add(csf);
+            this.segment_writer_consumer.release();
 
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -1,15 +1,14 @@
-package MapReduce.Parsers;
+package MapReduce.Parse.Parsers;
 
-import Main.Term;
-import MapReduce.AbstractTermDocumentInfo;
-import MapReduce.TermDocumentInfo;
+import MapReduce.Parse.Term;
+import MapReduce.Parse.AbstractTermDocumentInfo;
+import MapReduce.Parse.TermDocumentInfo;
 import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractParser {
 

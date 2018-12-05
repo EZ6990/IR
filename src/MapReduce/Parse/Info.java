@@ -1,4 +1,4 @@
-package MapReduce;
+package MapReduce.Parse;
 
 public interface Info {
 

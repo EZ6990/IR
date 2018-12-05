@@ -1,25 +1,21 @@
-package MapReduce;
+package MapReduce.Parse;
 
 public class DocumentTermInfo implements Info{
 
-    private int rareCount;
+    private int numOfDifferentWords;
     private String mostCommonName;
     private int mostCommonFreq;
     private String documentName;
 
     public DocumentTermInfo(String documentName) {
-        this.rareCount = 0;
+        this.numOfDifferentWords = 0;
         this.mostCommonName = "";
         this.mostCommonFreq = 0;
         this.documentName=documentName;
     }
 
-    public int getRareCount() {
-        return rareCount;
-    }
-
-    public void addRareCount() {
-        this.rareCount++;
+    public void setNumOfDifferentWords(int numOfDifferentWords) {
+        this.numOfDifferentWords = numOfDifferentWords;
     }
 
     public String getMostCommonName() {
@@ -45,6 +41,6 @@ public class DocumentTermInfo implements Info{
 
     @Override
     public String toString() {
-        return documentName+" "+mostCommonFreq+" "+rareCount;
+        return this.documentName + ";" + this.mostCommonFreq + "|" + this.numOfDifferentWords;
     }
 }

@@ -1,7 +1,8 @@
-package MapReduce;
+package MapReduce.Segment;
 
 import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
+import MapReduce.Parse.Info;
 
 import java.util.HashMap;
 import java.util.List;

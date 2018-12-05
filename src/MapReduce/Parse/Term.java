@@ -1,4 +1,4 @@
-package Main;
+package MapReduce.Parse;
 
 
 import TextOperations.Stemmer;

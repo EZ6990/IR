@@ -1,6 +1,6 @@
-package MapReduce.Parsers;
+package MapReduce.Parse.Parsers;
 
-import MapReduce.AbstractTermDocumentInfo;
+import MapReduce.Parse.AbstractTermDocumentInfo;
 import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;

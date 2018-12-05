@@ -1,4 +1,4 @@
-package Main;
+package MapReduce.Parse;
 
 import IO.HTTPWebRequest;
 import jdk.nashorn.internal.parser.JSONParser;

@@ -1,7 +1,10 @@
-package MapReduce;
+package MapReduce.Segment;
 
 import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
+import MapReduce.Parse.CityTDI;
+import MapReduce.Parse.Info;
+import MapReduce.Parse.TermDocumentInfo;
 
 import java.util.ArrayList;
 import java.util.List;

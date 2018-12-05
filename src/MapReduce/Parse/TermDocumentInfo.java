@@ -1,8 +1,6 @@
-package MapReduce;
+package MapReduce.Parse;
 
-import Main.Term;
-
-public class TermDocumentInfo extends AbstractTermDocumentInfo{
+public class TermDocumentInfo extends AbstractTermDocumentInfo {
 
     public TermDocumentInfo(Term term, String documentID) {
         super(term,documentID);

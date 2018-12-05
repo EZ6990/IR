@@ -1,7 +1,7 @@
-package Main;
+package IO;
 
 import IO.CountryInMemoryDB;
-import IO.HTTPWebRequest;
+import MapReduce.Parse.CountryInfo;
 
 import java.io.IOException;
 

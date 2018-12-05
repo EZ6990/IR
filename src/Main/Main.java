@@ -19,16 +19,17 @@ package Main;
 //}
 
 
-import Index.Indexer;
-import TextOperations.*;
+import Model.Master;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
+
+        List x = new ArrayList();
+        x.get(0);
 
 //        try {
 //            CountryInfo c = new CountryInfo("Jerusalem");
@@ -39,18 +40,23 @@ public class Main {
 //        DataProvider d = new DataProvider("");
 //        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
 //
-//        Master splinter = new Master();
-//        splinter.start();
+        Master splinter = new Master();
+        splinter.start();
 
 //        List<Token> lst = new ArrayList<>();
 //        lst.add(new Token(".111.111."));
+//        lst.add(new Token(".1."));
 //        lst.add(new Token("...222.222..."));
+//        lst.add(new Token("asdfasdf"));
+//        lst.add(new Token("......"));
 //        lst.add(new Token(",333.333,"));
 //        lst.add(new Token(".,.444.444,.,"));
 //        lst.add(new Token(".,.555.555,.,"));
 //        lst.add(new Token(",,.,.asdfa123dasfv,,cxvm,.123,.,,"));
-//
-//        RemoveFromEndnStart filter = new RemoveFromEndnStart();
+//        lst.add(new Token("asdfasfd,"));
+//        lst.add(new Token("...asdfasfd"));
+////
+//        RemoveFromEndnStart filter = new RemoveFromEndnStart(new char[]{',','.'});
 //        filter.filter(lst);
 //
 //        StopWords x = new StopWords();

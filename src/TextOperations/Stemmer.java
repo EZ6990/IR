@@ -1,6 +1,5 @@
 package TextOperations;
 
-import Main.Term;
 import org.tartarus.snowball.ext.englishStemmer;
 
 public class Stemmer {

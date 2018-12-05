@@ -1,13 +1,21 @@
-package Main;
+package Model;
 
+import IO.DataProvider;
 import IO.DocumentReader;
-import Index.CityIndexer;
-import Index.Indexer;
-import MapReduce.*;
+import MapReduce.Index.CityIndexer;
+import MapReduce.Index.Indexer;
+import MapReduce.Parse.AbstractTermDocumentInfo;
+import MapReduce.Parse.MasterParser;
+import MapReduce.Segment.SegmentFile;
+import MapReduce.Segment.SegmentFiles;
+import MapReduce.Segment.SegmentFilesWriter;
+import MapReduce.Segment.TermSegmentFile;
 import TextOperations.Document;
 import TextOperations.TextOperations;
 import TextOperations.Tokenize;
 import TextOperations.StopWords;
+import TextOperations.RulesWords;
+import TextOperations.IFilter;
 import TextOperations.TokenizedDocument;
 import java.io.File;
 import java.io.FileFilter;
@@ -63,8 +71,8 @@ public class Master {
         this.text_operators = new Thread[16];
         this.runnable_text_operators = new Runnable[16];
 
-        this.parsers = new Thread[8];
-        this.runnable_parsers = new Runnable[8];
+        this.parsers = new Thread[16];
+        this.runnable_parsers = new Runnable[16];
 
         this.segments = new Thread[2];
         this.runnable_segments = new Runnable[2];
@@ -161,8 +169,9 @@ public class Master {
         }
     }
     private void StartParsers() {
+        IFilter ignore = (new StopWords().intersection(new RulesWords()));
         for (int i = 0; i < this.parsers.length ; i++) {
-            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer,null,new StopWords())));
+            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer,null,ignore)));
             this.parsers[i].start();
         }
     }

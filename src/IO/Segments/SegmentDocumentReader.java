@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class SegmentCityReader implements SegmentReader {
+public class SegmentDocumentReader implements SegmentReader {
 
     @Override
     public List<String> read(String path) {

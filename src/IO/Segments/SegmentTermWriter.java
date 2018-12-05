@@ -1,13 +1,10 @@
 package IO.Segments;
 
 
-import MapReduce.Info;
-import MapReduce.TermDocumentInfo;
+import MapReduce.Parse.Info;
+import MapReduce.Parse.TermDocumentInfo;
 
-import javax.print.DocFlavor;
 import java.io.*;
-import java.lang.reflect.Array;
-import java.time.LocalTime;
 import java.util.*;
 
 public class SegmentTermWriter implements SegmentWriter {
@@ -34,7 +31,9 @@ public class SegmentTermWriter implements SegmentWriter {
             output.flush();
             output.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 }
 

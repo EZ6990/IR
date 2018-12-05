@@ -8,32 +8,49 @@ import java.util.regex.Pattern;
 public class RemoveFromEndnStart implements IFilter {
 
 
+    private char [] remove;
 
-    private Pattern pattern;
-
-    public RemoveFromEndnStart(){
-        this.pattern = Pattern.compile("^[\\.,]*(.*?)[\\.,]*$");
+    public RemoveFromEndnStart(char [] remove){
+        this.remove = remove;
     }
 
     @Override
     public List<Token> filter(List<Token> lst) {
 
         List<Token> tmpList = new ArrayList<>();
-        int size = lst.size();
-        for (int i = 0; i < size; i++) {
-            Matcher m = this.pattern.matcher(lst.get(i).getWord());
-            if (m.find()) {
-                if (m.group(1).length() > 0)
-                    tmpList.add(new Token(m.group(1)));
+        for (Token token : lst) {
+            char [] chars = token.getWord().toCharArray();
+            int posStart = 0;
+            int posEnd = chars.length - 1;
+            boolean bFound = true;
+            while (posStart < chars.length && bFound) {
+                bFound = false;
+                for (char cut : this.remove) {
+                    if (chars[posStart] == cut) {
+                        posStart++;
+                        bFound = true;
+                    }
+                }
             }
-
+            bFound = true;
+            while (posEnd > posStart && bFound) {
+                bFound = false;
+                for (char cut : this.remove) {
+                    if (chars[posEnd] == cut) {
+                        posEnd--;
+                        bFound = true;
+                    }
+                }
+            }
+            if (posStart < posEnd + 1)
+                tmpList.add(new Token(new String(chars, posStart, posEnd + 1 - posStart)));
         }
         return tmpList;
     }
 
     @Override
     public boolean contains(Token token) {
-        return token.getWord().matches(this.pattern.pattern());
+        return false;
     }
 
     @Override

@@ -1,6 +1,6 @@
-package MapReduce.Parsers;
+package MapReduce.Parse.Parsers;
 
-import MapReduce.AbstractTermDocumentInfo;
+import MapReduce.Parse.AbstractTermDocumentInfo;
 import TextOperations.*;
 
 import java.util.HashMap;
@@ -8,10 +8,10 @@ import java.util.HashMap;
 public class WordParser extends AbstractParser {
 
 
-    private IFilter stopWords;
-    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer, IFilter howdareyou) {
+    private IFilter ignore;
+    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer, IFilter ignore) {
         super(map, doc,stemmer);
-        this.stopWords = howdareyou;
+        this.ignore = ignore;
     }
 
     @Override
@@ -19,7 +19,6 @@ public class WordParser extends AbstractParser {
         int i = 0, size = getTxtSize();
         String strToken;
         Token token;
-        DynamicFilter ignore = this.stopWords.intersection(new RulesWords());
 
 //
         while (i < size) {
@@ -29,7 +28,7 @@ public class WordParser extends AbstractParser {
             char c = strToken.charAt(0);
 
 
-            if (ignore.contains(token)) {
+            if (this.ignore.contains(token)) {
                 i++;
                 continue;
             }

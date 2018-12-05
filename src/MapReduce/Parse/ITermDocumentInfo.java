@@ -1,6 +1,4 @@
-package MapReduce;
-
-import Main.Term;
+package MapReduce.Parse;
 
 public interface ITermDocumentInfo extends Info {
 

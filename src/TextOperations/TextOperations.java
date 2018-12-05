@@ -32,7 +32,7 @@ public class TextOperations implements Runnable{
     @Override
     public void run() {
 
-        RemoveFromEndnStart remover = new RemoveFromEndnStart();
+        RemoveFromEndnStart remover = new RemoveFromEndnStart(new char[]{'.',','});
         RulesWords rules = new RulesWords();
 
 
@@ -54,7 +54,8 @@ public class TextOperations implements Runnable{
             String path = doc.getPath();
             String ID = doc.getID();
             this.stop_words.substract(rules);
-            List<Token> Text = remover.filter(this.stop_words.substract(rules).filter(this.tokenizer.Tokenize(doc.getText())));
+            //List<Token> Text = remover.filter(this.stop_words.substract(rules).filter(this.tokenizer.Tokenize(doc.getText())));
+            List<Token> Text = this.stop_words.substract(rules).filter(this.tokenizer.Tokenize(doc.getText()));
             //List<Token> Text =(this.stop_words.substract(rules).filter(this.tokenizer.Tokenize(doc.getText())));
             List<Token> Date = this.stop_words.filter(this.tokenizer.Tokenize(doc.getDate()));
             List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getHeader()));

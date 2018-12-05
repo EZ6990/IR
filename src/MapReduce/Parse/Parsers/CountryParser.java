@@ -1,10 +1,10 @@
-package MapReduce.Parsers;
+package MapReduce.Parse.Parsers;
 
-import Main.CountryInfo;
-import Main.DataProvider;
-import Main.Term;
-import MapReduce.AbstractTermDocumentInfo;
-import MapReduce.CityTDI;
+import MapReduce.Parse.CountryInfo;
+import IO.DataProvider;
+import MapReduce.Parse.Term;
+import MapReduce.Parse.AbstractTermDocumentInfo;
+import MapReduce.Parse.CityTDI;
 import TextOperations.Stemmer;
 import TextOperations.Token;
 import TextOperations.TokenizedDocument;

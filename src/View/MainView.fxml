@@ -26,7 +26,7 @@
                                     <VBox prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="-42.0" AnchorPane.topAnchor="0.0">
                                        <children>
                                           <Label text="Initial Data Path" />
-                                          <Label text="Inverted Index Path" />
+                                          <Label text="Inverted MapReduce.Index Path" />
                                        </children>
                                     </VBox>
                                  </children>

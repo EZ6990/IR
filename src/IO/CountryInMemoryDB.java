@@ -1,6 +1,6 @@
 package IO;
 
-import Main.CountryInfo;
+import MapReduce.Parse.CountryInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

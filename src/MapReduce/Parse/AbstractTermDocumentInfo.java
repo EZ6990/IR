@@ -1,6 +1,4 @@
-package MapReduce;
-
-import Main.Term;
+package MapReduce.Parse;
 
 public abstract class AbstractTermDocumentInfo implements ITermDocumentInfo {
 

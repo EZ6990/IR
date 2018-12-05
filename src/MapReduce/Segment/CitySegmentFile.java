@@ -1,10 +1,11 @@
-package MapReduce;
+package MapReduce.Segment;
 
 import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
+import MapReduce.Parse.CityTDI;
+import MapReduce.Parse.Info;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class CitySegmentFile extends SegmentFile {

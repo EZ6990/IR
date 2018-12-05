@@ -1,13 +1,9 @@
-package MapReduce;
-
-import Main.CountryInfo;
-import Main.Term;
-import MapReduce.Parsers.NumberParser;
+package MapReduce.Parse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CityTDI extends AbstractTermDocumentInfo{
+public class CityTDI extends AbstractTermDocumentInfo {
 
     private String country;
     private String currency;
@@ -27,7 +23,6 @@ public class CityTDI extends AbstractTermDocumentInfo{
         this.country = info.getCountryName();
         this.currency = info.getCurrency();
         this.population = info.getPopulation();
-        NumberParser.convertNumber(this.population,false);
         this.termLocation = new ArrayList<>();
     }
 
@@ -55,7 +50,7 @@ public class CityTDI extends AbstractTermDocumentInfo{
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(getTerm().getData());
-        builder.append(";").append(this.country).append(" ").append(this.currency).append(" ").append(this.population).append("?").append(this.getDocumentID());
+        builder.append(";").append(this.country).append("!").append(this.currency).append("!").append(this.population).append("?").append(this.getDocumentID());
         for (Integer location : this.termLocation) {
             builder.append("|").append(location);
         }

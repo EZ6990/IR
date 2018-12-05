@@ -1,7 +1,7 @@
-package Index;
+package MapReduce.Index;
 
 import IO.Segments.SegmentCityReader;
-import MapReduce.CitySegmentFile;
+import MapReduce.Segment.CitySegmentFile;
 
 import java.io.*;
 import java.util.HashMap;
@@ -40,10 +40,10 @@ public class CityIndexer {
                 termData = termData[1].split("\\?");
                 if (!this.cityIndex.containsKey(cityName)) {
                     String[] countyData = termData[0].split(" ");
-                    this.cityIndex.put(cityName,countyData[0] + " " + countyData[1] + " " + countyData[2]);
+                    this.cityIndex.put(cityName,countyData[0] + "!" + countyData[1] + "!" + countyData[2]);
                 }
                 StringBuilder tmp = new StringBuilder();
-                tmp.append(this.cityIndex.get(cityName)).append(termData[1]);
+                tmp.append(this.cityIndex.get(cityName)).append("?").append(termData[1]);
                 this.cityIndex.replace(cityName,tmp.toString());
             }
 
@@ -64,6 +64,7 @@ public class CityIndexer {
             output.flush();
             output.close();
         } catch (IOException e) {
+            e.printStackTrace();
         }
 //      System.out.println(LocalTime.now() + " Done Write Data To Disk On Letter:" + Letters[i]);
     //   System.out.println(LocalTime.now() + " TermIndex Size: " + this.termIndex.size());

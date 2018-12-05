@@ -1,6 +1,6 @@
 package IO.Segments;
 
-import MapReduce.Info;
+import MapReduce.Parse.Info;
 
 import java.util.HashMap;
 import java.util.List;

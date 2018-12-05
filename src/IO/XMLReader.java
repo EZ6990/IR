@@ -42,7 +42,7 @@ public class XMLReader {
         try {
             XMLHeader = (Element) XMLDocument.getElementsByTag("HEADER").get(0);
         }catch(Exception e){
-
+            //e.printStackTrace();
         }
 
 
