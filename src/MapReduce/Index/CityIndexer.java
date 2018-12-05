@@ -39,7 +39,7 @@ public class CityIndexer {
                 String cityName = termData[0];
                 termData = termData[1].split("\\?");
                 if (!this.cityIndex.containsKey(cityName)) {
-                    String[] countyData = termData[0].split(" ");
+                    String[] countyData = termData[0].split("!");
                     this.cityIndex.put(cityName,countyData[0] + "!" + countyData[1] + "!" + countyData[2]);
                 }
                 StringBuilder tmp = new StringBuilder();

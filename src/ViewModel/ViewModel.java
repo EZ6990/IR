@@ -1,14 +1,16 @@
 package ViewModel;
 
-import Model.IModel;
+import Model.IInvertedIndexModel;
+import View.IView;
+
 import java.util.Observable;
 import java.util.Observer;
 
-public class ViewModel  extends Observable implements Observer {
+public class ViewModel extends Observable implements Observer {
 
-    private final IModel model;
+    private final IInvertedIndexModel model;
 
-    public ViewModel(IModel model) {
+    public ViewModel(IInvertedIndexModel model) {
         this.model = model;
     }
     @Override

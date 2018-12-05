@@ -33,9 +33,6 @@ public class WordParser extends AbstractParser {
                 continue;
             }
 
-            while (strToken.length() > 0 && (strToken.charAt(strToken.length() - 1) == '.' || strToken.charAt(strToken.length() - 1) == ','))
-                strToken = strToken.substring(0, strToken.length() - 1);
-
             Token newToken = new Token(strToken);
             if (strToken.length() == 0 || (strToken.length() == 1 && ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')))
                     || (c == '$') || strToken.charAt(strToken.length() - 1) == '%' || isFraction(strToken)
@@ -55,8 +52,6 @@ public class WordParser extends AbstractParser {
         if (token.isNumber())
             return new Double(Double.parseDouble(token.toString()));
         String s = token.toString().replace(",", "");
-        while (s.length() > 0 && s.charAt(s.length() - 1) == '.')
-            s = s.substring(0, s.length() - 1);
         try {
             return new Double(Double.parseDouble(s));
 

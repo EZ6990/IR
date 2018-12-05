@@ -19,18 +19,23 @@ public class RemoveFromEndnStart implements IFilter {
 
         List<Token> tmpList = new ArrayList<>();
         for (Token token : lst) {
-            char [] chars = token.getWord().toCharArray();
+            char [] chars = token.getWord().trim().toCharArray();
             int posStart = 0;
             int posEnd = chars.length - 1;
             boolean bFound = true;
+            try{
             while (posStart < chars.length && bFound) {
                 bFound = false;
                 for (char cut : this.remove) {
                     if (chars[posStart] == cut) {
                         posStart++;
                         bFound = true;
+                        break;
                     }
                 }
+            }}
+            catch (Exception e){
+                System.out.println(token.getWord());
             }
             bFound = true;
             while (posEnd > posStart && bFound) {
@@ -39,6 +44,7 @@ public class RemoveFromEndnStart implements IFilter {
                     if (chars[posEnd] == cut) {
                         posEnd--;
                         bFound = true;
+                        break;
                     }
                 }
             }

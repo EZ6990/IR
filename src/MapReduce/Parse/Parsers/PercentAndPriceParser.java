@@ -105,8 +105,6 @@ public class PercentAndPriceParser extends AbstractParser {
         if (token.isNumber())
             return new Double(Double.parseDouble(token.toString()));
         String s = token.toString().replace(",", "");
-        while (s.length() > 0 && s.charAt(s.length() - 1) == '.')
-            s = s.substring(0, s.length() - 1);
         try {
             return new Double(Double.parseDouble(s));
 
