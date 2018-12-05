@@ -21,9 +21,6 @@ public class StopWords implements IFilter {
             this.tokenized_stop_words.add(new Token(stop_word.toLowerCase()));
             this.tokenized_stop_words.add(new Token(stop_word.substring(0,1).toUpperCase() + stop_word.substring(1)));
         }
-
-        IFilter filter = new RulesWords();
-        this.tokenized_stop_words = filter.filter(this.tokenized_stop_words);
     }
 
 
@@ -37,5 +34,15 @@ public class StopWords implements IFilter {
     @Override
     public boolean contains(Token token) {
         return this.tokenized_stop_words.contains(token);
+    }
+
+    @Override
+    public DynamicFilter substract(IFilter filter) {
+        return new DynamicFilter(filter.filter(this.tokenized_stop_words));
+    }
+    @Override
+    public DynamicFilter intersection(IFilter filter) {
+        DynamicFilter right = this.substract(filter);
+        return this.substract(right);
     }
 }

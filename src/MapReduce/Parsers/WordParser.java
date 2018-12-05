@@ -1,17 +1,17 @@
 package MapReduce.Parsers;
 
 import MapReduce.AbstractTermDocumentInfo;
-import TextOperations.Stemmer;
-import TextOperations.Token;
-import TextOperations.TokenizedDocument;
+import TextOperations.*;
 
 import java.util.HashMap;
 
 public class WordParser extends AbstractParser {
 
 
-    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+    private IFilter stopWords;
+    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer, IFilter howdareyou) {
         super(map, doc,stemmer);
+        this.stopWords = howdareyou;
     }
 
     @Override
@@ -19,12 +19,20 @@ public class WordParser extends AbstractParser {
         int i = 0, size = getTxtSize();
         String strToken;
         Token token;
+        DynamicFilter ignore = this.stopWords.intersection(new RulesWords());
+
 //
         while (i < size) {
             token = get(i);
             strToken = token.toString();
             Double d;
             char c = strToken.charAt(0);
+
+
+            if (ignore.contains(token)) {
+                i++;
+                continue;
+            }
 
             while (strToken.length() > 0 && (strToken.charAt(strToken.length() - 1) == '.' || strToken.charAt(strToken.length() - 1) == ','))
                 strToken = strToken.substring(0, strToken.length() - 1);

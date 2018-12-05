@@ -2,6 +2,7 @@ package MapReduce;
 
 import Main.DataProvider;
 import MapReduce.Parsers.*;
+import TextOperations.IFilter;
 import TextOperations.Stemmer;
 import TextOperations.TokenizedDocument;
 
@@ -20,8 +21,9 @@ public class MasterParser implements Runnable{
     private Semaphore master_parser_producer;
     private Semaphore segment_file_consumer;
     private Stemmer stemmer;
+    private IFilter howdareyou;
 
-    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer,Stemmer stemmer){
+    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer,Stemmer stemmer,IFilter howdareyou){
         this.tokennized_queue = tokennized_queue;
         this.tdi_queue = tdi_queue;
         this.bStop = false;
@@ -30,6 +32,7 @@ public class MasterParser implements Runnable{
         this.master_parser_producer = master_parser_producer;
         this.segment_file_consumer = segment_file_consumer;
         this.stemmer = stemmer;
+        this.howdareyou = howdareyou;
     }
 
 
@@ -62,7 +65,7 @@ public class MasterParser implements Runnable{
             //System.out.println("Start Country" + doc.getID());
             new CountryParser(map, doc,this.stemmer).manipulate();
             //System.out.println("Start Word" + doc.getID());
-            new WordParser(map, doc,this.stemmer).manipulate();
+            new WordParser(map, doc,this.stemmer,this.howdareyou).manipulate();
             //System.out.println("Finish Word" + doc.getID());
 
             if (map.size() > 0) {

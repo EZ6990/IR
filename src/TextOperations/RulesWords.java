@@ -11,7 +11,7 @@ public class RulesWords implements IFilter {
 
 
     public RulesWords(){
-        this.stop_words = new String [] {"Thousand","Million","Billion","Trillion","%","$","Percent","Percentage","Dollars","U.S.","January","February","March","April","May","June","July","August","September","October","November","December","Jan","Feb","Mar","Apr","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+        this.stop_words = new String [] {"Between","And","From","To","Thousand","Million","Billion","Trillion","%","$","Percent","Percentage","Dollars","U.S.","January","February","March","April","May","June","July","August","September","October","November","December","Jan","Feb","Mar","Apr","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
         this.tokenized_stop_stop_words = new ArrayList<Token>();
 
@@ -32,5 +32,14 @@ public class RulesWords implements IFilter {
     @Override
     public boolean contains(Token token) {
         return this.tokenized_stop_stop_words.contains(token);
+    }
+
+    public DynamicFilter substract(IFilter filter) {
+        return new DynamicFilter(filter.filter(this.tokenized_stop_stop_words));
+    }
+    @Override
+    public DynamicFilter intersection(IFilter filter) {
+        DynamicFilter right = filter.substract(this);
+        return this.substract(right);
     }
 }

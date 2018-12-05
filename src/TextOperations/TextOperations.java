@@ -33,6 +33,9 @@ public class TextOperations implements Runnable{
     public void run() {
 
         RemoveFromEndnStart remover = new RemoveFromEndnStart();
+        RulesWords rules = new RulesWords();
+
+
         while (true){
             try {
                 this.text_operation_consumer.acquire();
@@ -50,7 +53,8 @@ public class TextOperations implements Runnable{
             this.documnet_reader_producer.release();
             String path = doc.getPath();
             String ID = doc.getID();
-            List<Token> Text = remover.filter(this.stop_words.filter(this.tokenizer.Tokenize(doc.getText())));
+            this.stop_words.substract(rules);
+            List<Token> Text = remover.filter(this.stop_words.substract(rules).filter(this.tokenizer.Tokenize(doc.getText())));
             List<Token> Date = this.stop_words.filter(this.tokenizer.Tokenize(doc.getDate()));
             List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getHeader()));
 

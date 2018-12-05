@@ -51,7 +51,9 @@ public class CityTDI extends AbstractTermDocumentInfo{
 
     @Override
     public String toString() {
-        return getTerm().getData() + "," + this.country + "," + this.currency + "," + this.population + "," + this.termLocation;
+        StringBuilder builder = new StringBuilder(getTerm().getData());
+
+        return builder.append(";").append(this.country).append(" ") + this.currency + "," + this.population + "," + this.termLocation;
     }
 
 }
