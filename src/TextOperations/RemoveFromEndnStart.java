@@ -35,4 +35,14 @@ public class RemoveFromEndnStart implements IFilter {
     public boolean contains(Token token) {
         return token.getWord().matches(this.pattern.pattern());
     }
+
+    @Override
+    public DynamicFilter substract(IFilter filter) {
+        return null;
+    }
+
+    @Override
+    public DynamicFilter intersection(IFilter filter) {
+        return null;
+    }
 }

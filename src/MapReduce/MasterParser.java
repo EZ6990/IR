@@ -2,6 +2,8 @@ package MapReduce;
 
 import Main.DataProvider;
 import MapReduce.Parsers.*;
+import TextOperations.IFilter;
+import TextOperations.Stemmer;
 import TextOperations.TokenizedDocument;
 
 import java.time.LocalTime;
@@ -18,8 +20,10 @@ public class MasterParser implements Runnable{
     private Semaphore master_parser_consumer;
     private Semaphore master_parser_producer;
     private Semaphore segment_file_consumer;
+    private Stemmer stemmer;
+    private IFilter howdareyou;
 
-    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer){
+    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer,Stemmer stemmer,IFilter howdareyou){
         this.tokennized_queue = tokennized_queue;
         this.tdi_queue = tdi_queue;
         this.bStop = false;
@@ -27,6 +31,8 @@ public class MasterParser implements Runnable{
         this.master_parser_consumer = master_parser_consumer;
         this.master_parser_producer = master_parser_producer;
         this.segment_file_consumer = segment_file_consumer;
+        this.stemmer = stemmer;
+        this.howdareyou = howdareyou;
     }
 
 
@@ -51,15 +57,15 @@ public class MasterParser implements Runnable{
             this.text_operation_producer.release();
             HashMap<String, AbstractTermDocumentInfo> map = new HashMap<String, AbstractTermDocumentInfo>();
             //System.out.println("Start Date" + doc.getID());
-            new DatesAndRangeParser(map, doc).manipulate();
+            new DatesAndRangeParser(map, doc,this.stemmer).manipulate();
             //System.out.println("Start Number" + doc.getID());
-            new NumberParser(map, doc).manipulate();
+            new NumberParser(map, doc,this.stemmer).manipulate();
             //System.out.println("Start Price" + doc.getID());
-            new PercentAndPriceParser(map, doc).manipulate();
+            new PercentAndPriceParser(map, doc,this.stemmer).manipulate();
             //System.out.println("Start Country" + doc.getID());
-            new CountryParser(map, doc).manipulate();
+            new CountryParser(map, doc,this.stemmer).manipulate();
             //System.out.println("Start Word" + doc.getID());
-            new WordParser(map, doc).manipulate();
+            new WordParser(map, doc,this.stemmer,this.howdareyou).manipulate();
             //System.out.println("Finish Word" + doc.getID());
 
             if (map.size() > 0) {
