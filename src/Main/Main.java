@@ -52,9 +52,9 @@ public class Main {
 //
 //        RemoveFromEndnStart filter = new RemoveFromEndnStart();
 //        filter.filter(lst);
-
-        StopWords x = new StopWords();
-        DynamicFilter y = x.intersection(new RulesWords());
+//
+//        StopWords x = new StopWords();
+//        DynamicFilter y = x.intersection(new RulesWords());
 
         //System.out.println(164686.12%0.1);
 
