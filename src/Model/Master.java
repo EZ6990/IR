@@ -3,6 +3,7 @@ package Model;
 import IO.DataProvider;
 import IO.DocumentReader;
 import MapReduce.Index.CityIndexer;
+import MapReduce.Index.DocumentIndexer;
 import MapReduce.Index.Indexer;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import MapReduce.Parse.MasterParser;
@@ -79,21 +80,6 @@ public class Master {
 
         this.segment_posting= new Thread[1];
         this.runnable_segment_posting = new Runnable[1];
-//
-//        this.doc_readers = new Thread[1];
-//        this.runnable_doc_readers = new Runnable[1];
-//
-//        this.text_operators = new Thread[1];
-//        this.runnable_text_operators = new Runnable[1];
-//
-//        this.parsers = new Thread[1];
-//        this.runnable_parsers = new Runnable[1];
-//
-//        this.segments = new Thread[1];
-//        this.runnable_segments = new Runnable[1];
-//
-//        this.segment_posting= new Thread[1];
-//        this.runnable_segment_posting = new Runnable[1];
 
         this.document_reader_producer = new Semaphore(5000,true);
         this.text_operation_consumer=  new Semaphore(0,true);
@@ -152,6 +138,11 @@ public class Master {
         CityIndexer cityIndexer = new CityIndexer();
         cityIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile");
         System.out.println("End indexing city: " + LocalTime.now());
+
+        System.out.println("Start indexing document: " + LocalTime.now());
+        DocumentIndexer documentIndexer = new DocumentIndexer();
+        documentIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile");
+        System.out.println("End indexing document: " + LocalTime.now());
 
     }
 

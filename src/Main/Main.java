@@ -28,9 +28,6 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-        List x = new ArrayList();
-        x.get(0);
-
 //        try {
 //            CountryInfo c = new CountryInfo("Jerusalem");
 //        } catch (IOException e) {
