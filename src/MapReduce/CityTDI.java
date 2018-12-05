@@ -4,18 +4,21 @@ import Main.CountryInfo;
 import Main.Term;
 import MapReduce.Parsers.NumberParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CityTDI extends AbstractTermDocumentInfo{
 
     private String country;
     private String currency;
     private String population;
-    private String termLocation;
+    private List<Integer> termLocation;
 
     public CityTDI(Term term, String documentID, String country, String currency, String population) {
         super(term, documentID);
         this.country = country;
         this.currency = currency;
-        this.termLocation = "";
+        this.termLocation = new ArrayList<>();
         this.population = population;
     }
 
@@ -25,13 +28,11 @@ public class CityTDI extends AbstractTermDocumentInfo{
         this.currency = info.getCurrency();
         this.population = info.getPopulation();
         NumberParser.convertNumber(this.population,false);
-        this.termLocation = "";
+        this.termLocation = new ArrayList<>();
     }
 
     public void addLocation(int location) {
-        if (this.termLocation.length() > 0)
-            this.termLocation += ",";
-        this.termLocation += location;
+        this.termLocation.add(location);
     }
 
     public String getCountry() {
@@ -46,7 +47,7 @@ public class CityTDI extends AbstractTermDocumentInfo{
         return population;
     }
 
-    public String getTermLocation() {
+    public List<Integer> getTermLocation() {
         return termLocation;
     }
 
@@ -54,8 +55,12 @@ public class CityTDI extends AbstractTermDocumentInfo{
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(getTerm().getData());
+        builder.append(";").append(this.country).append(" ").append(this.currency).append(" ").append(this.population);
+        for (Integer location : this.termLocation) {
+            builder.append("|").append(location);
+        }
 
-        return builder.append(";").append(this.country).append(" ") + this.currency + "," + this.population + "," + this.termLocation;
+        return builder.toString();
     }
 
 }

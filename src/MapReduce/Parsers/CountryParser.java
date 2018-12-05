@@ -13,31 +13,36 @@ import java.util.HashMap;
 public class CountryParser extends AbstractParser {
 
     private CountryInfo country = null;
+    private int index;
     public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
         super(map, doc,stemmer);
+        this.index = 0;
     }
 
     @Override
     public void manipulate() {
         int docSize = getTxtSize();
-        int i = 0;
-        while (i < docSize){
+        while (this.index < docSize){
             country = null;
-            Token token = get(i);
+            Token token = get(this.index);
             if ((country = getCountryInfo((token.toString()))) != null)
                 putInMap(token.toString());
-            i++;
+            this.index++;
         }
     }
 
     @Override
     protected void putInMap(String s) {
         String capitalName = s.toUpperCase();
+        CityTDI tmp = null;
         if (map.containsKey(capitalName)) {
-            AbstractTermDocumentInfo tmp = map.get(capitalName);
+            tmp = (CityTDI)map.get(capitalName);
             tmp.setFrequency(tmp.getFrequency() + 1);
+            tmp.addLocation(this.index);
         } else {
-            map.put(capitalName, new CityTDI(new Term(capitalName,this.stemmer),this.document.getID(),this.country));
+            tmp = new CityTDI(new Term(capitalName,this.stemmer),this.document.getID(),this.country);
+            tmp.addLocation(this.index);
+            map.put(capitalName,tmp);
         }
     }
 
