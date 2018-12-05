@@ -142,7 +142,7 @@ public class Master {
 
         System.out.println("Start indexing city: " + LocalTime.now());
         CityIndexer cityIndexer = new CityIndexer();
-        cityIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles");
+        cityIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile");
         System.out.println("End indexing city: " + LocalTime.now());
 
     }
