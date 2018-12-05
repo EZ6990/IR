@@ -35,6 +35,7 @@ public class CountryParser extends AbstractParser {
     protected void putInMap(String s) {
         String capitalName = s.toUpperCase();
         CityTDI tmp = null;
+
         if (map.containsKey(capitalName)) {
             tmp = (CityTDI)map.get(capitalName);
             tmp.setFrequency(tmp.getFrequency() + 1);

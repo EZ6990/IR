@@ -20,8 +20,11 @@ package Main;
 
 
 import Index.Indexer;
+import TextOperations.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 
@@ -36,8 +39,23 @@ public class Main {
 //        DataProvider d = new DataProvider("");
 //        System.out.println(DataProvider.getCountryInfo("Rome").getCountryName());
 //
-        Master splinter = new Master();
-        splinter.start();
+//        Master splinter = new Master();
+//        splinter.start();
+
+//        List<Token> lst = new ArrayList<>();
+//        lst.add(new Token(".111.111."));
+//        lst.add(new Token("...222.222..."));
+//        lst.add(new Token(",333.333,"));
+//        lst.add(new Token(".,.444.444,.,"));
+//        lst.add(new Token(".,.555.555,.,"));
+//        lst.add(new Token(",,.,.asdfa123dasfv,,cxvm,.123,.,,"));
+//
+//        RemoveFromEndnStart filter = new RemoveFromEndnStart();
+//        filter.filter(lst);
+
+        StopWords x = new StopWords();
+        DynamicFilter y = x.intersection(new RulesWords());
+
         //System.out.println(164686.12%0.1);
 
 //        Indexer indexer = new Indexer();

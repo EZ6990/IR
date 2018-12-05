@@ -1,6 +1,7 @@
 package Main;
 
 import IO.DocumentReader;
+import Index.CityIndexer;
 import Index.Indexer;
 import MapReduce.*;
 import TextOperations.Document;
@@ -138,6 +139,11 @@ public class Master {
         Indexer indexer = new Indexer();
         indexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles");
         System.out.println("End indexing: " + LocalTime.now());
+
+        System.out.println("Start indexing city: " + LocalTime.now());
+        CityIndexer cityIndexer = new CityIndexer();
+        cityIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile");
+        System.out.println("End indexing city: " + LocalTime.now());
 
     }
 

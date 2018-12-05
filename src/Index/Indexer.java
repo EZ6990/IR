@@ -87,6 +87,7 @@ public class Indexer {
                         k++;
                         }
                         output.write(chunk.toString());
+                        output.flush();
                         output.close();
                     } catch (IOException e) {
                     }
