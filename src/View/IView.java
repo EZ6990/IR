@@ -11,8 +11,9 @@ public interface IView extends Observer {
     void setViewModel(ViewModel viewModel);
     public String getCorpusLocation();
     public String getStopWordsLocationLocation();
-    public void getLanguage();
-    public void getDictionary();
+    public String getPostLocation();
+    public void setLanguage();
+    public void setDictionary();
 
 
 

@@ -1,5 +1,6 @@
 package MapReduce.Index;
 
+import IO.DataProvider;
 import IO.Segments.SegmentTermReader;
 import MapReduce.Segment.TermSegmentFile;
 
@@ -21,6 +22,7 @@ public class Indexer {
 
     public void CreatePostFiles(String segmentLocation){
 
+        String postLocation = DataProvider.getPostLocation();
         File segmentFilesDirectory = new File(segmentLocation);
         File[] segment_sub_dirs = segmentFilesDirectory.listFiles(new FileFilter() {
             @Override
@@ -71,7 +73,7 @@ public class Indexer {
                     try {
 //                        System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
                         int k = 0;
-                        String path = "d:\\documents\\users\\talmalu\\Documents\\Tal\\PostFiles\\" + i;
+                        String path = postLocation + "\\" + i;
                         BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
                         StringBuilder chunk = new StringBuilder();
                         for (String s : chunkTermIndex.keySet()) {

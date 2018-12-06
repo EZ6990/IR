@@ -1,5 +1,6 @@
 package MapReduce.Segment;
 
+import IO.DataProvider;
 import IO.Segments.SegmentCityWriter;
 import IO.Segments.SegmentDocumentWriter;
 import IO.Segments.SegmentTermWriter;
@@ -49,6 +50,7 @@ public class SegmentFiles implements Runnable {
     @Override
     public void run() {
         int mapCounter = 0;
+        String postLocation = DataProvider.getPostLocation();
         String [] Letters = {
                 "#","$","%","&","'","*","+",",","-",".","/","0","1","2","3","4","5","6","7","8","9","<","=",">","@",
                 "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
@@ -57,11 +59,12 @@ public class SegmentFiles implements Runnable {
         HashMap<String,TermSegmentFile> tsfa =new HashMap<String,TermSegmentFile>();
         int index = 0;
         for (String s : Letters) {
-            tsfa.put(s,new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
+            tsfa.put(s,new TermSegmentFile(postLocation + "\\"+ this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
         }
 
-        DocumentSegmentFile dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
-        CitySegmentFile csf = new CitySegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city.txt",new SegmentCityWriter(),null);
+        DocumentSegmentFile dsf = new DocumentSegmentFile(postLocation + "\\docs.txt",new SegmentDocumentWriter(),null);
+        CitySegmentFile csf = new CitySegmentFile(postLocation + "\\city.txt",new SegmentCityWriter(),null);
+
 
         while (true){
             try {
@@ -124,10 +127,10 @@ public class SegmentFiles implements Runnable {
                 }
                 index = 0;
                 for (String s : Letters) {
-                    tsfa.put(s,new TermSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles\\"+ this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
+                    tsfa.put(s,new TermSegmentFile(postLocation + "\\"+ this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
                 }
 
-                dsf = new DocumentSegmentFile("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile\\docs.txt",new SegmentDocumentWriter(),null);
+                dsf = new DocumentSegmentFile(postLocation + "\\docs.txt",new SegmentDocumentWriter(),null);
                 mapCounter = 0;
             }
         }
