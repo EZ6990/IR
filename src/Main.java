@@ -25,8 +25,12 @@ public class Main extends Application {
         model.addObserver(viewModel);
         viewModel.addObserver(view);
 
+        view.setViewModel(viewModel);
+
+
+
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 600, 450));
         primaryStage.show();
     }
 

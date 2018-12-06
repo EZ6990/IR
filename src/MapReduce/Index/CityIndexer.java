@@ -1,5 +1,6 @@
 package MapReduce.Index;
 
+import IO.DataProvider;
 import IO.Segments.SegmentCityReader;
 import MapReduce.Segment.CitySegmentFile;
 
@@ -52,7 +53,7 @@ public class CityIndexer {
         try {
 //          System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
             int k = 0;
-            String path = "D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile\\city_indexed.txt";
+            String path = DataProvider.getStopWordsLocation() + "\\city_indexed.txt";
             BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
             StringBuilder chunk = new StringBuilder();
             for (String s : this.cityIndex.keySet()) {

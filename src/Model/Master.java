@@ -16,6 +16,7 @@ import TextOperations.TextOperations;
 import TextOperations.Tokenize;
 import TextOperations.StopWords;
 import TextOperations.RulesWords;
+import TextOperations.Stemmer;
 import TextOperations.IFilter;
 import TextOperations.TokenizedDocument;
 import java.io.File;
@@ -56,10 +57,12 @@ public class Master {
     private Semaphore segment_file_producer;
     private Semaphore segment_writer_consumer;
 
+    private DataProvider provider;
+    private StopWords stopWords;
+    private Stemmer stemmer;
 
 
-
-    public Master() {
+    public Master(DataProvider provider, Stemmer stemmer) {
         this.files_queue = new ConcurrentLinkedQueue<File>();
         this.document_queue = new ConcurrentLinkedQueue<Document>();
         this.tokenized_queue = new ConcurrentLinkedQueue<TokenizedDocument>();
@@ -90,10 +93,11 @@ public class Master {
         this.segment_file_producer = new Semaphore(1000,true);
         this.segment_writer_consumer = new Semaphore(0,true);
 
+        this.provider = provider;
 
-        DataProvider data = new DataProvider("");
-
-        LoadDocuments("D:\\documents\\users\\talmalu\\Downloads\\corpus\\corpus");
+        LoadDocuments(DataProvider.getCorpusLocation());
+        this.stopWords = new StopWords(DataProvider.getStopWordsLocation());
+        this.stemmer = stemmer;
     }
 
     private void LoadDocuments(String location){
@@ -155,14 +159,14 @@ public class Master {
     }
     private void StartTextOperators(){
         for (int i = 0; i < this.text_operators.length ; i++) {
-            this.text_operators[i] = new Thread((this.runnable_text_operators[i] = new TextOperations(this.document_queue,this.tokenized_queue,new Tokenize(),new StopWords(),this.document_reader_producer,this.text_operation_consumer,this.text_operation_producer,this.master_parser_consumer)));
+            this.text_operators[i] = new Thread((this.runnable_text_operators[i] = new TextOperations(this.document_queue,this.tokenized_queue,new Tokenize(),this.stopWords,this.document_reader_producer,this.text_operation_consumer,this.text_operation_producer,this.master_parser_consumer)));
             this.text_operators[i].start();
         }
     }
     private void StartParsers() {
-        IFilter ignore = (new StopWords().intersection(new RulesWords()));
+        IFilter ignore = (this.stopWords.intersection(new RulesWords()));
         for (int i = 0; i < this.parsers.length ; i++) {
-            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer,null,ignore)));
+            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer,this.stemmer,ignore)));
             this.parsers[i].start();
         }
     }
