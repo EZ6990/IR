@@ -12,7 +12,6 @@ public class ViewModel extends Observable implements Observer {
 
     private final IInvertedIndexModel model;
 
-    private HashMap<String,Integer> termTF;
     public ViewModel(IInvertedIndexModel model) {
         this.model = model;
     }
@@ -43,5 +42,9 @@ public class ViewModel extends Observable implements Observer {
         this.model.setPostLocation(postLocation);
         this.model.setStemmer(selected);
         this.model.LoadDictionary();
+    }
+
+    public HashMap<String,String> getDictionary() {
+        return this.model.getTermTF();
     }
 }

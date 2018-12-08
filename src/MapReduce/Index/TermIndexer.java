@@ -5,7 +5,6 @@ import IO.Segments.SegmentTermReader;
 import MapReduce.Segment.TermSegmentFile;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -116,10 +115,8 @@ public class TermIndexer extends Indexer{
 
     public HashMap<String,String> getTermNumberOfOccurrenceMap(){
         HashMap <String,String> map = new HashMap<String,String>();
-        String [] terms =(String [])this.Index.keySet().toArray();
-        Arrays.sort(terms,String.CASE_INSENSITIVE_ORDER);
 
-        for (String term: terms) {
+        for (String term: this.Index.keySet()) {
             String [] termData = ((String)this.Index.get(term)).split(" ");
             map.put(term,termData[2]);
         }

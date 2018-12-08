@@ -42,10 +42,11 @@ public class WordParser extends AbstractParser {
                 continue;
 
 
-            } else if (strToken.length() > 1 && strToken.charAt(strToken.length() - 1) == 's' && strToken.charAt(strToken.length() - 2) == '\'')
-                putInMap(strToken.substring(0, strToken.length() - 2));
+            } else if (strToken.length() > 1 && strToken.charAt(strToken.length() - 1) == 's' && strToken.charAt(strToken.length() - 2) == '\'') {
+                if (strToken.length() > 2)
+                    putInMap(strToken.substring(0, strToken.length() - 2));
 
-
+            }
             else
                 putInMap(strToken);
             i++;

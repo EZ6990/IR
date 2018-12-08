@@ -74,14 +74,14 @@ public class Master {
         this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
         this.destSegmentFilesQueue = new ConcurrentLinkedQueue<SegmentFile>();
 
-        this.doc_readers = new Thread[1];
-        this.runnable_doc_readers = new Runnable[1];
+        this.doc_readers = new Thread[2];
+        this.runnable_doc_readers = new Runnable[2];
 
-        this.text_operators = new Thread[16];
-        this.runnable_text_operators = new Runnable[16];
+        this.text_operators = new Thread[8];
+        this.runnable_text_operators = new Runnable[8];
 
-        this.parsers = new Thread[16];
-        this.runnable_parsers = new Runnable[16];
+        this.parsers = new Thread[8];
+        this.runnable_parsers = new Runnable[8];
 
         this.segments = new Thread[2];
         this.runnable_segments = new Runnable[2];
@@ -100,8 +100,10 @@ public class Master {
 
         this.provider = provider;
 
-        LoadDocuments(DataProvider.getCorpusLocation());
-        this.stopWords = new StopWords(DataProvider.getStopWordsLocation());
+        if (!(DataProvider.getCorpusLocation() == null)) {
+            LoadDocuments(DataProvider.getCorpusLocation());
+            this.stopWords = new StopWords(DataProvider.getStopWordsLocation());
+        }
         this.stemmer = stemmer;
     }
 
@@ -127,33 +129,36 @@ public class Master {
     public void start() throws InterruptedException {
 
         System.out.println("Start : " + LocalTime.now());
-//        StartReaders();
-//        StartTextOperators();
-//        StartParsers();
-//        StartSegments();
-//        StartSegmentFilesPosting();
-//        WaitReaders();
-//        WaitTextOperators();
-//        WaitParsers();
-//        WaitSegments();
-//        WaitSegmentFilesPosting();
-//
-//         String postLocation = DataProvider.getPostLocation();
-//
-//        System.out.println("Start indexing: " + LocalTime.now());
-//        this.termIndexer = new TermIndexer(postLocation +"\\termIndexer.txt");
-//        this.termIndexer.CreatePostFiles(postLocation);
-//        System.out.println("End indexing: " + LocalTime.now());
-//
-//        System.out.println("Start indexing city: " + LocalTime.now());
-//        this.cityIndexer = new CityIndexer(postLocation +"\\cityIndexer.txt");
-//        this.cityIndexer.CreatePostFiles(postLocation);
-//        System.out.println("End indexing city: " + LocalTime.now());
-//
-//        System.out.println("Start indexing document: " + LocalTime.now());
-//        this.documentIndexer = new DocumentIndexer(postLocation +"\\documentIndexer.txt");
-//        this.documentIndexer.CreatePostFiles(postLocation);
-//        System.out.println("End indexing document: " + LocalTime.now());
+        StartReaders();
+        StartTextOperators();
+        StartParsers();
+        StartSegments();
+        StartSegmentFilesPosting();
+        WaitReaders();
+        WaitTextOperators();
+        WaitParsers();
+        WaitSegments();
+        WaitSegmentFilesPosting();
+
+        String postLocation = DataProvider.getPostLocation();
+
+        System.out.println("Start indexing: " + LocalTime.now());
+        this.termIndexer = new TermIndexer(postLocation +"\\termIndexer.txt");
+        this.termIndexer.CreatePostFiles(postLocation);
+        this.termIndexer.write();
+        System.out.println("End indexing: " + LocalTime.now());
+
+        System.out.println("Start indexing city: " + LocalTime.now());
+        this.cityIndexer = new CityIndexer(postLocation +"\\cityIndexer.txt");
+        this.cityIndexer.CreatePostFiles(postLocation);
+        this.cityIndexer.write();
+        System.out.println("End indexing city: " + LocalTime.now());
+
+        System.out.println("Start indexing document: " + LocalTime.now());
+        this.documentIndexer = new DocumentIndexer(postLocation +"\\documentIndexer.txt");
+        this.documentIndexer.CreatePostFiles(postLocation);
+        this.documentIndexer.write();
+        System.out.println("End indexing document: " + LocalTime.now());
 
     }
 
@@ -277,4 +282,8 @@ public class Master {
             this.documentIndexer = new DocumentIndexer(DataProvider.getPostLocation() + "\\documentIndexer.txt");
 
         this.documentIndexer.read();    }
+
+    public HashMap<String, String> getTermTF() {
+        return this.termIndexer.getTermNumberOfOccurrenceMap();
+    }
 }

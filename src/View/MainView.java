@@ -2,18 +2,20 @@ package View;
 
 import ViewModel.ViewModel;
 import javafx.beans.binding.BooleanBinding;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
+import java.util.HashMap;
 import java.util.Observable;
 
 public class MainView implements IView {
+
 
 
     private Stage stage;
@@ -28,7 +30,7 @@ public class MainView implements IView {
     public Button dcPostPath;
     public TextField tfCorpusInputPath;
     public TextField tfPostOutputPath;
-    public TableView tbDictionary;
+    public ListView lvDictionary;
 
 
 
@@ -111,7 +113,6 @@ public class MainView implements IView {
                 this.btnViewDictionary.setVisible(true);
             }
             else if (((String)arg).equals("CLEAR_DONE")){
-                this.tbDictionary.setVisible(false);
                 this.btnViewDictionary.setVisible(false);
             }
         }
@@ -150,6 +151,18 @@ public class MainView implements IView {
     }
 
     public void ShowDictionary(ActionEvent actionEvent) {
-        tbDictionary.setVisible(true);
+        LoadDictionaryToTable(this.viewModel.getDictionary());
+    }
+
+    private void LoadDictionaryToTable(HashMap<String,String> data){
+
+        ObservableList names = FXCollections.observableArrayList();
+        Object [] keys = data.keySet().toArray();
+        for (Object key : keys)
+            names.add(((String)key + "\t" + data.get(key)));
+
+        SortedList<String> sorted = new SortedList<String>(names,String.CASE_INSENSITIVE_ORDER);
+        this.lvDictionary.setItems(sorted);
+
     }
 }

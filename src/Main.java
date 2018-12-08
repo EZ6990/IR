@@ -22,6 +22,7 @@ public class Main extends Application {
         SimpleInvertedIndexModel model = new SimpleInvertedIndexModel();
         ViewModel viewModel = new ViewModel(model);
 
+        view.setStage(primaryStage);
         model.addObserver(viewModel);
         viewModel.addObserver(view);
 

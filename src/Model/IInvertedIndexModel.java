@@ -15,6 +15,6 @@ public interface IInvertedIndexModel{
     public void setPostLocation(String location);
     public void LoadDictionary();
     public List<String> getLanguage();
-    public HashMap<String,Integer> getTermTF();
+    public HashMap<String,String> getTermTF();
     public void setStemmer(boolean selected);
 }

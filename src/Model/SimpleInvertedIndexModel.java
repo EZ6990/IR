@@ -80,8 +80,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     @Override
-    public HashMap<String, Integer> getTermTF() {
-        return null;
+    public HashMap<String, String> getTermTF() {
+        return this.splinter.getTermTF();
     }
 
     @Override
