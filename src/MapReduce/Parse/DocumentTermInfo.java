@@ -6,13 +6,16 @@ public class DocumentTermInfo implements Info{
     private String mostCommonName;
     private int mostCommonFreq;
     private String documentName;
+    private int numOfTerms;
 
     public DocumentTermInfo(String documentName) {
         this.numOfDifferentWords = 0;
         this.mostCommonName = "";
         this.mostCommonFreq = 0;
         this.documentName=documentName;
+        this.numOfTerms=0;
     }
+    public void addToNumOfTerms(int freq){numOfTerms+=freq;}
 
     public void setNumOfDifferentWords(int numOfDifferentWords) {
         this.numOfDifferentWords = numOfDifferentWords;
@@ -41,6 +44,6 @@ public class DocumentTermInfo implements Info{
 
     @Override
     public String toString() {
-        return this.documentName + ";" + this.mostCommonFreq + "|" + this.numOfDifferentWords;
+        return this.documentName + ";" + this.mostCommonFreq + "|" + this.numOfDifferentWords +"|" +this.numOfTerms;
     }
 }

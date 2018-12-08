@@ -98,6 +98,8 @@ public class SegmentFiles implements Runnable {
                     dti.setMostCommonName(s);
                     dti.setMostCommonFreq(map.get(s).getFrequency());
                 }
+                dti.addToNumOfTerms(tdi.getFrequency());
+
             }
             //System.out.println("END ID: " + dti.getDocumentName() + "  Took : " + (System.currentTimeMillis() - start));
             dsf.add(dti.getDocumentName(), dti);

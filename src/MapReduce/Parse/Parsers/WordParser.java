@@ -9,8 +9,9 @@ public class WordParser extends AbstractParser {
 
 
     private IFilter ignore;
+
     public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer, IFilter ignore) {
-        super(map, doc,stemmer);
+        super(map, doc, stemmer);
         this.ignore = ignore;
     }
 
@@ -39,9 +40,14 @@ public class WordParser extends AbstractParser {
                     || strToken.contains("-") || ((isNumber(newToken)) != null)) {
                 i++;
                 continue;
-            } else putInMap(strToken);
 
-            putInMap(strToken);
+
+            } else if (strToken.length() > 1 && strToken.charAt(strToken.length() - 1) == 's' && strToken.charAt(strToken.length() - 2) == '\'')
+                putInMap(strToken.substring(0, strToken.length() - 2));
+
+
+            else
+                putInMap(strToken);
             i++;
         }
 
