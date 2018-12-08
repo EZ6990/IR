@@ -4,7 +4,7 @@ import IO.DataProvider;
 import IO.DocumentReader;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Index.DocumentIndexer;
-import MapReduce.Index.Indexer;
+import MapReduce.Index.TermIndexer;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import MapReduce.Parse.MasterParser;
 import MapReduce.Segment.SegmentFile;
@@ -19,6 +19,7 @@ import TextOperations.RulesWords;
 import TextOperations.Stemmer;
 import TextOperations.IFilter;
 import TextOperations.TokenizedDocument;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.time.LocalTime;
@@ -60,6 +61,10 @@ public class Master {
     private DataProvider provider;
     private StopWords stopWords;
     private Stemmer stemmer;
+
+    private TermIndexer termIndexer;
+    private CityIndexer cityIndexer;
+    private DocumentIndexer documentIndexer;
 
 
     public Master(DataProvider provider, Stemmer stemmer) {
@@ -133,19 +138,21 @@ public class Master {
         WaitSegments();
         WaitSegmentFilesPosting();
 
+        String postLocation = DataProvider.getPostLocation();
+
         System.out.println("Start indexing: " + LocalTime.now());
-        Indexer indexer = new Indexer();
-        indexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\SegmentFiles");
+        this.termIndexer = new TermIndexer(postLocation +"\\termIndexer.txt");
+        this.termIndexer.CreatePostFiles(postLocation);
         System.out.println("End indexing: " + LocalTime.now());
 
         System.out.println("Start indexing city: " + LocalTime.now());
-        CityIndexer cityIndexer = new CityIndexer();
-        cityIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\CiryFile");
+        this.cityIndexer = new CityIndexer(postLocation +"\\cityIndexer.txt");
+        this.cityIndexer.CreatePostFiles(postLocation);
         System.out.println("End indexing city: " + LocalTime.now());
 
         System.out.println("Start indexing document: " + LocalTime.now());
-        DocumentIndexer documentIndexer = new DocumentIndexer();
-        documentIndexer.CreatePostFiles("D:\\documents\\users\\talmalu\\Documents\\Tal\\DocumentFile");
+        this.documentIndexer = new DocumentIndexer(postLocation +"\\documentIndexer.txt");
+        this.documentIndexer.CreatePostFiles(postLocation);
         System.out.println("End indexing document: " + LocalTime.now());
 
     }
@@ -250,4 +257,24 @@ public class Master {
         System.out.println("Finished Segments File : " + LocalTime.now());
     }
     private void SegmentFilesPostingFinished() { System.out.println("Finished Segment Posting : " + LocalTime.now()); }
+
+    public void LoadTermIndex() {
+        if (this.termIndexer == null)
+            this.termIndexer = new TermIndexer(DataProvider.getPostLocation() + "\\termIndexer.txt");
+
+        this.termIndexer.read();
+    }
+
+    public void LoadCityIndexer() {
+        if (this.cityIndexer == null)
+            this.cityIndexer = new CityIndexer(DataProvider.getPostLocation() + "\\cityIndexer.txt");
+
+        this.cityIndexer.read();
+    }
+
+    public void LoadDocumentIndexer() {
+        if (this.documentIndexer == null)
+            this.documentIndexer = new DocumentIndexer(DataProvider.getPostLocation() + "\\documentIndexer.txt");
+
+        this.documentIndexer.read();    }
 }

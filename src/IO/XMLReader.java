@@ -45,7 +45,6 @@ public class XMLReader {
             //e.printStackTrace();
         }
 
-
         path = this.xml_file.getPath();
 
 

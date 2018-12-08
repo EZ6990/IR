@@ -2,6 +2,7 @@ package ViewModel;
 
 import Model.IInvertedIndexModel;
 import View.IView;
+import javafx.scene.control.TextField;
 
 import java.util.HashMap;
 import java.util.Observable;
@@ -25,12 +26,24 @@ public class ViewModel extends Observable implements Observer {
 
     }
 
-    public void startInvertedIndex(String corpusLocation, String postLocation){
+    public void startInvertedIndex(String corpusLocation, String postLocation, boolean selected){
         this.model.setCorpusLocation(corpusLocation);
         this.model.setStopWordsLocationLocation(corpusLocation);
         this.model.setPostLocation(postLocation);
+        this.model.setStemmer(selected);
         this.model.StartInvertedIndex();
     }
 
 
+    public void Clear(String location) {
+        this.model.setPostLocation(location);
+        this.model.ClearInvertedIndex();
+
+    }
+
+    public void LoadIndexers(String postLocation, boolean selected) {
+        this.model.setPostLocation(postLocation);
+        this.model.setStemmer(selected);
+        this.model.LoadDictionary();
+    }
 }

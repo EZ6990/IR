@@ -4,6 +4,7 @@ import ViewModel.ViewModel;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -14,9 +15,13 @@ import java.util.Observable;
 public class MainView implements IView {
 
 
-
     private Stage stage;
+    private ViewModel viewModel;
 
+
+    public CheckBox cbStemmer;
+    public Button btnLoad;
+    public Button btnClear;
     public Button btnStart;
     public Button dcCorpusPath;
     public Button dcPostPath;
@@ -36,9 +41,28 @@ public class MainView implements IView {
                 return (tfCorpusInputPath.getText().isEmpty() || tfPostOutputPath.getText().isEmpty());
             }
         });
+
+        this.btnClear.disableProperty().bind(new BooleanBinding() {
+            {
+                super.bind(tfPostOutputPath.textProperty());
+            }
+            @Override
+            protected boolean computeValue() {
+                return (tfPostOutputPath.getText().isEmpty());
+            }
+        });
+
+        this.btnLoad.disableProperty().bind(new BooleanBinding() {
+            {
+                super.bind(tfPostOutputPath.textProperty());
+            }
+            @Override
+            protected boolean computeValue() {
+                return (tfPostOutputPath.getText().isEmpty());
+            }
+        });
     }
 
-    private ViewModel viewModel;
 
     @Override
     public void setStage(Stage stage) {
@@ -103,6 +127,14 @@ public class MainView implements IView {
     }
 
     public void startInvertedIndex(ActionEvent actionEvent) {
-        this.viewModel.startInvertedIndex(this.tfCorpusInputPath.getText(),this.tfPostOutputPath.getText());
+        this.viewModel.startInvertedIndex(this.tfCorpusInputPath.getText(),this.tfPostOutputPath.getText(),this.cbStemmer.isSelected());
+    }
+
+    public void Clear(ActionEvent actionEvent) {
+        this.viewModel.Clear(this.tfPostOutputPath.getText());
+    }
+
+    public void LoadIndexers(ActionEvent actionEvent) {
+        this.viewModel.LoadIndexers(this.tfPostOutputPath.getText(),this.cbStemmer.isSelected());
     }
 }
