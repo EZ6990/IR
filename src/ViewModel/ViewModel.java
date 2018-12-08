@@ -19,11 +19,9 @@ public class ViewModel extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (o == model){
-            if (((String)arg).equals("INVERTED INDEX DONE")){
-                this.termTF = model.getTermTF();
-            }
+            setChanged();
+            notifyObservers(arg);
         }
-
     }
 
     public void startInvertedIndex(String corpusLocation, String postLocation, boolean selected){
@@ -31,14 +29,14 @@ public class ViewModel extends Observable implements Observer {
         this.model.setStopWordsLocationLocation(corpusLocation);
         this.model.setPostLocation(postLocation);
         this.model.setStemmer(selected);
-        this.model.StartInvertedIndex();
+
+        new Thread(() -> {this.model.StartInvertedIndex();}).start();
     }
 
 
     public void Clear(String location) {
         this.model.setPostLocation(location);
         this.model.ClearInvertedIndex();
-
     }
 
     public void LoadIndexers(String postLocation, boolean selected) {

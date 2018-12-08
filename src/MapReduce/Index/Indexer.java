@@ -52,6 +52,4 @@ public abstract class Indexer {
             e.printStackTrace();
         }
     }
-
-
 }
