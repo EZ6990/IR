@@ -43,6 +43,7 @@ public class DataProvider {
     public static void setPostLocation(String postLocation) {
         DataProvider.postLocation = postLocation;
     }
+
     public static String getStopWordsLocation() {
         return DataProvider.stopWordsLocation;
     }
@@ -58,6 +59,7 @@ public class DataProvider {
     public static String getPrefixPost() {
         return DataProvider.prefixPost;
     }
+
     public static void setPrefixPost(String prefixPost) {
         DataProvider.prefixPost = prefixPost;
     }
