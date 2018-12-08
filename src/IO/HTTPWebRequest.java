@@ -11,8 +11,6 @@ import java.util.Scanner;
 public class HTTPWebRequest {
 
     public JSONObject post(String url) throws IOException {
-
-
         URL address = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) address.openConnection();
         conn.setRequestMethod("GET");
