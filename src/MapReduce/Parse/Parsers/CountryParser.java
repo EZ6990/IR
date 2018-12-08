@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 public class CountryParser extends AbstractParser {
 
+
     private CountryInfo country = null;
     private int index;
     public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
@@ -21,6 +22,11 @@ public class CountryParser extends AbstractParser {
 
     @Override
     public void manipulate() {
+
+        if (this.getFP104().size() > 0){
+
+        }
+
         int docSize = getTxtSize();
         while (this.index < docSize){
             country = null;

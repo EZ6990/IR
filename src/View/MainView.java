@@ -5,6 +5,7 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -18,8 +19,8 @@ public class MainView implements IView {
     private Stage stage;
     private ViewModel viewModel;
 
-
     public CheckBox cbStemmer;
+    public Button btnViewDictionary;
     public Button btnLoad;
     public Button btnClear;
     public Button btnStart;
@@ -27,6 +28,7 @@ public class MainView implements IView {
     public Button dcPostPath;
     public TextField tfCorpusInputPath;
     public TextField tfPostOutputPath;
+    public TableView tbDictionary;
 
 
 
@@ -102,7 +104,16 @@ public class MainView implements IView {
     @Override
     public void update(Observable o, Object arg) {
         if (o == this.viewModel){
-
+            if (((String)arg).equals("INVERTED_INDEX_DONE")){
+                this.btnViewDictionary.setVisible(true);
+            }
+            else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
+                this.btnViewDictionary.setVisible(true);
+            }
+            else if (((String)arg).equals("CLEAR_DONE")){
+                this.tbDictionary.setVisible(false);
+                this.btnViewDictionary.setVisible(false);
+            }
         }
 
     }
@@ -122,7 +133,7 @@ public class MainView implements IView {
     }
 
     public void SetPostPath(ActionEvent actionEvent) {
-        String  location = OpenFolderChooser();
+        String location = OpenFolderChooser();
         this.tfPostOutputPath.setText(location);
     }
 
@@ -136,5 +147,9 @@ public class MainView implements IView {
 
     public void LoadIndexers(ActionEvent actionEvent) {
         this.viewModel.LoadIndexers(this.tfPostOutputPath.getText(),this.cbStemmer.isSelected());
+    }
+
+    public void ShowDictionary(ActionEvent actionEvent) {
+        tbDictionary.setVisible(true);
     }
 }

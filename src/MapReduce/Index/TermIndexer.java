@@ -5,6 +5,7 @@ import IO.Segments.SegmentTermReader;
 import MapReduce.Segment.TermSegmentFile;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class TermIndexer extends Indexer{
     public TermIndexer(String location){
         super(location);
     }
+
 
 
 
@@ -80,7 +82,7 @@ public class TermIndexer extends Indexer{
                         int numOfDocs=splitToCount.length;
                         chunk.append(s).append(";").append(forgodsake[0]);
                         chunk.append("\n");
-                        chunkTermIndex.replace(s, i + " " + k + " " + num+" "+numOfDocs);
+                        chunkTermIndex.replace(s, i + " " + k + " " + num + " " + numOfDocs);
                         k++;
                     }
                     output.write(chunk.toString());
@@ -110,5 +112,17 @@ public class TermIndexer extends Indexer{
         int sum=Integer.parseInt(split[1])+Integer.parseInt(splitMapTerm[1]);
         chunkTermIndex.put(term,(new StringBuilder(split[0]).append("|").append(splitMapTerm[0]).append("?").append(sum)).toString());
 
+    }
+
+    public HashMap<String,String> getTermNumberOfOccurrenceMap(){
+        HashMap <String,String> map = new HashMap<String,String>();
+        String [] terms =(String [])this.Index.keySet().toArray();
+        Arrays.sort(terms,String.CASE_INSENSITIVE_ORDER);
+
+        for (String term: terms) {
+            String [] termData = ((String)this.Index.get(term)).split(" ");
+            map.put(term,termData[2]);
+        }
+        return map;
     }
 }

@@ -127,33 +127,33 @@ public class Master {
     public void start() throws InterruptedException {
 
         System.out.println("Start : " + LocalTime.now());
-        StartReaders();
-        StartTextOperators();
-        StartParsers();
-        StartSegments();
-        StartSegmentFilesPosting();
-        WaitReaders();
-        WaitTextOperators();
-        WaitParsers();
-        WaitSegments();
-        WaitSegmentFilesPosting();
-
-        String postLocation = DataProvider.getPostLocation();
-
-        System.out.println("Start indexing: " + LocalTime.now());
-        this.termIndexer = new TermIndexer(postLocation +"\\termIndexer.txt");
-        this.termIndexer.CreatePostFiles(postLocation);
-        System.out.println("End indexing: " + LocalTime.now());
-
-        System.out.println("Start indexing city: " + LocalTime.now());
-        this.cityIndexer = new CityIndexer(postLocation +"\\cityIndexer.txt");
-        this.cityIndexer.CreatePostFiles(postLocation);
-        System.out.println("End indexing city: " + LocalTime.now());
-
-        System.out.println("Start indexing document: " + LocalTime.now());
-        this.documentIndexer = new DocumentIndexer(postLocation +"\\documentIndexer.txt");
-        this.documentIndexer.CreatePostFiles(postLocation);
-        System.out.println("End indexing document: " + LocalTime.now());
+//        StartReaders();
+//        StartTextOperators();
+//        StartParsers();
+//        StartSegments();
+//        StartSegmentFilesPosting();
+//        WaitReaders();
+//        WaitTextOperators();
+//        WaitParsers();
+//        WaitSegments();
+//        WaitSegmentFilesPosting();
+//
+//         String postLocation = DataProvider.getPostLocation();
+//
+//        System.out.println("Start indexing: " + LocalTime.now());
+//        this.termIndexer = new TermIndexer(postLocation +"\\termIndexer.txt");
+//        this.termIndexer.CreatePostFiles(postLocation);
+//        System.out.println("End indexing: " + LocalTime.now());
+//
+//        System.out.println("Start indexing city: " + LocalTime.now());
+//        this.cityIndexer = new CityIndexer(postLocation +"\\cityIndexer.txt");
+//        this.cityIndexer.CreatePostFiles(postLocation);
+//        System.out.println("End indexing city: " + LocalTime.now());
+//
+//        System.out.println("Start indexing document: " + LocalTime.now());
+//        this.documentIndexer = new DocumentIndexer(postLocation +"\\documentIndexer.txt");
+//        this.documentIndexer.CreatePostFiles(postLocation);
+//        System.out.println("End indexing document: " + LocalTime.now());
 
     }
 

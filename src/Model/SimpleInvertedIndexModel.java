@@ -34,7 +34,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        setChanged();
+        notifyObservers("INVERTED_INDEX_DONE");
     }
 
     @Override
@@ -44,6 +45,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             f.delete();
         }
         this.splinter = null;
+        setChanged();
+        notifyObservers("CLEAR_DONE");
     }
 
     @Override
@@ -67,6 +70,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         this.splinter.LoadTermIndex();
         this.splinter.LoadCityIndexer();
         this.splinter.LoadDocumentIndexer();
+        setChanged();
+        notifyObservers("LOAD_INVERTED_INDEX_DONE");
     }
 
     @Override
