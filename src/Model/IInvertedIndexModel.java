@@ -1,10 +1,7 @@
 package Model;
 
-import javafx.beans.Observable;
-
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observer;
 
 public interface IInvertedIndexModel{
 

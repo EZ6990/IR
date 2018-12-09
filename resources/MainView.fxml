@@ -19,7 +19,8 @@
       <CheckBox fx:id="cbStemmer" layoutX="86.0" layoutY="160.0" mnemonicParsing="false" text="Stemming" />
       <Button fx:id="btnClear" layoutX="175.0" layoutY="200.0" mnemonicParsing="false" onAction="#Clear" text="Clear" />
       <Button fx:id="btnLoad" layoutX="265.0" layoutY="200.0" mnemonicParsing="false" onAction="#LoadIndexers" text="Load" />
-      <Button fx:id="btnViewDictionary" layoutX="147.0" layoutY="323.0" mnemonicParsing="false" onAction="#ShowDictionary" text="ViewDictionary" visible="false" />
+      <Button fx:id="btnViewDictionary" layoutX="147.0" layoutY="323.0" mnemonicParsing="false" onAction="#ShowDictionary" text="View Dictionary" visible="false" />
+      <Button fx:id="btnViewLanguages" layoutX="147.0" layoutY="353.0" mnemonicParsing="false" onAction="#ShowLanguages" text="View Languages" visible="false" />
       <ListView fx:id="lvDictionary" layoutX="400" layoutY="0" prefHeight="450" prefWidth="200" />
    </children>
 </AnchorPane>

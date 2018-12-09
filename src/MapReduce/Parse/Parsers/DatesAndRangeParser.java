@@ -112,7 +112,7 @@ public class DatesAndRangeParser extends AbstractParser {
                 } else if ((theNumber=isNumber(token))!=null) {
                     //second is month
                     if (dayDates.containsKey(theNumber.intValue()+"") && monthDates.containsKey(nextTokenStr)) {
-                        s = s + monthDates.get(nextTokenStr) + dayDates.get(theNumber.intValue()+"");
+                        s = s + monthDates.get(nextTokenStr) + "-" + dayDates.get(theNumber.intValue()+"");
                         putInMap(s);
                     }
                 }

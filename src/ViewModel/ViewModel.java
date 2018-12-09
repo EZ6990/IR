@@ -1,10 +1,8 @@
 package ViewModel;
 
 import Model.IInvertedIndexModel;
-import View.IView;
-import javafx.scene.control.TextField;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -61,4 +59,7 @@ public class ViewModel extends Observable implements Observer {
     }
 
 
+    public List<String> getLanguagesDictionary() {
+        return this.model.getLanguage();
+    }
 }

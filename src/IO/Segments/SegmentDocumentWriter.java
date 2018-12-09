@@ -2,9 +2,8 @@ package IO.Segments;
 
 import MapReduce.Parse.Info;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,7 +16,7 @@ public class SegmentDocumentWriter implements SegmentWriter {
 
 
         try {
-            BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
+            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, true),  StandardCharsets.UTF_8));
             StringBuilder chunk = new StringBuilder();
             for (String s : data.keySet()) {
                 for (Info dti : data.get(s)) {

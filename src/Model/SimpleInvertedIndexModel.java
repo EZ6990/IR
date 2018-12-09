@@ -3,10 +3,9 @@ package Model;
 
 import IO.DataProvider;
 import TextOperations.Stemmer;
-import javafx.beans.InvalidationListener;
 
-import javax.xml.crypto.Data;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -77,7 +76,12 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public List<String> getLanguage() {
-        return null;
+        List<String> lstLanguages = new ArrayList<>();
+        for (String value : DataProvider.getInstance().getFP105().values()) {
+            if (!lstLanguages.contains(value))
+                lstLanguages.add(value);
+        }
+        return lstLanguages;
     }
 
     @Override

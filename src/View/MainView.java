@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Observable;
 
 public class MainView implements IView {
@@ -22,6 +23,7 @@ public class MainView implements IView {
     private ViewModel viewModel;
 
     public CheckBox cbStemmer;
+    public Button btnViewLanguages;
     public Button btnViewDictionary;
     public Button btnLoad;
     public Button btnClear;
@@ -111,13 +113,18 @@ public class MainView implements IView {
         if (o == this.viewModel){
             if (((String)arg).equals("INVERTED_INDEX_DONE")){
                 this.btnViewDictionary.setVisible(true);
+                this.btnViewLanguages.setVisible(true);
                 Platform.runLater(() -> displayInformationAlert(this.viewModel.updateTimeToFinish(),this.viewModel.getDocsDictionaryLength(),this.viewModel.getTermDictionaryLength()));
             }
             else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
+                this.btnViewLanguages.setVisible(false);
+                this.lvDictionary.setItems( FXCollections.observableArrayList());
                 this.btnViewDictionary.setVisible(true);
             }
             else if (((String)arg).equals("CLEAR_DONE")){
+                this.btnViewLanguages.setVisible(false);
                 this.btnViewDictionary.setVisible(false);
+                this.lvDictionary.setItems( FXCollections.observableArrayList());
             }
         }
 
@@ -176,6 +183,19 @@ public class MainView implements IView {
         for (Object key : keys)
             names.add(((String)key + "\t" + data.get(key)));
 
+        SortedList<String> sorted = new SortedList<String>(names,String.CASE_INSENSITIVE_ORDER);
+        this.lvDictionary.setItems(sorted);
+
+    }
+
+    public void ShowLanguages(ActionEvent actionEvent) {
+        LoadLanguagesToTable(this.viewModel.getLanguagesDictionary());
+    }
+
+    private void LoadLanguagesToTable(List<String> data) {
+
+        ObservableList names = FXCollections.observableArrayList();
+        names.addAll(data);
         SortedList<String> sorted = new SortedList<String>(names,String.CASE_INSENSITIVE_ORDER);
         this.lvDictionary.setItems(sorted);
 

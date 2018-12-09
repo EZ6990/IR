@@ -88,8 +88,6 @@ public class PercentAndPriceParser extends AbstractParser {
                     else
                         s = s + convertNumberLessthanMill(tokenStr) + " Dollars";
                 }
-            if (s.length() > 0)
-                putInMap(s);
             i++;
         }
     }
