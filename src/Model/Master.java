@@ -128,17 +128,17 @@ public class Master {
 
     public void start() throws InterruptedException {
 
-//        System.out.println("Start : " + LocalTime.now());
-//        StartReaders();
-//        StartTextOperators();
-//        StartParsers();
-//        StartSegments();
-//        StartSegmentFilesPosting();
-//        WaitReaders();
-//        WaitTextOperators();
-//        WaitParsers();
-//        WaitSegments();
-//        WaitSegmentFilesPosting();
+        System.out.println("Start : " + LocalTime.now());
+        StartReaders();
+        StartTextOperators();
+        StartParsers();
+        StartSegments();
+        StartSegmentFilesPosting();
+        WaitReaders();
+        WaitTextOperators();
+        WaitParsers();
+        WaitSegments();
+        WaitSegmentFilesPosting();
 
         String postLocation = DataProvider.getPostLocation();
 
