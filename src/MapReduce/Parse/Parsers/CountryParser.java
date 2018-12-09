@@ -22,11 +22,6 @@ public class CountryParser extends AbstractParser {
 
     @Override
     public void manipulate() {
-
-        if (this.getFP104().size() > 0){
-
-        }
-
         int docSize = getTxtSize();
         while (this.index < docSize){
             country = null;

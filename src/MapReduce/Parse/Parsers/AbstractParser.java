@@ -15,7 +15,6 @@ public abstract class AbstractParser {
     protected HashMap<String, AbstractTermDocumentInfo> map;
     protected TokenizedDocument document;
     private List<Token> txt;
-    private List<Token> FP104;
     private int index;
     protected Stemmer stemmer;
 
@@ -24,7 +23,6 @@ public abstract class AbstractParser {
         this.map = map;
         this.document = doc;
         this.txt = doc.getTokenizedText();
-        this.FP104 = doc.getTokenizedHeader();
         this.stemmer = stemmer;
     }
 
@@ -70,8 +68,4 @@ public abstract class AbstractParser {
         return index < txt.size();
     }
 
-
-    public List<Token> getFP104() {
-        return FP104;
-    }
 }

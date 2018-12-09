@@ -74,8 +74,8 @@ public class Master {
         this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
         this.destSegmentFilesQueue = new ConcurrentLinkedQueue<SegmentFile>();
 
-        this.doc_readers = new Thread[2];
-        this.runnable_doc_readers = new Runnable[2];
+        this.doc_readers = new Thread[1];
+        this.runnable_doc_readers = new Runnable[1];
 
         this.text_operators = new Thread[8];
         this.runnable_text_operators = new Runnable[8];
@@ -128,17 +128,17 @@ public class Master {
 
     public void start() throws InterruptedException {
 
-        System.out.println("Start : " + LocalTime.now());
-        StartReaders();
-        StartTextOperators();
-        StartParsers();
-        StartSegments();
-        StartSegmentFilesPosting();
-        WaitReaders();
-        WaitTextOperators();
-        WaitParsers();
-        WaitSegments();
-        WaitSegmentFilesPosting();
+//        System.out.println("Start : " + LocalTime.now());
+//        StartReaders();
+//        StartTextOperators();
+//        StartParsers();
+//        StartSegments();
+//        StartSegmentFilesPosting();
+//        WaitReaders();
+//        WaitTextOperators();
+//        WaitParsers();
+//        WaitSegments();
+//        WaitSegmentFilesPosting();
 
         String postLocation = DataProvider.getPostLocation();
 

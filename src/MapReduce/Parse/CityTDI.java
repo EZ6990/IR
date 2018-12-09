@@ -9,7 +9,6 @@ public class CityTDI extends AbstractTermDocumentInfo {
     private String currency;
     private String population;
     private List<Integer> termLocation;
-    private String FP104;
 
     public CityTDI(Term term, String documentID, String country, String currency, String population) {
         super(term, documentID);
@@ -17,7 +16,6 @@ public class CityTDI extends AbstractTermDocumentInfo {
         this.currency = currency;
         this.termLocation = new ArrayList<>();
         this.population = population;
-        this.FP104 = "";
     }
 
     public CityTDI(Term term, String documentID, CountryInfo info) {
@@ -26,7 +24,6 @@ public class CityTDI extends AbstractTermDocumentInfo {
         this.currency = info.getCurrency();
         this.population = info.getPopulation();
         this.termLocation = new ArrayList<>();
-        this.FP104 = "";
     }
 
     public void addLocation(int location) {
@@ -59,13 +56,5 @@ public class CityTDI extends AbstractTermDocumentInfo {
         }
 
         return builder.toString();
-    }
-
-    public String getFP104() {
-        return FP104;
-    }
-
-    public void setFP104(String FP104) {
-        this.FP104 = FP104;
     }
 }

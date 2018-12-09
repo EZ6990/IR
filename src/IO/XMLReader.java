@@ -53,7 +53,7 @@ public class XMLReader {
             ID = XMLDocument.getElementsByTag("DOCNO").text();
             Text = this.doc.first().getElementsByTag("TEXT").text();
             if (FP104 != null)
-                Country = FP104.text();
+                Country = FP104.text().trim().split(" ")[0];
         }
         if (XMLHeader != null) {
             date = XMLHeader.getElementsByTag("DATE1").text();
