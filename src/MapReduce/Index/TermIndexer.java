@@ -77,7 +77,7 @@ public class TermIndexer extends Indexer{
                     for (String s : chunkTermIndex.keySet()) {
                         String[] forgodsake = chunkTermIndex.get(s).split("\\?");
                         String num = forgodsake[1];
-                        String[] splitToCount=forgodsake[0].split("|");
+                        String[] splitToCount=forgodsake[0].split("\\|");
                         int numOfDocs=splitToCount.length;
                         chunk.append(s).append(";").append(forgodsake[0]);
                         chunk.append("\n");
