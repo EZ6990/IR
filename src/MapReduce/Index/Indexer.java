@@ -5,6 +5,7 @@ import IO.Segments.SegmentTermReader;
 import MapReduce.Segment.TermSegmentFile;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public abstract class Indexer {
 
         try {
 //          System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
-            BufferedWriter output = new BufferedWriter(new FileWriter(this.location, true));
+            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.location, true),  StandardCharsets.UTF_8));
             StringBuilder chunk = new StringBuilder();
             for (String s : this.Index.keySet()) {
                 chunk.append(s).append(";").append(this.Index.get(s)).append("\n");

@@ -6,6 +6,7 @@ import IO.Segments.SegmentDocumentReader;
 import MapReduce.Segment.DocumentSegmentFile;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class DocumentIndexer extends Indexer{
 //          System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
             int k = 0;
             String path = DataProvider.getInstance().getPostLocation() + "\\" + prefix + "docPost.post";
-            BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
+            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, true),  StandardCharsets.UTF_8));
             StringBuilder chunk = new StringBuilder();
             for (String s : this.Index.keySet()) {
                 chunk.append(s).append(";").append(this.Index.get(s)).append("\n");

@@ -5,6 +5,7 @@ import IO.Segments.SegmentTermReader;
 import MapReduce.Segment.TermSegmentFile;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class TermIndexer extends Indexer{
 //                        System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
                     int k = 0;
                     String path = postLocation + "\\" + prefix + i + ".post";
-                    BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
+                    BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, true),  StandardCharsets.UTF_8));
                     StringBuilder chunk = new StringBuilder();
                     for (String s : chunkTermIndex.keySet()) {
                         String[] forgodsake = chunkTermIndex.get(s).split("\\?");

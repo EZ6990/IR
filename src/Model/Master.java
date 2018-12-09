@@ -271,23 +271,24 @@ public class Master {
 
     public void LoadTermIndex() {
         if (this.termIndexer == null)
-            this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\termIndexer.txt");
+            this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "termIndexer.index");
 
         this.termIndexer.read();
     }
 
     public void LoadCityIndexer() {
         if (this.cityIndexer == null)
-            this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\cityIndexer.txt");
+            this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityIndexer.index");
 
         this.cityIndexer.read();
     }
 
     public void LoadDocumentIndexer() {
         if (this.documentIndexer == null)
-            this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() + "\\documentIndexer.txt");
+            this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() +"\\" + DataProvider.getInstance().getPrefixPost() + "documentIndexer.index");
 
-        this.documentIndexer.read();    }
+        this.documentIndexer.read();
+    }
 
     public HashMap<String, String> getTermTF() {
         return this.termIndexer.getTermNumberOfOccurrenceMap();
