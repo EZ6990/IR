@@ -19,6 +19,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private String strPostLocation;
     private boolean bStemmer;
     private Master splinter;
+    private long TimeToInvertIndex;
 
     public SimpleInvertedIndexModel(){
         this.splinter = null;
@@ -28,12 +29,12 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     public void StartInvertedIndex() {
 
         initializeMaster();
-        
         try {
             this.splinter.start();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        this.TimeToInvertIndex = splinter.getTimeToInvertIndex();
         setChanged();
         notifyObservers("INVERTED_INDEX_DONE");
     }
@@ -89,16 +90,31 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         this.bStemmer = selected;
     }
 
+    @Override
+    public long getTimeToFinish() {
+        return this.TimeToInvertIndex/1000;
+    }
+
+    @Override
+    public int getDocumentDictionaryLength() {
+        return this.splinter.getDocumentDictionarySize();
+    }
+
     private void initializeMaster(){
-        DataProvider provider = new DataProvider("");
-        DataProvider.setStopWordsLocation(this.strCorpusLocation);
-        DataProvider.setCorpusLocation(this.strStopWordsLocation);
-        DataProvider.setPostLocation(this.strPostLocation);
+        DataProvider provider = DataProvider.getInstance();
+        provider.setStopWordsLocation(this.strCorpusLocation);
+        provider.setCorpusLocation(this.strStopWordsLocation);
+        provider.setPostLocation(this.strPostLocation);
         Stemmer stemmer = null;
 
-        if (this.bStemmer)
+        if (this.bStemmer) {
             stemmer = new Stemmer();
-
+            provider.setPrefixPost("stem_");
+        }
+        else{
+            stemmer = null;
+            provider.setPrefixPost("no_stem_");
+        }
         this.splinter = new Master(provider,stemmer);
     }
 }

@@ -52,4 +52,8 @@ public abstract class Indexer {
             e.printStackTrace();
         }
     }
+
+    public int size(){
+        return this.Index.size();
+    }
 }

@@ -23,6 +23,7 @@ import TextOperations.TokenizedDocument;
 import java.io.File;
 import java.io.FileFilter;
 import java.time.LocalTime;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -30,6 +31,7 @@ import java.util.concurrent.Semaphore;
 public class Master {
 
 
+    private long TimeToInvertIndex;
     private ConcurrentLinkedQueue<File> files_queue;
     private ConcurrentLinkedQueue<Document> document_queue;
     private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
@@ -100,9 +102,9 @@ public class Master {
 
         this.provider = provider;
 
-        if (!(DataProvider.getCorpusLocation() == null)) {
-            LoadDocuments(DataProvider.getCorpusLocation());
-            this.stopWords = new StopWords(DataProvider.getStopWordsLocation());
+        if (!(DataProvider.getInstance().getCorpusLocation() == null)) {
+            LoadDocuments(DataProvider.getInstance().getCorpusLocation());
+            this.stopWords = new StopWords(DataProvider.getInstance().getStopWordsLocation());
         }
         this.stemmer = stemmer;
     }
@@ -128,6 +130,7 @@ public class Master {
 
     public void start() throws InterruptedException {
 
+        long start = System.currentTimeMillis();
 //        System.out.println("Start : " + LocalTime.now());
 //        StartReaders();
 //        StartTextOperators();
@@ -139,26 +142,29 @@ public class Master {
 //        WaitParsers();
 //        WaitSegments();
 //        WaitSegmentFilesPosting();
+//
+//        String postLocation = DataProvider.getInstance().getPostLocation();
+//        String prefix = DataProvider.getInstance().getPrefixPost();
+//
+//        System.out.println("Start indexing: " + LocalTime.now());
+//        this.termIndexer = new TermIndexer(postLocation + "\\" + prefix + "termIndexer.index");
+//        this.termIndexer.CreatePostFiles(postLocation);
+//        this.termIndexer.write();
+//        System.out.println("End indexing: " + LocalTime.now());
+//
+//        System.out.println("Start indexing city: " + LocalTime.now());
+//        this.cityIndexer = new CityIndexer(postLocation + "\\" + prefix + "cityIndexer.index");
+//        this.cityIndexer.CreatePostFiles(postLocation);
+//        this.cityIndexer.write();
+//        System.out.println("End indexing city: " + LocalTime.now());
+//
+//        System.out.println("Start indexing document: " + LocalTime.now());
+//        this.documentIndexer = new DocumentIndexer(postLocation + "\\" + prefix + "documentIndexer.index");
+//        this.documentIndexer.CreatePostFiles(postLocation);
+//        this.documentIndexer.write();
+//        System.out.println("End indexing document: " + LocalTime.now());
 
-        String postLocation = DataProvider.getPostLocation();
-
-        System.out.println("Start indexing: " + LocalTime.now());
-        this.termIndexer = new TermIndexer(postLocation +"\\termIndexer.txt");
-        this.termIndexer.CreatePostFiles(postLocation);
-        this.termIndexer.write();
-        System.out.println("End indexing: " + LocalTime.now());
-
-        System.out.println("Start indexing city: " + LocalTime.now());
-        this.cityIndexer = new CityIndexer(postLocation +"\\cityIndexer.txt");
-        this.cityIndexer.CreatePostFiles(postLocation);
-        this.cityIndexer.write();
-        System.out.println("End indexing city: " + LocalTime.now());
-
-        System.out.println("Start indexing document: " + LocalTime.now());
-        this.documentIndexer = new DocumentIndexer(postLocation +"\\documentIndexer.txt");
-        this.documentIndexer.CreatePostFiles(postLocation);
-        this.documentIndexer.write();
-        System.out.println("End indexing document: " + LocalTime.now());
+        this.TimeToInvertIndex = System.currentTimeMillis() - start;
 
     }
 
@@ -231,7 +237,7 @@ public class Master {
         for (int i = 0; i < this.runnable_text_operators.length ; i++) {
             ((TextOperations)this.runnable_text_operators[i]).Stop();
         }
-        this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker","","","",""));
+        this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker","","","","",""));
         this.text_operation_consumer.release();
         System.out.println("Finished Read Files : " + LocalTime.now());
     }
@@ -265,25 +271,33 @@ public class Master {
 
     public void LoadTermIndex() {
         if (this.termIndexer == null)
-            this.termIndexer = new TermIndexer(DataProvider.getPostLocation() + "\\termIndexer.txt");
+            this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\termIndexer.txt");
 
         this.termIndexer.read();
     }
 
     public void LoadCityIndexer() {
         if (this.cityIndexer == null)
-            this.cityIndexer = new CityIndexer(DataProvider.getPostLocation() + "\\cityIndexer.txt");
+            this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\cityIndexer.txt");
 
         this.cityIndexer.read();
     }
 
     public void LoadDocumentIndexer() {
         if (this.documentIndexer == null)
-            this.documentIndexer = new DocumentIndexer(DataProvider.getPostLocation() + "\\documentIndexer.txt");
+            this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() + "\\documentIndexer.txt");
 
         this.documentIndexer.read();    }
 
     public HashMap<String, String> getTermTF() {
         return this.termIndexer.getTermNumberOfOccurrenceMap();
+    }
+
+    public long getTimeToInvertIndex() {
+        return TimeToInvertIndex;
+    }
+
+    public int getDocumentDictionarySize() {
+        return this.documentIndexer.size();
     }
 }

@@ -1,6 +1,7 @@
 package View;
 
 import ViewModel.ViewModel;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +18,6 @@ import java.util.Observable;
 public class MainView implements IView {
 
 
-
     private Stage stage;
     private ViewModel viewModel;
 
@@ -32,10 +32,13 @@ public class MainView implements IView {
     public TextField tfPostOutputPath;
     public ListView lvDictionary;
 
+    private Alert alert;
+
 
 
     public void initialize(){
 
+        alert = new Alert(Alert.AlertType.INFORMATION);
         this.btnStart.disableProperty().bind(new BooleanBinding() {
             {
                 super.bind(tfCorpusInputPath.textProperty(),tfPostOutputPath.textProperty());
@@ -108,6 +111,7 @@ public class MainView implements IView {
         if (o == this.viewModel){
             if (((String)arg).equals("INVERTED_INDEX_DONE")){
                 this.btnViewDictionary.setVisible(true);
+                Platform.runLater(() -> displayInformationAlert(this.viewModel.updateTimeToFinish(),this.viewModel.getDocsDictionaryLength(),this.viewModel.getTermDictionaryLength()));
             }
             else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
                 this.btnViewDictionary.setVisible(true);
@@ -117,6 +121,17 @@ public class MainView implements IView {
             }
         }
 
+    }
+
+    private void displayInformationAlert(long timeToFinish, int docsDictionaryLength, int termDictionaryLength) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText("Time To Finish : " + timeToFinish + "\n" +
+                             "Number of Indexed Terms : " + termDictionaryLength + "\n" +
+                             "Number of Indexed Documents : " + docsDictionaryLength
+        );
+        alert.showAndWait();
     }
 
     public String OpenFolderChooser() {

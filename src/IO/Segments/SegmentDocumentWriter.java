@@ -7,12 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SegmentDocumentWriter implements SegmentWriter {
 
 
     @Override
-    public void write(String path,HashMap<String, List<Info>> data) {
+    public void write(String path, ConcurrentHashMap<String, List<Info>> data) {
 
 
         try {

@@ -20,12 +20,13 @@ public class TermIndexer extends Indexer{
 
     public void CreatePostFiles(String segmentLocation){
 
-        String postLocation = DataProvider.getPostLocation();
+        String postLocation = DataProvider.getInstance().getPostLocation();
+        String prefix = DataProvider.getInstance().getPrefixPost();
         File segmentFilesDirectory = new File(segmentLocation);
         File[] segment_sub_dirs = segmentFilesDirectory.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
-                return !pathname.isDirectory();
+                return !pathname.isDirectory() && pathname.getName().startsWith(prefix);
             }
         });
 
@@ -71,7 +72,7 @@ public class TermIndexer extends Indexer{
                 try {
 //                        System.out.println(LocalTime.now() + " Start Write Data To Disk On Letter:" + Letters[i]);
                     int k = 0;
-                    String path = postLocation + "\\" + i;
+                    String path = postLocation + "\\" + prefix + i + ".post";
                     BufferedWriter output = new BufferedWriter(new FileWriter(path, true));
                     StringBuilder chunk = new StringBuilder();
                     for (String s : chunkTermIndex.keySet()) {
@@ -81,7 +82,7 @@ public class TermIndexer extends Indexer{
                         int numOfDocs=splitToCount.length;
                         chunk.append(s).append(";").append(forgodsake[0]);
                         chunk.append("\n");
-                        chunkTermIndex.replace(s, i + " " + k + " " + num + " " + numOfDocs);
+                        chunkTermIndex.replace(s, prefix + i + ".post" + " " + k + " " + num + " " + numOfDocs);
                         k++;
                     }
                     output.write(chunk.toString());
@@ -94,6 +95,11 @@ public class TermIndexer extends Indexer{
 //                    System.out.println(LocalTime.now() + " Done Write Data To Disk On Letter:" + Letters[i]);
 //                    System.out.println(LocalTime.now() + " TermIndex Size: " + this.termIndex.size());
             }
+        }
+
+        for (int i = 0; i < segment_sub_dirs.length; i++) {
+            if (segment_sub_dirs[i].getName().endsWith(".txt") && !(segment_sub_dirs[i].getName().equals(prefix + "docs.txt")) && !(segment_sub_dirs[i].getName().equals(prefix + "city.txt")))
+                segment_sub_dirs[i].delete();
         }
     }
 

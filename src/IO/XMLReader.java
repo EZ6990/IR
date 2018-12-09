@@ -36,6 +36,8 @@ public class XMLReader {
         String date = "";
         String Text = "";
         String Country = "";
+        String Language = "";
+
 
         Element XMLDocument = this.doc.first();
         Element XMLHeader = null;
@@ -49,11 +51,18 @@ public class XMLReader {
 
 
         if (XMLDocument != null) {
-            Elements FP104 = XMLDocument.getElementsByTag("<F P=104>");
+            Elements F = XMLDocument.getElementsByTag("F");
             ID = XMLDocument.getElementsByTag("DOCNO").text();
             Text = this.doc.first().getElementsByTag("TEXT").text();
-            if (FP104 != null)
-                Country = FP104.text().trim().split(" ")[0];
+            if (F != null && F.size() > 0) {
+                for (int i = 0; i < F.size(); i++) {
+                    Element FP = F.get(i);
+                    if (FP.attr("P").equals("104"))
+                        Country = FP.text().trim().split(" ")[0].toUpperCase();
+                    else if (FP.attr("P").equals("105"))
+                        Language = FP.text().trim();
+                }
+            }
         }
         if (XMLHeader != null) {
             date = XMLHeader.getElementsByTag("DATE1").text();
@@ -68,7 +77,7 @@ public class XMLReader {
         this.doc = this.doc.next();
 
 
-        return new TextOperations.Document(path,ID,Country,date,Text);
+        return new TextOperations.Document(path,ID,Country,date,Text,Language);
     }
     public boolean hasNext(){
         return this.doc.size() > 0;

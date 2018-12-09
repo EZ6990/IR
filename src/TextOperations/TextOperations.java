@@ -55,7 +55,7 @@ public class TextOperations implements Runnable{
             String ID = doc.getID();
             List<Token> Text = remover.filter(this.stop_words.substract(rules).filter(this.tokenizer.Tokenize(doc.getText())));
             List<Token> Date = this.stop_words.filter(this.tokenizer.Tokenize(doc.getDate()));
-            List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getHeader()));
+            List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getRepresentativeCountry()));
 
             try {
                 this.text_operation_producer.acquire();

@@ -3,64 +3,93 @@ package IO;
 import IO.CountryInMemoryDB;
 import MapReduce.Parse.CountryInfo;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DataProvider {
 
 
-    private String ConfigFilePath;
-    private static String stopWordsLocation;
-    private static String corpusLocation;
-    private static String postLocation;
-    private static String prefixPost;
-    private static CountryInMemoryDB CountryDB;
+    private static DataProvider Instance;
 
-    public DataProvider(String ConfigFile){
-        this.ConfigFilePath = ConfigFile;
+    private String ConfigFilePath;
+    private String stopWordsLocation;
+    private String corpusLocation;
+    private String postLocation;
+    private String prefixPost;
+    private CountryInMemoryDB CountryDB;
+    private ConcurrentHashMap<String,String> FP104;
+    private ConcurrentHashMap<String,String> FP105;
+
+
+    public ConcurrentHashMap<String, String> getFP104() {
+        return FP104;
+    }
+
+    public ConcurrentHashMap<String, String> getFP105() {
+        return FP105;
+    }
+
+    private DataProvider(){
+        this.ConfigFilePath = "";
         try {
-            CountryDB = new CountryInMemoryDB("https://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies");
+            this.CountryDB = new CountryInMemoryDB("https://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies");
+            this.stopWordsLocation = null;
+            this.corpusLocation = null;
+            this.postLocation = null;
+            this.prefixPost = null;
+            this.FP104 = new ConcurrentHashMap<>();
+            this.FP105 = new ConcurrentHashMap<>();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static CountryInfo getCountryInfo(String CapitalName){
+    public CountryInfo getCountryInfo(String CapitalName){
         CountryInfo country = null;
-        if (CountryDB != null){
-            country = CountryDB.getCountryByCapital(CapitalName);
+        if (this.CountryDB != null){
+            country = this.CountryDB.getCountryByCapital(CapitalName);
         }
         return country;
     }
 
-    public static void setStopWordsLocation(String stopWordsLocation) {
-        DataProvider.stopWordsLocation = stopWordsLocation;
-        DataProvider.stopWordsLocation += "\\" + "stop_words.txt";
+    public void setStopWordsLocation(String stopWordsLocation) {
+        this.stopWordsLocation = stopWordsLocation;
+        this.stopWordsLocation += "\\" + "stop_words.txt";
     }
 
-    public static void setCorpusLocation(String corpusLocation) {
-        DataProvider.corpusLocation = corpusLocation;
+    public void setCorpusLocation(String corpusLocation) {
+        this.corpusLocation = corpusLocation;
     }
 
-    public static void setPostLocation(String postLocation) {
-        DataProvider.postLocation = postLocation;
+    public void setPostLocation(String postLocation) {
+        this.postLocation = postLocation;
     }
 
-    public static String getStopWordsLocation() {
-        return DataProvider.stopWordsLocation;
+    public String getStopWordsLocation() {
+        return this.stopWordsLocation;
     }
 
-    public static String getCorpusLocation() {
-        return DataProvider.corpusLocation;
+    public String getCorpusLocation() {
+        return this.corpusLocation;
     }
 
-    public static String getPostLocation() {
-        return DataProvider.postLocation;
+    public String getPostLocation() {
+        return this.postLocation;
     }
 
-    public static String getPrefixPost() {
-        return DataProvider.prefixPost;
+    public String getPrefixPost() {
+        return this.prefixPost;
     }
 
-    public static void setPrefixPost(String prefixPost) {
-        DataProvider.prefixPost = prefixPost;
+    public void setPrefixPost(String prefixPost) {
+        this.prefixPost = prefixPost;
+    }
+
+    public static DataProvider getInstance() {
+
+        if (Instance == null) {
+            Instance = new DataProvider();
+        }
+        return Instance;
     }
 }

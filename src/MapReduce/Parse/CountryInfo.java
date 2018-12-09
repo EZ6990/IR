@@ -1,6 +1,7 @@
 package MapReduce.Parse;
 
 import IO.HTTPWebRequest;
+import MapReduce.Parse.Parsers.NumberParser;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ public class CountryInfo {
 
         this.CountryName = data.get("name").toString();
         this.CapitalName = data.get("capital").toString();
-        this.Population = data.get("population").toString();
+        this.Population = NumberParser.convertNumber(data.get("population").toString() + ".0",false);
         this.Currency = data.getJSONArray("currencies").getJSONObject(0).get("name").toString();
 
     }

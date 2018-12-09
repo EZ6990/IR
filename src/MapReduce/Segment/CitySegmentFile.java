@@ -18,10 +18,9 @@ public class CitySegmentFile extends SegmentFile {
     public void add(String key,Info item) {
         if (item instanceof CityTDI) {
             List lst = data.get(key);
-            if (lst == null) {
+            if (lst == null)
                 data.put(key, (lst = new ArrayList()));
-                lst.add(item);
-            }
+            lst.add(item);
         }
     }
 }

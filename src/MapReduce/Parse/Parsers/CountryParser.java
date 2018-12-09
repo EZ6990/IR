@@ -49,6 +49,6 @@ public class CountryParser extends AbstractParser {
     }
 
     private CountryInfo getCountryInfo(String CapitalName){
-        return DataProvider.getCountryInfo(CapitalName);
+        return DataProvider.getInstance().getCountryInfo(CapitalName);
     }
 }

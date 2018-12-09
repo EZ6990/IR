@@ -6,17 +6,18 @@ import MapReduce.Parse.Info;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class SegmentFile{
 
     private String path;
-    protected HashMap<String,List<Info>> data;
+    protected ConcurrentHashMap<String,List<Info>> data;
     private SegmentWriter writer;
     private SegmentReader reader;
 
     public SegmentFile(String path, SegmentWriter writer,SegmentReader reader) {
         this.path = path;
-        this.data = new HashMap<>();
+        this.data = new ConcurrentHashMap<>();
         this.writer = writer;
         this.reader = reader;
     }

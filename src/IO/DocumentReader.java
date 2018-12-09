@@ -32,7 +32,12 @@ public class DocumentReader implements Runnable {
                     //System.out.println("Document Reader Producer : " + this.document_reader_producer.availablePermits());
                     this.document_reader_producer.acquire();
                     Document document = reader.getNextDocument();
-                    document.getHeader();
+                    if (document.getRepresentativeCountry().length() > 0){
+                        DataProvider.getInstance().getFP104().put(document.getID(),document.getRepresentativeCountry());
+                    }
+                    if (document.getLanguage().length() > 0){
+                        DataProvider.getInstance().getFP105().put(document.getID(),document.getLanguage());
+                    }
                     this.document_queue.add(document);
                     //System.out.println("Text Operation Consumer : " + this.text_operation_consumer.availablePermits());
                     this.text_operation_consumer.release();

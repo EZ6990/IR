@@ -47,4 +47,18 @@ public class ViewModel extends Observable implements Observer {
     public HashMap<String,String> getDictionary() {
         return this.model.getTermTF();
     }
+
+    public long updateTimeToFinish() {
+        return this.model.getTimeToFinish();
+    }
+
+    public int getTermDictionaryLength(){
+        return this.model.getTermTF().size();
+    }
+
+    public int getDocsDictionaryLength(){
+        return this.model.getDocumentDictionaryLength();
+    }
+
+
 }

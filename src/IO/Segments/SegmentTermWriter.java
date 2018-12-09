@@ -6,11 +6,12 @@ import MapReduce.Parse.TermDocumentInfo;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SegmentTermWriter implements SegmentWriter {
 
     @Override
-    public void write(String path,HashMap<String,List<Info>> data) {
+    public void write(String path, ConcurrentHashMap<String,List<Info>> data) {
 
         ArrayList lst = new ArrayList(data.keySet());
         Collections.sort(lst,String.CASE_INSENSITIVE_ORDER);

@@ -7,15 +7,17 @@ public class Document {
     private String Country;
     private String Date;
     private String Text;
+    private String Language;
 
 
 
-    public Document(String path, String ID, String Country, String date, String text) {
+    public Document(String path, String ID, String Country, String date, String text,String language) {
         this.path = path;
         this.ID = ID;
         this.Country = Country;
         this.Date = date;
         this.Text = text;
+        this.Language = language;
     }
 
     public String getPath() {
@@ -26,7 +28,7 @@ public class Document {
         return ID;
     }
 
-    public String getHeader() {
+    public String getRepresentativeCountry() {
         return Country;
     }
 
@@ -36,5 +38,9 @@ public class Document {
 
     public String getText() {
         return Text;
+    }
+
+    public String getLanguage() {
+        return this.Language;
     }
 }

@@ -17,4 +17,6 @@ public interface IInvertedIndexModel{
     public List<String> getLanguage();
     public HashMap<String,String> getTermTF();
     public void setStemmer(boolean selected);
+    public long getTimeToFinish();
+    int getDocumentDictionaryLength();
 }

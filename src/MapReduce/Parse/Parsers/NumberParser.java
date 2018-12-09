@@ -41,7 +41,7 @@ public class NumberParser extends AbstractParser {
                 s = "" + valueNumber;
                 s = convertNumber(s, false);
 
-                if (isFraction(nextTokenStr) && valueNumber < 1000000) {
+                if (isFraction(nextTokenStr) && valueNumber < 1000) {
                     s = s + " " + nextTokenStr;
                     i++;
                 } else {
@@ -131,18 +131,18 @@ public class NumberParser extends AbstractParser {
 
             }
             string = num + "";
-            return string.indexOf('.') == -1 ? (string = num + "") : (string = num + "").substring(0, string.indexOf('.')) + "B";
+            return num%1>0 || string.indexOf('.') == -1 ? (string = num + "") : (string = num + "").substring(0, string.indexOf('.')) + "B";
         } else if (num >= 1000000) {
             num = num / 1000000;
             string = num + "";
-            return string.substring(0, string.indexOf('.')) + "M";
+            return num%1>0 || string.indexOf('.') == -1 ? (string = num + "") : (string = num + "").substring(0, string.indexOf('.')) + "M";
 
         } else if (num >= 1000) {
             num = num / 1000;
             string = num + "";
-            return string.substring(0, string.indexOf('.')) + "K";
+            return num%1>0 || string.indexOf('.') == -1 ? (string = num + "") : (string = num + "").substring(0, string.indexOf('.')) + "K";
         } else {
-            return string.substring(0, string.indexOf('.'));
+            return num%1>0 || string.indexOf('.') == -1 ? (string = num + "") : (string = num + "").substring(0, string.indexOf('.'));
         }
     }
 
