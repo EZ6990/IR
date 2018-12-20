@@ -5,6 +5,9 @@ import IO.DataProvider;
 import TextOperations.Stemmer;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,10 +69,21 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void LoadDictionary() {
-        initializeMaster();
-        this.splinter.LoadTermIndex();
-        this.splinter.LoadCityIndexer();
-        this.splinter.LoadDocumentIndexer();
+        DataProvider provider = DataProvider.getInstance();
+        provider.setStopWordsLocation(this.strCorpusLocation);
+        provider.setCorpusLocation(this.strStopWordsLocation);
+        provider.setPostLocation(this.strPostLocation);
+
+        if (this.bStemmer) {
+            provider.setPrefixPost("stem_");
+        }
+        else{
+            provider.setPrefixPost("no_stem_");
+        }
+
+        DataProvider.getInstance().LoadTermIndex();
+        DataProvider.getInstance().LoadCityIndexer();
+        DataProvider.getInstance().LoadDocumentIndexer();
         setChanged();
         notifyObservers("LOAD_INVERTED_INDEX_DONE");
     }
@@ -104,6 +118,16 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         return this.splinter.getDocumentDictionarySize();
     }
 
+    @Override
+    public void SearchQueries(File f) {
+
+    }
+
+    @Override
+    public void SearchQuery(String text) {
+
+    }
+
     private void initializeMaster(){
         DataProvider provider = DataProvider.getInstance();
         provider.setStopWordsLocation(this.strCorpusLocation);
@@ -119,6 +143,6 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             stemmer = null;
             provider.setPrefixPost("no_stem_");
         }
-        this.splinter = new Master(provider,stemmer);
+        this.splinter = new Master(stemmer);
     }
 }

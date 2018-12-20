@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface IInvertedIndexModel{
     public void setStemmer(boolean selected);
     public long getTimeToFinish();
     int getDocumentDictionaryLength();
+
+    void SearchQueries(File f);
+    void SearchQuery(String text);
 }

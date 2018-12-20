@@ -32,6 +32,7 @@ public class MainView implements IView {
     public Button dcPostPath;
     public TextField tfCorpusInputPath;
     public TextField tfPostOutputPath;
+    public TextField tfQueries;
     public ListView lvDictionary;
 
     private Alert alert;
@@ -199,5 +200,14 @@ public class MainView implements IView {
         SortedList<String> sorted = new SortedList<String>(names,String.CASE_INSENSITIVE_ORDER);
         this.lvDictionary.setItems(sorted);
 
+    }
+
+    public void SetQueriesPath(ActionEvent actionEvent) {
+        String  location = OpenFolderChooser();
+        this.tfQueries.setText(location);
+    }
+
+    public void Search(ActionEvent actionEvent) {
+        this.viewModel.Search(this.tfQueries.getText());
     }
 }

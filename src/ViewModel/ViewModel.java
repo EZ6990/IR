@@ -1,6 +1,10 @@
 package ViewModel;
 
 import Model.IInvertedIndexModel;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -61,5 +65,13 @@ public class ViewModel extends Observable implements Observer {
 
     public List<String> getLanguagesDictionary() {
         return this.model.getLanguage();
+    }
+
+    public void Search(String text) {
+        File f = new File(text);
+        if (f.exists())
+            this.model.SearchQueries(f);
+        else
+            this.model.SearchQuery(text);
     }
 }

@@ -1,14 +1,15 @@
 package IO;
 
-import IO.CountryInMemoryDB;
+import MapReduce.Index.CityIndexer;
+import MapReduce.Index.DocumentIndexer;
+import MapReduce.Index.Indexer;
+import MapReduce.Index.TermIndexer;
 import MapReduce.Parse.CountryInfo;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataProvider {
-
 
     private static DataProvider Instance;
 
@@ -16,10 +17,15 @@ public class DataProvider {
     private String stopWordsLocation;
     private String corpusLocation;
     private String postLocation;
+    private String queriesLocation;
     private String prefixPost;
     private CountryInMemoryDB CountryDB;
     private ConcurrentHashMap<String,String> FP104;
     private ConcurrentHashMap<String,String> FP105;
+
+    private TermIndexer termIndexer;
+    private DocumentIndexer documentIndexer;
+    private CityIndexer cityIndexer;
 
 
     public ConcurrentHashMap<String, String> getFP104() {
@@ -65,6 +71,14 @@ public class DataProvider {
         this.postLocation = postLocation;
     }
 
+    public String getQueriesLocation() {
+        return queriesLocation;
+    }
+
+    public void setQueriesLocation(String location) {
+        this.queriesLocation = location;
+    }
+
     public String getStopWordsLocation() {
         return this.stopWordsLocation;
     }
@@ -83,6 +97,51 @@ public class DataProvider {
 
     public void setPrefixPost(String prefixPost) {
         this.prefixPost = prefixPost;
+    }
+
+    public TermIndexer getTermIndexer() {
+        return termIndexer;
+    }
+
+    public DocumentIndexer getDocumentIndexer() {
+        return documentIndexer;
+    }
+
+    public CityIndexer getCityIndexer() {
+        return cityIndexer;
+    }
+
+    public void LoadTermIndex() {
+        if (this.termIndexer == null)
+            this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "termIndexer.index");
+
+        this.termIndexer.read();
+    }
+
+    public void LoadCityIndexer() {
+        if (this.cityIndexer == null)
+            this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityIndexer.index");
+
+        this.cityIndexer.read();
+    }
+
+    public void LoadDocumentIndexer() {
+        if (this.documentIndexer == null)
+            this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() +"\\" + DataProvider.getInstance().getPrefixPost() + "documentIndexer.index");
+
+        this.documentIndexer.read();
+    }
+
+    public void setTermIndexer(TermIndexer termIndexer) {
+        this.termIndexer = termIndexer;
+    }
+
+    public void setDocumentIndexer(DocumentIndexer documentIndexer) {
+        this.documentIndexer = documentIndexer;
+    }
+
+    public void setCityIndexer(CityIndexer cityIndexer) {
+        this.cityIndexer = cityIndexer;
     }
 
     public static DataProvider getInstance() {
