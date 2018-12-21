@@ -18,4 +18,8 @@ public class Term{
             return this.stemmer.stemString(this.data);
         return this.data.trim();
     }
+
+    public void setTerm(String termData) {
+        data=termData;
+    }
 }

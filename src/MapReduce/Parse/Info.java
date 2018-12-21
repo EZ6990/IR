@@ -2,5 +2,6 @@ package MapReduce.Parse;
 
 public interface Info {
 
-    public String toString();
+     String toString();
+    boolean equals(Object obj);
 }

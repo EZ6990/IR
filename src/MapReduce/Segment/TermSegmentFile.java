@@ -24,4 +24,16 @@ public class TermSegmentFile extends SegmentFile {
             lst.add(item);
         }
     }
+
+    @Override
+    public void read(String key, int position) {
+        List<String> lst=read();
+        String[] line =lst.get(position).trim().split(";")[1].split("|");
+        for (int i=0;i<line.length;i++)
+        {
+           // TermDocumentInfo tdi=new TermDocumentInfo();
+        }
+
+
+    }
 }

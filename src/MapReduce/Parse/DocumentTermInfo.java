@@ -46,4 +46,11 @@ public class DocumentTermInfo implements Info{
     public String toString() {
         return this.documentName + ";" + this.mostCommonFreq + "|" + this.numOfDifferentWords +"|" +this.numOfTerms;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof DocumentTermInfo)
+            return this.documentName.equals(((DocumentTermInfo)obj).getDocumentName());
+        return false;
+    }
 }

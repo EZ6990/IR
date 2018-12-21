@@ -57,4 +57,12 @@ public abstract class Indexer {
     public int size(){
         return this.Index.size();
     }
+
+    public boolean contains(String data) {
+        return this.Index.containsKey(data);
+    }
+
+    public String getValue(String termData){
+        return this.Index.get(termData);
+    }
 }
