@@ -23,4 +23,9 @@ public class CitySegmentFile extends SegmentFile {
             lst.add(item);
         }
     }
+
+    @Override
+    public void read(String key, int position) {
+
+    }
 }

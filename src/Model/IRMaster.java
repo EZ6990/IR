@@ -2,6 +2,7 @@ package Model;
 
 import IO.DataProvider;
 import IO.DocumentReader;
+import IO.XMLReader;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import MapReduce.Parse.MasterParser;
 import TextOperations.*;
@@ -56,43 +57,34 @@ public class IRMaster {
         this.runnable_parsers = new Runnable[1];
 
         this.document_reader_producer = new Semaphore(5000,true);
-        this.text_operation_consumer=  new Semaphore(0,true);
+        this.text_operation_consumer =  new Semaphore(0,true);
         this.text_operation_producer = new Semaphore(10000,true);
         this.master_parser_consumer = new Semaphore(0,true);
         this.master_parser_producer = new Semaphore(30000,true);
         this.segment_file_consumer = new Semaphore(0,true);
 
 
-        if (!(DataProvider.getInstance().getCorpusLocation() == null)) {
-            LoadQueries(DataProvider.getInstance().getQueriesLocation());
-            this.stopWords = new StopWords(DataProvider.getInstance().getStopWordsLocation());
+        if (!(DataProvider.getInstance().getQueriesLocation() == null)) {
+            this.files_queue.add(new File(DataProvider.getInstance().getQueriesLocation()));
         }
+
+        this.stopWords = new StopWords(DataProvider.getInstance().getStopWordsLocation());
         this.stemmer = stemmer;
     }
-    private void LoadQueries(String location){
-        File corpus = new File(location);
-        File[] corpus_sub_dirs = corpus.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
 
-        for (File dir : corpus_sub_dirs) {
-            File[] files = dir.listFiles(new FileFilter() {
-                public boolean accept(File pathname) {
-                    return !(pathname.isDirectory());
-                }
-            });
-            for (File file : files)
-                this.files_queue.add(file);
-        }
-    }
-
-    public void start() throws InterruptedException {
+    public void start(String query) throws InterruptedException {
 
         long start = System.currentTimeMillis();
         System.out.println("Start : " + LocalTime.now());
-        StartReaders();
+        if (query == null)
+            StartReaders();
+        else{
+            this.document_reader_producer.acquire();
+            this.document_queue.add(new Document("","","","",query,""));
+            this.text_operation_consumer.release();
+            //ReaderFinished();
+        }
+
         StartTextOperators();
         StartParsers();
 
@@ -104,7 +96,7 @@ public class IRMaster {
     }
     private void StartReaders(){
         for (int i = 0; i < this.doc_readers.length ; i++) {
-            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue,this.document_queue,this.document_reader_producer,this.text_operation_consumer)));
+            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue,this.document_queue,this.document_reader_producer,this.text_operation_consumer, XMLReader.Type.QUERY)));
             this.doc_readers[i].start();
         }
     }

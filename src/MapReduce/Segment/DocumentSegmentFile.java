@@ -23,4 +23,9 @@ public class DocumentSegmentFile extends SegmentFile {
         }
     }
 
+    @Override
+    public void read(String key, int position) {
+
+    }
+
 }

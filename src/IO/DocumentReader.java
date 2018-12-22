@@ -14,12 +14,17 @@ public class DocumentReader implements Runnable {
     private ConcurrentLinkedQueue<Document> document_queue;
     private Semaphore document_reader_producer;
     private Semaphore text_operation_consumer;
+    private XMLReaderFactory xmlReaderFactory;
+    private XMLReader.Type readerType;
 
-    public DocumentReader(ConcurrentLinkedQueue<File> files_queue, ConcurrentLinkedQueue<Document> document_queue, Semaphore document_reader_producer,Semaphore text_operation_consumer){
+    public DocumentReader(ConcurrentLinkedQueue<File> files_queue, ConcurrentLinkedQueue<Document> document_queue, Semaphore document_reader_producer,Semaphore text_operation_consumer,XMLReader.Type readerType){
         this.files_queue = files_queue;
         this.document_queue = document_queue;
         this.document_reader_producer = document_reader_producer;
         this.text_operation_consumer = text_operation_consumer;
+        this.xmlReaderFactory = new XMLReaderFactory();
+        this.readerType = readerType;
+
     }
     @Override
     public void run() {
@@ -27,7 +32,7 @@ public class DocumentReader implements Runnable {
         XMLReader reader;
         while ((f = this.files_queue.poll()) != null){
             try {
-                reader = new XMLReader(f);
+                reader = xmlReaderFactory.getXMLReader(this.readerType,f);
                 while(reader.hasNext()) {
                     //System.out.println("Document Reader Producer : " + this.document_reader_producer.availablePermits());
                     this.document_reader_producer.acquire();

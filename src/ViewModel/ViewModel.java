@@ -62,7 +62,6 @@ public class ViewModel extends Observable implements Observer {
         return this.model.getDocumentDictionaryLength();
     }
 
-
     public List<String> getLanguagesDictionary() {
         return this.model.getLanguage();
     }

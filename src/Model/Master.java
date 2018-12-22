@@ -2,6 +2,7 @@ package Model;
 
 import IO.DataProvider;
 import IO.DocumentReader;
+import IO.XMLReader;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Index.DocumentIndexer;
 import MapReduce.Index.TermIndexer;
@@ -173,7 +174,7 @@ public class Master {
 
     private void StartReaders(){
         for (int i = 0; i < this.doc_readers.length ; i++) {
-            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue,this.document_queue,this.document_reader_producer,this.text_operation_consumer)));
+            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue,this.document_queue,this.document_reader_producer,this.text_operation_consumer, XMLReader.Type.DOCUMENT)));
             this.doc_readers[i].start();
         }
     }

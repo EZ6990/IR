@@ -72,7 +72,7 @@ public class DataProvider {
     }
 
     public String getQueriesLocation() {
-        return queriesLocation;
+        return this.queriesLocation;
     }
 
     public void setQueriesLocation(String location) {

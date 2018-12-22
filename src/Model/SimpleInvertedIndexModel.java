@@ -19,6 +19,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private String strStopWordsLocation;
     private String strCorpusLocation;
     private String strPostLocation;
+    private String strQueriesLocation;
+
     private boolean bStemmer;
     private Master splinter;
     private long TimeToInvertIndex;
@@ -120,12 +122,13 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void SearchQueries(File f) {
-
+        this.strQueriesLocation = f.getAbsolutePath();
+        DataProvider.getInstance().setQueriesLocation(this.strQueriesLocation);
     }
 
     @Override
     public void SearchQuery(String text) {
-
+        DataProvider.getInstance().setQueriesLocation(null);
     }
 
     private void initializeMaster(){

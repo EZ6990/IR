@@ -8,6 +8,7 @@ import MapReduce.Segment.DocumentSegmentFile;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class DocumentIndexer extends Indexer{
@@ -43,8 +44,9 @@ public class DocumentIndexer extends Indexer{
             BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path, true),  StandardCharsets.UTF_8));
             StringBuilder chunk = new StringBuilder();
             for (String s : this.Index.keySet()) {
-                chunk.append(s).append(";").append(this.Index.get(s)).append("\n");
-                this.Index.replace(s, prefix + "docPost.post" + " " + k);
+                String data = this.Index.get(s);
+                chunk.append(s).append(";").append(data).append("\n");
+                this.Index.replace(s, prefix + "docPost.post" + " " + k + " " + data.split("\\|")[2]);
                 k++;
             }
             output.write(chunk.toString());

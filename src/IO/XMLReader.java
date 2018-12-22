@@ -7,78 +7,31 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class XMLReader {
+public abstract class XMLReader {
 
-    private File xml_file;
-    private Elements doc;
+    protected File xml_file;
+    protected Elements doc;
+    public enum Type{DOCUMENT,QUERY};
 
     public XMLReader(String path) throws IOException {
         this.xml_file = new File(path);
-        FileInputStream fis = new FileInputStream(this.xml_file);
-        this.doc = Jsoup.parse(fis, null, "", Parser.xmlParser()).getElementsByTag("DOC");
+        initializeReader();
     }
 
     public XMLReader(File file) throws IOException {
         this.xml_file = file;
-        FileInputStream fis = new FileInputStream(this.xml_file);
-        this.doc = Jsoup.parse(fis, null, "", Parser.xmlParser()).getElementsByTag("DOC");
-
+        initializeReader();
     }
 
-    public TextOperations.Document getNextDocument() {
+    protected abstract void initializeReader() throws IOException;
 
-        String path = "";
-        String ID = "";
-        String date = "";
-        String Text = "";
-        String Country = "";
-        String Language = "";
+    public abstract TextOperations.Document getNextDocument();
 
-
-        Element XMLDocument = this.doc.first();
-        Element XMLHeader = null;
-        try {
-            XMLHeader = (Element) XMLDocument.getElementsByTag("HEADER").get(0);
-        }catch(Exception e){
-            //e.printStackTrace();
-        }
-
-        path = this.xml_file.getPath();
-
-
-        if (XMLDocument != null) {
-            Elements F = XMLDocument.getElementsByTag("F");
-            ID = XMLDocument.getElementsByTag("DOCNO").text();
-            Text = this.doc.first().getElementsByTag("TEXT").text();
-            if (F != null && F.size() > 0) {
-                for (int i = 0; i < F.size(); i++) {
-                    Element FP = F.get(i);
-                    if (FP.attr("P").equals("104"))
-                        Country = FP.text().trim().split(" ")[0].toUpperCase();
-                    else if (FP.attr("P").equals("105"))
-                        Language = FP.text().trim();
-                }
-            }
-        }
-        if (XMLHeader != null) {
-            date = XMLHeader.getElementsByTag("DATE1").text();
-        }
-        else{
-            date = XMLDocument.getElementsByTag("DATE").text();
-//          Date oDate = new Date(Integer.parseInt(DATE.substring(0, 2)), Integer.parseInt(DATE.substring(2, 4)), Integer.parseInt(DATE.substring(4, 6)));
-//          date = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH).format(oDate);
-
-        }
-
-        this.doc = this.doc.next();
-
-
-        return new TextOperations.Document(path,ID,Country,date,Text,Language);
-    }
     public boolean hasNext(){
         return this.doc.size() > 0;
     }
