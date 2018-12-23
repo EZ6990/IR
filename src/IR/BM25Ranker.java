@@ -45,7 +45,7 @@ public class BM25Ranker implements IRanker {
                             Double rank = documentRank.get(((TermDocumentInfo) info).getTerm().getData());
                             double value = calculate(termDocumentInfo);
                             rank = (rank == null ? value : rank + value);
-                            documentRank.put(((TermDocumentInfo) info).getTerm().getData(),rank);
+                            documentRank.put(((TermDocumentInfo) info).getDocumentID(),rank);
 
                         }
                     }

@@ -3,6 +3,7 @@ package MapReduce.Segment;
 import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
 import MapReduce.Parse.Info;
+import MapReduce.Parse.Term;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,7 @@ public abstract class SegmentFile {
         return this.reader.read(this.path);
     }
 
-    public abstract void read(String key, int position);
+    public abstract void read(Term key, int position);
 
     public String getPath() {
         return this.path;

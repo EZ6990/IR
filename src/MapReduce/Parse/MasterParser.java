@@ -13,7 +13,7 @@ public class MasterParser implements Runnable{
 
     private ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue;
     private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> tdi_queue;
-    private boolean bStop;
+
     private Semaphore text_operation_producer;
     private Semaphore master_parser_consumer;
     private Semaphore master_parser_producer;
@@ -24,7 +24,7 @@ public class MasterParser implements Runnable{
     public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer,Stemmer stemmer,IFilter ignore){
         this.tokennized_queue = tokennized_queue;
         this.tdi_queue = tdi_queue;
-        this.bStop = false;
+
         this.text_operation_producer = text_operation_producer;
         this.master_parser_consumer = master_parser_consumer;
         this.master_parser_producer = master_parser_producer;
@@ -79,7 +79,4 @@ public class MasterParser implements Runnable{
         }
     }
 
-    public void Stop(){
-        this.bStop = true;
-    }
 }

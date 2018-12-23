@@ -31,7 +31,7 @@ public class SegmentFiles implements Runnable {
     private Semaphore segment_writer_consumer;
 
     public SegmentFiles(ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> TDIQueue, ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue,
-                        Semaphore master_parser_producer,Semaphore segments_file_consumer,Semaphore segment_file_term_producer,Semaphore segment_writer_consumer) {
+                        Semaphore master_parser_producer, Semaphore segments_file_consumer, Semaphore segment_file_term_producer, Semaphore segment_writer_consumer) {
 
         this.TDIQueue = TDIQueue;
         this.numOfDocs = 10000;
@@ -52,31 +52,31 @@ public class SegmentFiles implements Runnable {
         int mapCounter = 0;
         String postLocation = DataProvider.getInstance().getPostLocation();
         String prefix = DataProvider.getInstance().getPrefixPost();
-        String [] Letters = {
-                "#","$","%","&","'","*","+",",","-",".","/","0","1","2","3","4","5","6","7","8","9","<","=",">","@",
-                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
-                "\\","^","_","`","~"
+        String[] Letters = {
+                "#", "$", "%", "&", "'", "*", "+", ",", "-", ".", "/", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "<", "=", ">", "@",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+                "\\", "^", "_", "`", "~"
         };
-        HashMap<String,TermSegmentFile> tsfa =new HashMap<String,TermSegmentFile>();
+        HashMap<String, TermSegmentFile> tsfa = new HashMap<String, TermSegmentFile>();
         int index = 0;
         for (String s : Letters) {
-            tsfa.put(s,new TermSegmentFile(postLocation + "\\"+ prefix + "" + this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
+            tsfa.put(s, new TermSegmentFile(postLocation + "\\" + prefix + "" + this.ThreadID + "_" + index++ + ".txt", new SegmentTermWriter(), null));
         }
 
-        DocumentSegmentFile dsf = new DocumentSegmentFile(postLocation + "\\" + prefix + "docs.txt",new SegmentDocumentWriter(),null);
-        CitySegmentFile csf = new CitySegmentFile(postLocation + "\\" + prefix + "city.txt",new SegmentCityWriter(),null);
+        DocumentSegmentFile dsf = new DocumentSegmentFile(postLocation + "\\" + prefix + "docs.txt", new SegmentDocumentWriter(), null);
+        CitySegmentFile csf = new CitySegmentFile(postLocation + "\\" + prefix + "city.txt", new SegmentCityWriter(), null);
 
 
-        while (true){
+        while (true) {
             try {
-              //  System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
+                //  System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
                 this.segments_file_consumer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
-           //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
-            if (map.containsKey("DannyAndTalSendTheirRegardsYouFucker")){
+            //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
+            if (map.containsKey("DannyAndTalSendTheirRegardsYouFucker")) {
                 this.TDIQueue.add(map);
                 this.segments_file_consumer.release();
                 break;
@@ -84,6 +84,7 @@ public class SegmentFiles implements Runnable {
             this.master_parser_producer.release();
             DocumentTermInfo dti = new DocumentTermInfo(((AbstractTermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
             dti.setNumOfDifferentWords(map.size());
+            setEntities(dti, map);
             //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             long start = System.currentTimeMillis();
             for (String s : map.keySet()) {
@@ -92,8 +93,8 @@ public class SegmentFiles implements Runnable {
 
                 if (tdi instanceof CityTDI)
                     csf.add(termWord, tdi);
-                if(tsfa.containsKey(termWord.substring(0,1).toLowerCase()))
-                    tsfa.get(termWord.substring(0,1).toLowerCase()).add(termWord,tdi);
+                if (tsfa.containsKey(termWord.substring(0, 1).toLowerCase()))
+                    tsfa.get(termWord.substring(0, 1).toLowerCase()).add(termWord, tdi);
 
                 if (map.get(s).getFrequency() > dti.getMostCommonFreq()) {
                     dti.setMostCommonName(s);
@@ -130,10 +131,10 @@ public class SegmentFiles implements Runnable {
                 }
                 index = 0;
                 for (String s : Letters) {
-                    tsfa.put(s,new TermSegmentFile(postLocation + "\\" + prefix + this.ThreadID +"_" + index++ + ".txt",new SegmentTermWriter(),null));
+                    tsfa.put(s, new TermSegmentFile(postLocation + "\\" + prefix + this.ThreadID + "_" + index++ + ".txt", new SegmentTermWriter(), null));
                 }
-                csf = new CitySegmentFile(postLocation + "\\" + prefix + "city.txt",new SegmentCityWriter(),null);
-                dsf = new DocumentSegmentFile(postLocation + "\\" + prefix + "docs.txt",new SegmentDocumentWriter(),null);
+                csf = new CitySegmentFile(postLocation + "\\" + prefix + "city.txt", new SegmentCityWriter(), null);
+                dsf = new DocumentSegmentFile(postLocation + "\\" + prefix + "docs.txt", new SegmentDocumentWriter(), null);
                 mapCounter = 0;
             }
         }
@@ -163,7 +164,22 @@ public class SegmentFiles implements Runnable {
             e.printStackTrace();
         }
     }
-    public void Stop(){
+
+    private void setEntities(DocumentTermInfo dti, HashMap<String, AbstractTermDocumentInfo> map) {
+        String entities = "";
+        Queue enties = new PriorityQueue((o1, o2) -> ((AbstractTermDocumentInfo) o1).getFrequency() - ((AbstractTermDocumentInfo) o2).getFrequency());
+        for (AbstractTermDocumentInfo atdi :
+                map.values()) {
+            enties.add(atdi);
+        }
+        for (int i = 0; i < 5; i++) {
+            AbstractTermDocumentInfo tmp = (AbstractTermDocumentInfo) enties.poll();
+            entities += tmp.getTerm().getData();
+        }
+        dti.setEntities(entities);
+    }
+
+    public void Stop() {
         this.bStop = true;
     }
 

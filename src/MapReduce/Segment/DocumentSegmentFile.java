@@ -4,6 +4,7 @@ import IO.Segments.SegmentReader;
 import IO.Segments.SegmentWriter;
 import MapReduce.Parse.DocumentTermInfo;
 import MapReduce.Parse.Info;
+import MapReduce.Parse.Term;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class DocumentSegmentFile extends SegmentFile {
     }
 
     @Override
-    public void read(String key, int position) {
+    public void read(Term key, int position) {
 
     }
 

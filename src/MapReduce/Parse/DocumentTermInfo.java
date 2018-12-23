@@ -7,6 +7,7 @@ public class DocumentTermInfo implements Info{
     private int mostCommonFreq;
     private String documentName;
     private int numOfTerms;
+    private String entities;
 
     public DocumentTermInfo(String documentName) {
         this.numOfDifferentWords = 0;
@@ -14,6 +15,7 @@ public class DocumentTermInfo implements Info{
         this.mostCommonFreq = 0;
         this.documentName=documentName;
         this.numOfTerms=0;
+        this.entities="";
     }
     public void addToNumOfTerms(int freq){numOfTerms+=freq;}
 
@@ -41,6 +43,13 @@ public class DocumentTermInfo implements Info{
         return documentName;
     }
 
+    public String getEntities() {
+        return entities;
+    }
+
+    public void setEntities(String entities) {
+        this.entities = entities;
+    }
 
     @Override
     public String toString() {

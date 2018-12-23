@@ -3,8 +3,10 @@ package Model;
 import IO.DataProvider;
 import IO.DocumentReader;
 import IO.XMLReader;
+import IR.SimpleSearcher;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import MapReduce.Parse.MasterParser;
+import MapReduce.Segment.SegmentFile;
 import TextOperations.*;
 
 import java.io.File;
@@ -76,15 +78,16 @@ public class IRMaster {
 
         long start = System.currentTimeMillis();
         System.out.println("Start : " + LocalTime.now());
-        if (query == null)
-            StartReaders();
-        else{
+
+        if (query != null)
+        {
             this.document_reader_producer.acquire();
             this.document_queue.add(new Document("","","","",query,""));
             this.text_operation_consumer.release();
             //ReaderFinished();
         }
 
+        StartReaders();
         StartTextOperators();
         StartParsers();
 
@@ -92,6 +95,15 @@ public class IRMaster {
         WaitReaders();
         WaitTextOperators();
         WaitParsers();
+
+
+        SimpleSearcher searcher = new SimpleSearcher();
+        HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
+        while (this.tdi_queue.isEmpty()) {
+            HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
+            searcher.search(thisQuery,null);
+        }
+
 
     }
     private void StartReaders(){
@@ -132,18 +144,12 @@ public class IRMaster {
         ParsersFinished();
     }
     private void ReaderFinished(){
-        for (int i = 0; i < this.runnable_text_operators.length ; i++) {
-            ((TextOperations)this.runnable_text_operators[i]).Stop();
-        }
         this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker","","","","",""));
         this.text_operation_consumer.release();
         System.out.println("Finished Read Files : " + LocalTime.now());
     }
     private void TextOperatorsFinished() {
-        for (int i = 0; i < this.parsers.length ; i++) {
-            ((MasterParser)this.runnable_parsers[i]).Stop();
-        }
-        this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker","",null,null,null));
+          this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker","",null,null,null));
         this.master_parser_consumer.release();
         System.out.println("Finished Text Operations : " + LocalTime.now());
     }

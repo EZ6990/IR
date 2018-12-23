@@ -10,7 +10,6 @@ public class TextOperations implements Runnable{
     private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
     private Tokenize tokenizer;
     private IFilter stop_words;
-    private boolean bStop;
     private Semaphore documnet_reader_producer;
     private Semaphore text_operation_consumer;
     private Semaphore text_operation_producer;
@@ -22,7 +21,6 @@ public class TextOperations implements Runnable{
         this.tokenized_queue = tokenized_queue;
         this.tokenizer = tokenizer;
         this.stop_words = filter;
-        this.bStop = false;
         this.documnet_reader_producer = documnet_reader_producer;
         this.text_operation_consumer= text_operation_consumer;
         this.text_operation_producer = text_operation_producer;
@@ -67,7 +65,4 @@ public class TextOperations implements Runnable{
         }
     }
 
-    public void Stop(){
-        this.bStop = true;
-    }
 }
