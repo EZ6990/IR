@@ -23,6 +23,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     private boolean bStemmer;
     private Master splinter;
+    private IRMaster irsplinter;
     private long TimeToInvertIndex;
 
     public SimpleInvertedIndexModel(){
@@ -122,13 +123,25 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void SearchQueries(File f) {
+        initializeIRMaster();
         this.strQueriesLocation = f.getAbsolutePath();
         DataProvider.getInstance().setQueriesLocation(this.strQueriesLocation);
+        try {
+            this.irsplinter.start(null);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void SearchQuery(String text) {
+        initializeIRMaster();
         DataProvider.getInstance().setQueriesLocation(null);
+        try {
+            this.irsplinter.start(text);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeMaster(){
@@ -147,5 +160,23 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             provider.setPrefixPost("no_stem_");
         }
         this.splinter = new Master(stemmer);
+    }
+
+    private void initializeIRMaster(){
+        DataProvider provider = DataProvider.getInstance();
+        provider.setStopWordsLocation(this.strCorpusLocation);
+        provider.setCorpusLocation(this.strStopWordsLocation);
+        provider.setPostLocation(this.strPostLocation);
+        Stemmer stemmer = null;
+
+        if (this.bStemmer) {
+            stemmer = new Stemmer();
+            provider.setPrefixPost("stem_");
+        }
+        else{
+            stemmer = null;
+            provider.setPrefixPost("no_stem_");
+        }
+        this.irsplinter = new IRMaster(stemmer);
     }
 }

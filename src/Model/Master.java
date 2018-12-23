@@ -237,17 +237,11 @@ public class Master {
     }
 
     private void ReaderFinished(){
-        for (int i = 0; i < this.runnable_text_operators.length ; i++) {
-            ((TextOperations)this.runnable_text_operators[i]).Stop();
-        }
         this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker","","","","",""));
         this.text_operation_consumer.release();
         System.out.println("Finished Read Files : " + LocalTime.now());
     }
     private void TextOperatorsFinished() {
-        for (int i = 0; i < this.parsers.length ; i++) {
-            ((MasterParser)this.runnable_parsers[i]).Stop();
-        }
         this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker","",null,null,null));
         this.master_parser_consumer.release();
         System.out.println("Finished Text Operations : " + LocalTime.now());

@@ -31,35 +31,45 @@ public class BM25Ranker implements IRanker {
 
         HashMap<String,Double> documentRank = new HashMap<String, Double>();
 
-
-        for (SegmentFile file: files) {
+        for (Map.Entry<AbstractTermDocumentInfo,SegmentFile> pair : termDocuments.entrySet()){
+            AbstractTermDocumentInfo queryTerm = pair.getKey();
+            SegmentFile file = pair.getValue();
             if (file instanceof TermSegmentFile){
                 TermSegmentFile termSegmentFile = (TermSegmentFile) file;
                 Collection<List<Info>> termsInfo  = termSegmentFile.getData().values();
                 for (List<Info> lstTermInfo : termsInfo){
                     for (Info info : lstTermInfo){
                         if (info instanceof TermDocumentInfo) {
-
                             //sum rank foreach term in doc
                             TermDocumentInfo termDocumentInfo = (TermDocumentInfo) info;
                             Double rank = documentRank.get(((TermDocumentInfo) info).getTerm().getData());
-                            double value = calculate(termDocumentInfo);
+                            double value = calculate(queryTerm,termDocumentInfo);
                             rank = (rank == null ? value : rank + value);
                             documentRank.put(((TermDocumentInfo) info).getDocumentID(),rank);
-
                         }
                     }
                 }
             }
         }
 
-        return null;
+        List<Map.Entry<String,Double>> lstDucomentRank = new ArrayList<>(documentRank.entrySet());
+
+        Collections.sort(lstDucomentRank, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                return ((o1.getValue() - o2.getValue()) < 0 ? -1 : 1);
+            }
+        });
+
+        ArrayList<String> ans = new ArrayList();
+        lstDucomentRank.forEach(stringDoubleEntry -> ans.add(stringDoubleEntry.getKey()));
+        return ans;
     }
 
-    private Double calculate(TermDocumentInfo info){
+    private Double calculate(AbstractTermDocumentInfo queryTerm, TermDocumentInfo info){
         int wordDocumentFrequncy = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getTerm().getData()).split(" ")[1]);
-        return (((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequncy));
+        return (queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequncy));
     }
 
     private int getAvdl(){

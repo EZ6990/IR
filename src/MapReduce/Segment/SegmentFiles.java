@@ -174,6 +174,7 @@ public class SegmentFiles implements Runnable {
         }
         for (int i = 0; i < 5; i++) {
             AbstractTermDocumentInfo tmp = (AbstractTermDocumentInfo) enties.poll();
+            //if uppercase
             entities += tmp.getTerm().getData();
         }
         dti.setEntities(entities);
