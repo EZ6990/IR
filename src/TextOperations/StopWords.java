@@ -31,7 +31,7 @@ public class StopWords implements IFilter {
         try {
             stop_words = Files.readAllLines(Paths.get(location));
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         this.tokenized_stop_words = new ArrayList<Token>();

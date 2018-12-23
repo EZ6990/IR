@@ -99,7 +99,7 @@ public class IRMaster {
 
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
-        while (this.tdi_queue.isEmpty()) {
+        while (!this.tdi_queue.isEmpty()) {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
             searcher.search(thisQuery,null);
         }
