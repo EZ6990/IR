@@ -19,6 +19,7 @@ import java.util.Observable;
 public class MainView implements IView {
 
 
+
     private Stage stage;
     private ViewModel viewModel;
 
@@ -35,8 +36,8 @@ public class MainView implements IView {
     public TextField tfPostOutputPath;
     public TextField tfQueries;
 
-    public ListView lvDictionary;
-    public ListView lvContriesFilter;
+    public TableView tbl_Dictionary;
+    public ListView lvCountriesFilter;
 
     private Alert alert;
 
@@ -55,9 +56,10 @@ public class MainView implements IView {
         this.tfCorpusInputPath.textProperty().bindBidirectional(this.viewModel.strCorpusLocationProperty());
         this.tfPostOutputPath.textProperty().bindBidirectional(this.viewModel.strPostingLocationProperty());
         this.tfQueries.textProperty().bindBidirectional(this.viewModel.strQueryProperty());
-        this.lvContriesFilter.itemsProperty().bindBidirectional(this.viewModel.observableCountryItemsProperty());
+        this.lvCountriesFilter.itemsProperty().bindBidirectional(this.viewModel.observableListViewItemsProperty());
         this.cbStemmer.selectedProperty().bindBidirectional(this.viewModel.bStemmingProperty());
         this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
+        this.tbl_Dictionary.itemsProperty().bind(this.viewModel.observableTableVIewProperty());
 
         this.btnClear.disableProperty().bind(new BooleanBinding() {
             {
@@ -98,17 +100,14 @@ public class MainView implements IView {
             if (((String)arg).equals("INVERTED_INDEX_DONE")){
                 this.btnViewDictionary.setVisible(true);
                 this.btnViewLanguages.setVisible(true);
-                //Platform.runLater(() -> displayInformationAlert(this.viewModel.updateTimeToFinish(),this.viewModel.getDocsDictionaryLength(),this.viewModel.getTermDictionaryLength()));
             }
             else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
                 this.btnViewLanguages.setVisible(false);
-                //this.lvDictionary.setItems( FXCollections.observableArrayList());
                 this.btnViewDictionary.setVisible(true);
             }
             else if (((String)arg).equals("CLEAR_DONE")){
                 this.btnViewLanguages.setVisible(false);
                 this.btnViewDictionary.setVisible(false);
-                //this.lvDictionary.setItems( FXCollections.observableArrayList());
             }
         }
 
@@ -157,32 +156,11 @@ public class MainView implements IView {
     }
 
     public void ShowDictionary(ActionEvent actionEvent) {
-        //LoadDictionaryToTable(this.viewModel.);
-    }
-
-    private void LoadDictionaryToTable(HashMap<String,String> data){
-
-        ObservableList names = FXCollections.observableArrayList();
-        Object [] keys = data.keySet().toArray();
-        for (Object key : keys)
-            names.add(((String)key + "\t" + data.get(key)));
-
-        SortedList<String> sorted = new SortedList<String>(names,String.CASE_INSENSITIVE_ORDER);
-        this.lvDictionary.setItems(sorted);
-
+        this.viewModel.getTermTF();
     }
 
     public void ShowLanguages(ActionEvent actionEvent) {
-        LoadLanguagesToTable(this.viewModel.getLanguagesDictionary());
-    }
-
-    private void LoadLanguagesToTable(List<String> data) {
-
-        ObservableList names = FXCollections.observableArrayList();
-        names.addAll(data);
-        SortedList<String> sorted = new SortedList<String>(names,String.CASE_INSENSITIVE_ORDER);
-        this.lvDictionary.setItems(sorted);
-
+        this.viewModel.getLanguagesDictionary();
     }
 
     public void SetQueriesPath(ActionEvent actionEvent) {
@@ -191,6 +169,6 @@ public class MainView implements IView {
     }
 
     public void Search(ActionEvent actionEvent) {
-        this.viewModel.Search(this.tfQueries.getText());
+        this.viewModel.Search();
     }
 }

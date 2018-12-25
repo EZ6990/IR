@@ -1,19 +1,19 @@
 package ViewModel;
 
+import MapReduce.Index.TermIndexer;
 import Model.IInvertedIndexModel;
+import View.TermIndexerData;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class ViewModel extends Observable implements Observer {
 
@@ -23,7 +23,11 @@ public class ViewModel extends Observable implements Observer {
     private SimpleStringProperty strQuery;
     private SimpleBooleanProperty bStemming;
     private SimpleBooleanProperty bSemantic;
-    private SimpleObjectProperty observableCountryItems;
+    private SimpleObjectProperty<ObservableList<String>> observableListViewItems;
+    private ObservableList<String>observableLanguageItems;
+
+    private SimpleObjectProperty observableTableVIew;
+
 
     public ViewModel(IInvertedIndexModel model) {
 
@@ -34,16 +38,25 @@ public class ViewModel extends Observable implements Observer {
         this.bStemming = new SimpleBooleanProperty(false);
         this.bSemantic = new SimpleBooleanProperty(false);
         ObservableList<String> tmp = FXCollections.observableArrayList();
-        this.observableCountryItems = new SimpleObjectProperty(tmp);
+        this.observableListViewItems = new SimpleObjectProperty(new SortedList<String>(tmp,String.CASE_INSENSITIVE_ORDER));
+        ObservableList<TermIndexer> tmp2 = FXCollections.observableArrayList();
+        this.observableTableVIew = new SimpleObjectProperty(tmp2);
+    }
 
+    public Object getObservableTableVIew() {
+        return observableTableVIew.get();
+    }
+
+    public SimpleObjectProperty observableTableVIewProperty() {
+        return observableTableVIew;
     }
 
     public ObservableList<String> getObservableCountryItems() {
-        return (ObservableList<String>)observableCountryItems.get();
+        return (ObservableList<String>)observableListViewItems.get();
     }
 
-    public SimpleObjectProperty observableCountryItemsProperty() {
-        return observableCountryItems;
+    public SimpleObjectProperty observableListViewItemsProperty() {
+        return observableListViewItems;
     }
     public String getStrCorpusLocation() {
         return strCorpusLocation.get();
@@ -92,6 +105,10 @@ public class ViewModel extends Observable implements Observer {
             notifyObservers(arg);
         }
     }
+    public void getTermTF(){
+        for (Map.Entry<String,String> pair: this.model.getTermTF().entrySet())
+            ((ObservableList<TermIndexerData>)this.observableTableVIew.get()).add(new TermIndexerData(pair.getKey(),pair.getValue()));
+    }
 
     public void startInvertedIndex(){
         this.model.setCorpusLocation(getStrCorpusLocation());
@@ -130,7 +147,8 @@ public class ViewModel extends Observable implements Observer {
         return this.model.getLanguage();
     }
 
-    public void Search(String text) {
+    public void Search() {
+        String text = getStrQuery();
         File f = new File(text);
         if (f.exists())
             this.model.SearchQueries(f);
