@@ -7,7 +7,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainView">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="864.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainView">
    <children>
       <Button fx:id="dcCorpusPath" layoutX="323.0" layoutY="92.0" mnemonicParsing="false" onAction="#SetCorpusPath" text="browse..." />
       <Button fx:id="dcPostPath" layoutX="323.0" layoutY="124.0" mnemonicParsing="false" onAction="#SetPostPath" text="browse..." />
@@ -19,12 +20,15 @@
       <CheckBox fx:id="cbStemmer" layoutX="86.0" layoutY="160.0" mnemonicParsing="false" text="Stemming" />
       <Button fx:id="btnClear" layoutX="175.0" layoutY="200.0" mnemonicParsing="false" onAction="#Clear" text="Clear" />
       <Button fx:id="btnLoad" layoutX="265.0" layoutY="200.0" mnemonicParsing="false" onAction="#LoadIndexers" text="Load" />
-      <Button fx:id="btnViewDictionary" layoutX="147.0" layoutY="323.0" mnemonicParsing="false" onAction="#ShowDictionary" text="View Dictionary" />
-      <Button fx:id="btnViewLanguages" layoutX="147.0" layoutY="353.0" mnemonicParsing="false" onAction="#ShowLanguages" text="View Languages" />
-      <ListView fx:id="lvDictionary" layoutX="400" layoutY="0" prefHeight="400.0" prefWidth="200" />
+      <Button fx:id="btnViewDictionary" layoutX="713.0" layoutY="410.0" mnemonicParsing="false" onAction="#ShowDictionary" prefHeight="25.0" prefWidth="102.0" text="View Dictionary" />
+      <Button fx:id="btnViewLanguages" layoutX="712.0" layoutY="440.0" mnemonicParsing="false" onAction="#ShowLanguages" prefHeight="25.0" prefWidth="102.0" text="View Languages" />
+      <ListView fx:id="lvDictionary" layoutX="664.0" prefHeight="400.0" prefWidth="200" />
       <TextField fx:id="tfQueries" layoutX="86.0" layoutY="249.0" prefHeight="25.0" prefWidth="217.0" promptText="Location of desired posting location..." />
       <Label layoutX="14.0" layoutY="253.0" prefHeight="17.0" prefWidth="43.0" text="search" />
       <Button fx:id="dcQueriesPath" layoutX="323.0" layoutY="249.0" mnemonicParsing="false" onAction="#SetQueriesPath" text="browse..." />
       <Button fx:id="btnSearch" layoutX="172.0" layoutY="281.0" mnemonicParsing="false" onAction="#Search" text="Search" />
+      <CheckBox fx:id="cbSemantic" layoutX="88.0" layoutY="285.0" mnemonicParsing="false" text="Semantic" />
+      <ListView fx:id="lvContriesFilter" layoutX="446.0" prefHeight="400.0" prefWidth="200" />
+      <Button layoutX="487.0" layoutY="410.0" mnemonicParsing="false" text="View Contries Filter" />
    </children>
 </AnchorPane>

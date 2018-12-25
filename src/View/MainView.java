@@ -23,6 +23,7 @@ public class MainView implements IView {
     private ViewModel viewModel;
 
     public CheckBox cbStemmer;
+    public CheckBox cbSemantic;
     public Button btnViewLanguages;
     public Button btnViewDictionary;
     public Button btnLoad;
@@ -33,13 +34,13 @@ public class MainView implements IView {
     public TextField tfCorpusInputPath;
     public TextField tfPostOutputPath;
     public TextField tfQueries;
+
     public ListView lvDictionary;
+    public ListView lvContriesFilter;
 
     private Alert alert;
 
-
-
-    public void initialize(){
+    public void initializeView(){
 
         alert = new Alert(Alert.AlertType.INFORMATION);
         this.btnStart.disableProperty().bind(new BooleanBinding() {
@@ -51,6 +52,12 @@ public class MainView implements IView {
                 return (tfCorpusInputPath.getText().isEmpty() || tfPostOutputPath.getText().isEmpty());
             }
         });
+        this.tfCorpusInputPath.textProperty().bindBidirectional(this.viewModel.strCorpusLocationProperty());
+        this.tfPostOutputPath.textProperty().bindBidirectional(this.viewModel.strPostingLocationProperty());
+        this.tfQueries.textProperty().bindBidirectional(this.viewModel.strQueryProperty());
+        this.lvContriesFilter.itemsProperty().bindBidirectional(this.viewModel.observableCountryItemsProperty());
+        this.cbStemmer.selectedProperty().bindBidirectional(this.viewModel.bStemmingProperty());
+        this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
 
         this.btnClear.disableProperty().bind(new BooleanBinding() {
             {
@@ -80,33 +87,9 @@ public class MainView implements IView {
     }
 
     @Override
-    public String getCorpusLocation() {
-        return this.tfCorpusInputPath.getText();
-    }
-
-    @Override
-    public String getStopWordsLocationLocation() {
-        return this.tfCorpusInputPath.getText();
-    }
-
-    @Override
-    public String getPostLocation() {
-        return this.tfPostOutputPath.getText();
-    }
-
-    @Override
-    public void setLanguage() {
-
-    }
-
-    @Override
-    public void setDictionary() {
-
-    }
-
-    @Override
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
+        initializeView();
     }
 
     @Override
@@ -115,17 +98,17 @@ public class MainView implements IView {
             if (((String)arg).equals("INVERTED_INDEX_DONE")){
                 this.btnViewDictionary.setVisible(true);
                 this.btnViewLanguages.setVisible(true);
-                Platform.runLater(() -> displayInformationAlert(this.viewModel.updateTimeToFinish(),this.viewModel.getDocsDictionaryLength(),this.viewModel.getTermDictionaryLength()));
+                //Platform.runLater(() -> displayInformationAlert(this.viewModel.updateTimeToFinish(),this.viewModel.getDocsDictionaryLength(),this.viewModel.getTermDictionaryLength()));
             }
             else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
                 this.btnViewLanguages.setVisible(false);
-                this.lvDictionary.setItems( FXCollections.observableArrayList());
+                //this.lvDictionary.setItems( FXCollections.observableArrayList());
                 this.btnViewDictionary.setVisible(true);
             }
             else if (((String)arg).equals("CLEAR_DONE")){
                 this.btnViewLanguages.setVisible(false);
                 this.btnViewDictionary.setVisible(false);
-                this.lvDictionary.setItems( FXCollections.observableArrayList());
+                //this.lvDictionary.setItems( FXCollections.observableArrayList());
             }
         }
 
@@ -153,16 +136,16 @@ public class MainView implements IView {
 
     public void SetCorpusPath(ActionEvent actionEvent) {
         String  location = OpenFolderChooser();
-        this.tfCorpusInputPath.setText(location);
+        this.tfCorpusInputPath.textProperty().setValue(location);
     }
 
     public void SetPostPath(ActionEvent actionEvent) {
         String location = OpenFolderChooser();
-        this.tfPostOutputPath.setText(location);
+        this.tfPostOutputPath.textProperty().setValue(location);
     }
 
     public void startInvertedIndex(ActionEvent actionEvent) {
-        this.viewModel.startInvertedIndex(this.tfCorpusInputPath.getText(),this.tfPostOutputPath.getText(),this.cbStemmer.isSelected());
+        this.viewModel.startInvertedIndex();
     }
 
     public void Clear(ActionEvent actionEvent) {
@@ -170,11 +153,11 @@ public class MainView implements IView {
     }
 
     public void LoadIndexers(ActionEvent actionEvent) {
-        this.viewModel.LoadIndexers(this.tfPostOutputPath.getText(),this.cbStemmer.isSelected());
+        this.viewModel.LoadIndexers();
     }
 
     public void ShowDictionary(ActionEvent actionEvent) {
-        LoadDictionaryToTable(this.viewModel.getDictionary());
+        //LoadDictionaryToTable(this.viewModel.);
     }
 
     private void LoadDictionaryToTable(HashMap<String,String> data){
