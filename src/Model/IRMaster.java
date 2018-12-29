@@ -101,14 +101,15 @@ public class IRMaster {
         WaitParsers();
 
 
+        IRanker ranker = new BM25Ranker(0.2,(float)0.5,getAvdl(),DataProvider.getInstance().getDocumentIndexer().size());
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
-            searcher.search(thisQuery,getCorpusCityFilterDocuments(Filter));
+            ranker.returnRankedDocs(searcher.search(thisQuery,getCorpusCityFilterDocuments(Filter)));
         }
 
-        IRanker ranker = new BM25Ranker(0.2,(float)0.5,getAvdl(),DataProvider.getInstance().getDocumentIndexer().size());
+
 
 
     }
