@@ -19,8 +19,8 @@ public interface IInvertedIndexModel{
     public long getTimeToFinish();
     int getDocumentDictionaryLength();
 
-    void SearchQueries(File f);
-    void SearchQuery(String text);
+    void SearchQueries(File f,List<String> Cities);
+    void SearchQuery(String text,List<String> Cities);
 
     List<String> getCountries();
 }

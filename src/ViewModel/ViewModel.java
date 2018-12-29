@@ -25,7 +25,6 @@ public class ViewModel extends Observable implements Observer {
     private SimpleBooleanProperty bStemming;
     private SimpleBooleanProperty bSemantic;
     private SimpleObjectProperty<ObservableList<String>> observableListViewItems;
-    private ObservableList<String>observableLanguageItems;
 
     private SimpleObjectProperty observableTableVIew;
 
@@ -38,10 +37,8 @@ public class ViewModel extends Observable implements Observer {
         this.strQuery = new SimpleStringProperty("");
         this.bStemming = new SimpleBooleanProperty(false);
         this.bSemantic = new SimpleBooleanProperty(false);
-        ObservableList<String> tmp = FXCollections.observableArrayList();
-        this.observableListViewItems = new SimpleObjectProperty(new SortedList<String>(tmp,String.CASE_INSENSITIVE_ORDER));
-        ObservableList<TermIndexer> tmp2 = FXCollections.observableArrayList();
-        this.observableTableVIew = new SimpleObjectProperty(tmp2);
+        this.observableListViewItems = new SimpleObjectProperty<ObservableList<String>>();
+        this.observableTableVIew = new SimpleObjectProperty();
     }
 
     public Object getObservableTableVIew() {
@@ -107,8 +104,10 @@ public class ViewModel extends Observable implements Observer {
         }
     }
     public void getTermTF(){
+        ObservableList<TermIndexerData> lst = FXCollections.observableArrayList();
         for (Map.Entry<String,String> pair: this.model.getTermTF().entrySet())
-            ((ObservableList<TermIndexerData>)this.observableTableVIew.get()).add(new TermIndexerData(pair.getKey(),pair.getValue()));
+            lst.add(new TermIndexerData(pair.getKey(),pair.getValue()));
+        this.observableTableVIew.setValue(lst);
     }
 
     public void startInvertedIndex(){
@@ -145,21 +144,23 @@ public class ViewModel extends Observable implements Observer {
     }
 
     public void getLanguages() {
-        observableListViewItems.get().clear();
-        observableListViewItems.get().setAll(this.model.getLanguage());
+        ObservableList<String> lst = FXCollections.observableArrayList();
+        lst.setAll(this.model.getLanguage());
+        this.observableListViewItems.setValue(new SortedList<String>(lst,String.CASE_INSENSITIVE_ORDER));
     }
 
-    public void Search() {
+    public void Search(List<String> Cities) {
         String text = getStrQuery();
         File f = new File(text);
         if (f.exists())
-            this.model.SearchQueries(f);
+            this.model.SearchQueries(f,Cities);
         else
-            this.model.SearchQuery(text);
+            this.model.SearchQuery(text,Cities);
     }
 
     public void getCountries() {
-        observableListViewItems.get().clear();
-        observableListViewItems.get().setAll(this.model.getCountries());
+        ObservableList<String> lst = FXCollections.observableArrayList();
+        lst.setAll(this.model.getCountries());
+        this.observableListViewItems.setValue(new SortedList<String>(lst,String.CASE_INSENSITIVE_ORDER));
     }
 }

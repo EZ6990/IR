@@ -65,6 +65,8 @@ public class MainView implements IView {
         this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
         this.tbl_Dictionary.itemsProperty().bind(this.viewModel.observableTableVIewProperty());
 
+        this.lvCountriesFilter.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         this.btnClear.disableProperty().bind(new BooleanBinding() {
             {
                 super.bind(tfPostOutputPath.textProperty());
@@ -179,7 +181,7 @@ public class MainView implements IView {
         this.tfQueries.setText(location);
     }
     public void Search(ActionEvent actionEvent) {
-        this.viewModel.Search();
+        this.viewModel.Search(this.lvCountriesFilter.getSelectionModel().getSelectedItems());
     }
 
     public void ShowCountries(ActionEvent actionEvent) {

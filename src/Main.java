@@ -28,10 +28,8 @@ public class Main extends Application {
 
         view.setViewModel(viewModel);
 
-
-
         primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 600, 450));
+        primaryStage.setScene(new Scene(root, 864, 604));
         primaryStage.show();
     }
 

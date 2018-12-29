@@ -3,15 +3,13 @@ package Model;
 
 import IO.DataProvider;
 import TextOperations.Stemmer;
+import org.omg.CORBA.DATA_CONVERSION;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 
 public class SimpleInvertedIndexModel extends Observable implements IInvertedIndexModel {
 
@@ -122,23 +120,23 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     @Override
-    public void SearchQueries(File f) {
+    public void SearchQueries(File f,List<String> Cities) {
         initializeIRMaster();
         this.strQueriesLocation = f.getAbsolutePath();
         DataProvider.getInstance().setQueriesLocation(this.strQueriesLocation);
         try {
-            this.irsplinter.start(null);
+            this.irsplinter.start(null,Cities);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void SearchQuery(String text) {
+    public void SearchQuery(String text,List<String> Cities) {
         initializeIRMaster();
         DataProvider.getInstance().setQueriesLocation(null);
         try {
-            this.irsplinter.start(text);
+            this.irsplinter.start(text,Cities);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -147,10 +145,20 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     @Override
     public List<String> getCountries() {
         List<String> lstCountries = new ArrayList<>();
-        for (String value : DataProvider.getInstance().getFP104().values()) {
-            if (!lstCountries.contains(value))
-                lstCountries.add(value);
+        if (DataProvider.getInstance().getFP104() != null && DataProvider.getInstance().getFP104().size() > 0) {
+            for (String value : DataProvider.getInstance().getFP104().values())
+                if (!lstCountries.contains(value))
+                    lstCountries.add(value);
         }
+        else {
+            Iterator it = DataProvider.getInstance().getCityIndexer().iterator();
+            while(it.hasNext()){
+                Map.Entry pair = (Map.Entry)it.next();
+                lstCountries.add(pair.getKey().toString());
+                it.remove();
+            }
+        }
+
         return lstCountries;
     }
 

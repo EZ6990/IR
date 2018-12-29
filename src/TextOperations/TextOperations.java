@@ -56,6 +56,7 @@ public class TextOperations implements Runnable{
             List<Token> Header = this.stop_words.filter(this.tokenizer.Tokenize(doc.getRepresentativeCountry()));
 
             try {
+                System.out.println("Text Operation Producer : " + this.text_operation_producer.availablePermits());
                 this.text_operation_producer.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();

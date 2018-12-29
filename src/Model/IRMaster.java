@@ -2,17 +2,21 @@ package Model;
 
 import IO.DataProvider;
 import IO.DocumentReader;
+import IO.Segments.SegmentCityReader;
 import IO.XMLReader;
 import IR.SimpleSearcher;
-import MapReduce.Parse.AbstractTermDocumentInfo;
-import MapReduce.Parse.MasterParser;
+import MapReduce.Index.CityIndexer;
+import MapReduce.Parse.*;
+import MapReduce.Segment.CitySegmentFile;
 import MapReduce.Segment.SegmentFile;
 import TextOperations.*;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -74,7 +78,7 @@ public class IRMaster {
         this.stemmer = stemmer;
     }
 
-    public void start(String query) throws InterruptedException {
+    public void start(String query, List<String> Filter) throws InterruptedException {
 
         long start = System.currentTimeMillis();
         System.out.println("Start : " + LocalTime.now());
@@ -162,5 +166,25 @@ public class IRMaster {
 //        this.tdi_queue.add(temp);
 //        this.segment_file_consumer.release();
         System.out.println("Finished Parsing : " + LocalTime.now());
+    }
+
+    private List<Info> getCorpusCityFilterDocuments(List<String> cities){
+
+        List <Info> docs = null;
+        CitySegmentFile cityPost = new CitySegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityPost.post",null,new SegmentCityReader());
+        if (cities != null && cities.size() > 0) {
+            docs = new ArrayList<Info>();
+            CityIndexer cityIndexer = DataProvider.getInstance().getCityIndexer();
+            for (String city : cities)
+                cityPost.read(new Term(city,this.stemmer),Integer.parseInt(cityIndexer.getValue(city).split(" ")[0]));
+//            for (List<Info> cityPost.getData().values()){
+//
+//            }
+
+           // DataProvider.getInstance().getTermIndexer().getValue()
+        }
+        return null;
+
+
     }
 }

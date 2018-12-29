@@ -5,6 +5,7 @@ import IO.Segments.SegmentWriter;
 import MapReduce.Parse.CityTDI;
 import MapReduce.Parse.Info;
 import MapReduce.Parse.Term;
+import MapReduce.Parse.TermDocumentInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,12 @@ public class CitySegmentFile extends SegmentFile {
 
     @Override
     public void read(Term key, int position) {
-
+        List<String> lst=read();
+        String[] line =lst.get(position).trim().split(";")[1].split("\\|");
+        for (int i=0;i<line.length;i++)
+        {
+            TermDocumentInfo tdi=new TermDocumentInfo(key,line[i].split(" ")[0]);
+            add(key.getData(),tdi);
+        }
     }
 }

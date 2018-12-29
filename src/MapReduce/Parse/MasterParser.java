@@ -67,6 +67,7 @@ public class MasterParser implements Runnable{
 
             if (map.size() > 0) {
                 try {
+                    System.out.println("Master Parser Producer : " + this.master_parser_producer.availablePermits());
                     this.master_parser_producer.acquire();
                     this.tdi_queue.add(map);
                     this.segment_file_consumer.release();

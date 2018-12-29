@@ -76,11 +76,11 @@ public class Master {
         this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
         this.destSegmentFilesQueue = new ConcurrentLinkedQueue<SegmentFile>();
 
-        this.doc_readers = new Thread[1];
-        this.runnable_doc_readers = new Runnable[1];
+        this.doc_readers = new Thread[2];
+        this.runnable_doc_readers = new Runnable[2];
 
-        this.text_operators = new Thread[8];
-        this.runnable_text_operators = new Runnable[8];
+        this.text_operators = new Thread[12];
+        this.runnable_text_operators = new Runnable[12];
 
         this.parsers = new Thread[8];
         this.runnable_parsers = new Runnable[8];
@@ -91,7 +91,7 @@ public class Master {
         this.segment_posting= new Thread[1];
         this.runnable_segment_posting = new Runnable[1];
 
-        this.document_reader_producer = new Semaphore(5000,true);
+        this.document_reader_producer = new Semaphore(10000,true);
         this.text_operation_consumer=  new Semaphore(0,true);
         this.text_operation_producer = new Semaphore(10000,true);
         this.master_parser_consumer = new Semaphore(0,true);
