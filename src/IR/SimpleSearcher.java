@@ -4,12 +4,9 @@ import IO.DataProvider;
 import IO.Segments.SegmentTermReader;
 import IO.Segments.SegmentTermWriter;
 import MapReduce.Parse.AbstractTermDocumentInfo;
-import MapReduce.Parse.DocumentTermInfo;
 import MapReduce.Parse.Info;
-import MapReduce.Parse.TermDocumentInfo;
 import MapReduce.Segment.SegmentFile;
 import MapReduce.Segment.TermSegmentFile;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +20,7 @@ public class SimpleSearcher implements ISearcher {
             String termData = atdi.getTerm().getData();
             if (DataProvider.getInstance().getTermIndexer().contains(termData = termData.toLowerCase()) ||
                     DataProvider.getInstance().getTermIndexer().contains(termData = termData.toUpperCase())) {
-                atdi.getTerm().setTerm(termData);
+                atdi.getTerm().setData(termData);
                 String[] IndexerValue = DataProvider.getInstance().getTermIndexer().getValue(termData).split(" ");
                 TermSegmentFile tsf = new TermSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + IndexerValue[0], new SegmentTermWriter(), new SegmentTermReader());
                 //String[] splitedV=IndexerValue.split(" ");

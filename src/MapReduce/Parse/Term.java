@@ -19,7 +19,7 @@ public class Term{
         return this.data.trim();
     }
 
-    public void setTerm(String termData) {
+    public void setData(String termData) {
         data=termData;
     }
 }
