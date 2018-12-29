@@ -11,12 +11,12 @@ import java.util.*;
 
 public class BM25Ranker implements IRanker {
 
-    private final long k;
+    private final double k;
     private final float b;
     private final int avdl;
     private final int M;
 
-    public BM25Ranker(long k, float b, int avdl,int M){
+    public BM25Ranker(double k, float b, int avdl,int M){
         this.k = k;
         this.b = b;
         this.avdl = avdl;
@@ -70,18 +70,5 @@ public class BM25Ranker implements IRanker {
         int wordDocumentFrequncy = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getTerm().getData()).split(" ")[1]);
         return (queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequncy));
-    }
-
-    private int getAvdl(){
-
-        Iterator it = DataProvider.getInstance().getDocumentIndexer().iterator();
-        int total = 0;
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            total += Integer.parseInt(pair.getValue().toString().split(" ")[1]);
-            it.remove();
-        }
-
-        return (total/DataProvider.getInstance().getDocumentIndexer().size());
     }
 }

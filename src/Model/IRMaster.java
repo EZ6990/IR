@@ -4,6 +4,8 @@ import IO.DataProvider;
 import IO.DocumentReader;
 import IO.Segments.SegmentCityReader;
 import IO.XMLReader;
+import IR.BM25Ranker;
+import IR.IRanker;
 import IR.SimpleSearcher;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Parse.*;
@@ -14,9 +16,7 @@ import TextOperations.*;
 import java.io.File;
 import java.io.FileFilter;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -105,8 +105,10 @@ public class IRMaster {
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
-            searcher.search(thisQuery,null);
+            searcher.search(thisQuery,getCorpusCityFilterDocuments(Filter));
         }
+
+        IRanker ranker = new BM25Ranker(0.2,(float)0.5,getAvdl(),DataProvider.getInstance().getDocumentIndexer().size());
 
 
     }
@@ -182,5 +184,18 @@ public class IRMaster {
             }
         }
         return docs;
+    }
+
+    private int getAvdl(){
+
+        Iterator it = DataProvider.getInstance().getDocumentIndexer().iterator();
+        int total = 0;
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            total += Integer.parseInt(pair.getValue().toString().split(" ")[1]);
+            it.remove();
+        }
+
+        return (total/DataProvider.getInstance().getDocumentIndexer().size());
     }
 }
