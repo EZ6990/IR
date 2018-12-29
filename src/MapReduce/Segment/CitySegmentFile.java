@@ -29,11 +29,17 @@ public class CitySegmentFile extends SegmentFile {
     @Override
     public void read(Term key, int position) {
         List<String> lst=read();
-        String[] line =lst.get(position).trim().split(";")[1].split("\\|");
-        for (int i=0;i<line.length;i++)
-        {
-            TermDocumentInfo tdi=new TermDocumentInfo(key,line[i].split(" ")[0]);
-            add(key.getData(),tdi);
+        String[] termData = lst.get(position).trim().split(";");
+        Term term = new Term(termData[0],null);
+        String[] data = termData[1].split("\\?");
+        String [] countryInfo = data[0].split("\\!");
+
+        for (int i = 1; i < data.length; i++) {
+            String [] termDocumentData = data[i].split("\\|");
+            CityTDI cityInfo = new CityTDI(term,termDocumentData[0],countryInfo[0],countryInfo[1],countryInfo[2]);
+            for (String location : data[i].split("\\|"))
+                cityInfo.addLocation(Integer.parseInt(location));
+            this.add(term.getData(),cityInfo);
         }
     }
 }

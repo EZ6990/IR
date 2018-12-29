@@ -177,14 +177,10 @@ public class IRMaster {
             CityIndexer cityIndexer = DataProvider.getInstance().getCityIndexer();
             for (String city : cities)
                 cityPost.read(new Term(city,this.stemmer),Integer.parseInt(cityIndexer.getValue(city).split(" ")[0]));
-//            for (List<Info> cityPost.getData().values()){
-//
-//            }
-
-           // DataProvider.getInstance().getTermIndexer().getValue()
+            for (List<Info> lstInfo : cityPost.getData().values()){
+                docs.addAll(lstInfo);
+            }
         }
-        return null;
-
-
+        return docs;
     }
 }

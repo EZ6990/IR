@@ -39,9 +39,9 @@ public class BM25Ranker implements IRanker {
                 Collection<List<Info>> termsInfo  = termSegmentFile.getData().values();
                 for (List<Info> lstTermInfo : termsInfo){
                     for (Info info : lstTermInfo){
-                        if (info instanceof TermDocumentInfo) {
+                        if (info instanceof AbstractTermDocumentInfo) {
                             //sum rank foreach term in doc
-                            TermDocumentInfo termDocumentInfo = (TermDocumentInfo) info;
+                            AbstractTermDocumentInfo termDocumentInfo = (TermDocumentInfo) info;
                             Double rank = documentRank.get(((TermDocumentInfo) info).getTerm().getData());
                             double value = calculate(queryTerm,termDocumentInfo);
                             rank = (rank == null ? value : rank + value);
@@ -66,7 +66,7 @@ public class BM25Ranker implements IRanker {
         return ans;
     }
 
-    private Double calculate(AbstractTermDocumentInfo queryTerm, TermDocumentInfo info){
+    private Double calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info){
         int wordDocumentFrequncy = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getTerm().getData()).split(" ")[1]);
         return (queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequncy));
