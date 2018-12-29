@@ -1,5 +1,6 @@
 package ViewModel;
 
+import IO.DataProvider;
 import MapReduce.Index.TermIndexer;
 import Model.IInvertedIndexModel;
 import View.TermIndexerData;
@@ -143,8 +144,9 @@ public class ViewModel extends Observable implements Observer {
         return this.model.getDocumentDictionaryLength();
     }
 
-    public List<String> getLanguagesDictionary() {
-        return this.model.getLanguage();
+    public void getLanguages() {
+        observableListViewItems.get().clear();
+        observableListViewItems.get().setAll(this.model.getLanguage());
     }
 
     public void Search() {
@@ -154,5 +156,10 @@ public class ViewModel extends Observable implements Observer {
             this.model.SearchQueries(f);
         else
             this.model.SearchQuery(text);
+    }
+
+    public void getCountries() {
+        observableListViewItems.get().clear();
+        observableListViewItems.get().setAll(this.model.getCountries());
     }
 }

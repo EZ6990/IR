@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface IInvertedIndexModel{
 
     void SearchQueries(File f);
     void SearchQuery(String text);
+
+    List<String> getCountries();
 }

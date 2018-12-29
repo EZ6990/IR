@@ -29,11 +29,11 @@
       <Button fx:id="btnSearch" layoutX="172.0" layoutY="281.0" mnemonicParsing="false" onAction="#Search" text="Search" />
       <CheckBox fx:id="cbSemantic" layoutX="88.0" layoutY="285.0" mnemonicParsing="false" text="Semantic" />
       <ListView fx:id="lvCountriesFilter" layoutX="446.0" prefHeight="400.0" prefWidth="200" />
-      <Button layoutX="487.0" layoutY="410.0" mnemonicParsing="false" text="View Contries Filter" />
+      <Button layoutX="487.0" layoutY="410.0" mnemonicParsing="false" text="View Contries Filter" onAction="#ShowCountries"/>
       <TableView fx:id="tbl_Dictionary" layoutX="663.0" layoutY="-2.0" prefHeight="400.0" prefWidth="200.0">
         <columns>
-          <TableColumn prefWidth="101.0" text="Term" />
-          <TableColumn prefWidth="98.0" text="Count" />
+          <TableColumn fx:id="colTerm" prefWidth="101.0" text="Term" />
+          <TableColumn fx:id="colFrequency" prefWidth="98.0" text="Frequency" />
         </columns>
       </TableView>
    </children>

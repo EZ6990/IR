@@ -103,7 +103,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public HashMap<String, String> getTermTF() {
-        return this.splinter.getTermTF();
+        return DataProvider.getInstance().getTermIndexer().getTermNumberOfOccurrenceMap();
     }
 
     @Override
@@ -142,6 +142,16 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<String> getCountries() {
+        List<String> lstCountries = new ArrayList<>();
+        for (String value : DataProvider.getInstance().getFP104().values()) {
+            if (!lstCountries.contains(value))
+                lstCountries.add(value);
+        }
+        return lstCountries;
     }
 
     private void initializeMaster(){

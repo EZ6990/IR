@@ -266,10 +266,6 @@ public class Master {
     }
     private void SegmentFilesPostingFinished() { System.out.println("Finished Segment Posting : " + LocalTime.now()); }
 
-    public HashMap<String, String> getTermTF() {
-        return this.termIndexer.getTermNumberOfOccurrenceMap();
-    }
-
     public long getTimeToInvertIndex() {
         return TimeToInvertIndex;
     }

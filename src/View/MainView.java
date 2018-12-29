@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -37,6 +38,9 @@ public class MainView implements IView {
     public TextField tfQueries;
 
     public TableView tbl_Dictionary;
+    public TableColumn colTerm;
+    public TableColumn colFrequency;
+
     public ListView lvCountriesFilter;
 
     private Alert alert;
@@ -80,6 +84,13 @@ public class MainView implements IView {
                 return (tfPostOutputPath.getText().isEmpty());
             }
         });
+
+        this.colTerm.setCellValueFactory(
+                new PropertyValueFactory<TermIndexerData, String>("term")
+        );
+        this.colFrequency.setCellValueFactory(
+                new PropertyValueFactory<TermIndexerData, String>("frequency")
+        );
     }
 
 
@@ -160,15 +171,18 @@ public class MainView implements IView {
     }
 
     public void ShowLanguages(ActionEvent actionEvent) {
-        this.viewModel.getLanguagesDictionary();
+        this.viewModel.getLanguages();
     }
 
     public void SetQueriesPath(ActionEvent actionEvent) {
         String  location = OpenFolderChooser();
         this.tfQueries.setText(location);
     }
-
     public void Search(ActionEvent actionEvent) {
         this.viewModel.Search();
+    }
+
+    public void ShowCountries(ActionEvent actionEvent) {
+        this.viewModel.getCountries();
     }
 }

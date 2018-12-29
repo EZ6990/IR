@@ -116,6 +116,8 @@ public class DataProvider {
             this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "termIndexer.index");
 
         this.termIndexer.read();
+
+        System.out.println("Done Load Term Indexer");
     }
 
     public void LoadCityIndexer() {
@@ -123,6 +125,8 @@ public class DataProvider {
             this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityIndexer.index");
 
         this.cityIndexer.read();
+
+        System.out.println("Done Load City Indexer");
     }
 
     public void LoadDocumentIndexer() {
@@ -130,6 +134,8 @@ public class DataProvider {
             this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() +"\\" + DataProvider.getInstance().getPrefixPost() + "documentIndexer.index");
 
         this.documentIndexer.read();
+
+        System.out.println("Done Load Document Indexer");
     }
 
     public void setTermIndexer(TermIndexer termIndexer) {
