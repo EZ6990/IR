@@ -24,6 +24,7 @@ public class ViewModel extends Observable implements Observer {
     private SimpleStringProperty strQuery;
     private SimpleBooleanProperty bStemming;
     private SimpleBooleanProperty bSemantic;
+
     private SimpleObjectProperty<ObservableList<String>> observableListViewItems;
     private SimpleObjectProperty<ObservableList<String>> observableQueriesListViewItems;
 
@@ -41,6 +42,14 @@ public class ViewModel extends Observable implements Observer {
         this.observableListViewItems = new SimpleObjectProperty<ObservableList<String>>();
         this.observableQueriesListViewItems = new SimpleObjectProperty<ObservableList<String>>();
         this.observableTableVIew = new SimpleObjectProperty();
+    }
+
+    public ObservableList<String> getObservableQueriesListViewItems() {
+        return observableQueriesListViewItems.get();
+    }
+
+    public SimpleObjectProperty<ObservableList<String>> observableQueriesListViewItemsProperty() {
+        return observableQueriesListViewItems;
     }
 
     public Object getObservableTableVIew() {
@@ -162,17 +171,13 @@ public class ViewModel extends Observable implements Observer {
 
         ObservableList<String> lst = FXCollections.observableArrayList();
         lst.setAll(this.model.getQueriesResult());
-        this.observableQueriesListViewItems.setValue(new SortedList<String>(lst,String.CASE_INSENSITIVE_ORDER));
+        this.observableQueriesListViewItems.setValue(lst);
     }
 
     public void getCountries() {
         ObservableList<String> lst = FXCollections.observableArrayList();
         lst.setAll(this.model.getCountries());
         this.observableListViewItems.setValue(new SortedList<String>(lst,String.CASE_INSENSITIVE_ORDER));
-    }
-
-    public Set<String> getQueriesID(){
-        return DataProvider.getInstance().getQueriesResult().keySet();
     }
 
     public void getQueryResultById(String id) {

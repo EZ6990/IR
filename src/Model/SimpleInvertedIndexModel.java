@@ -121,9 +121,9 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void SearchQueries(File f,List<String> Cities) {
-        initializeIRMaster();
         this.strQueriesLocation = f.getAbsolutePath();
         DataProvider.getInstance().setQueriesLocation(this.strQueriesLocation);
+        initializeIRMaster();
         try {
             this.irsplinter.start(null,Cities);
         } catch (InterruptedException e) {
@@ -173,7 +173,9 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public List<String> getQueriesResultById(String id) {
-        return DataProvider.getInstance().getQueriesResult().get(id);
+        List<String> docs = DataProvider.getInstance().getQueriesResult().get(id);
+
+        return docs.subList(0,docs.size() >= 50 ? 50 : docs.size());
     }
 
     private void initializeMaster(){

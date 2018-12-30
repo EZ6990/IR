@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -63,7 +64,7 @@ public class MainView implements IView {
         this.tfPostOutputPath.textProperty().bindBidirectional(this.viewModel.strPostingLocationProperty());
         this.tfQueries.textProperty().bindBidirectional(this.viewModel.strQueryProperty());
         this.lvCountriesFilter.itemsProperty().bindBidirectional(this.viewModel.observableListViewItemsProperty());
-        this.lvQueries.itemsProperty().bindBidirectional(this.viewModel.observableListViewItemsProperty());
+        this.lvQueries.itemsProperty().bindBidirectional(this.viewModel.observableQueriesListViewItemsProperty());
         this.cbStemmer.selectedProperty().bindBidirectional(this.viewModel.bStemmingProperty());
         this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
         this.tbl_Dictionary.itemsProperty().bind(this.viewModel.observableTableVIewProperty());
@@ -73,8 +74,6 @@ public class MainView implements IView {
         this.lvQueries.getSelectionModel().selectedItemProperty()
                 .addListener(new ChangeListener<String>() {
                     public void changed(ObservableValue<? extends String> observable,String oldValue, String newValue) {
-                        // change the label text value to the newly selected
-                        // item.
                         getQueryResultListById(newValue);
                     }
                 });
@@ -157,6 +156,14 @@ public class MainView implements IView {
 
         return "";
     }
+    public String OpenFileChooser() {
+        FileChooser fc = new FileChooser();
+        File selected = fc.showOpenDialog(new Stage());
+        if (selected != null)
+            return selected.getAbsolutePath();
+
+        return "";
+    }
 
     public void SetCorpusPath(ActionEvent actionEvent) {
         String  location = OpenFolderChooser();
@@ -189,7 +196,7 @@ public class MainView implements IView {
     }
 
     public void SetQueriesPath(ActionEvent actionEvent) {
-        String  location = OpenFolderChooser();
+        String  location = OpenFileChooser();
         this.tfQueries.setText(location);
     }
     public void Search(ActionEvent actionEvent) {
