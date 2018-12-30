@@ -3,6 +3,8 @@ package Model;
 import IO.DataProvider;
 import IO.DocumentReader;
 import IO.Segments.SegmentCityReader;
+import IO.Segments.SegmentDocumentReader;
+import IO.Segments.SegmentTermReader;
 import IO.XMLReader;
 import IR.BM25Ranker;
 import IR.IRanker;
@@ -10,7 +12,9 @@ import IR.SimpleSearcher;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Parse.*;
 import MapReduce.Segment.CitySegmentFile;
+import MapReduce.Segment.DocumentSegmentFile;
 import MapReduce.Segment.SegmentFile;
+import MapReduce.Segment.TermSegmentFile;
 import TextOperations.*;
 
 import java.io.File;
@@ -171,6 +175,20 @@ public class IRMaster {
         System.out.println("Finished Parsing : " + LocalTime.now());
     }
 
+
+
+    private int getAvdl(){
+
+        Iterator it = DataProvider.getInstance().getDocumentIndexer().iterator();
+        int total = 0;
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
+        }
+
+        return (total/DataProvider.getInstance().getDocumentIndexer().size());
+    }
+
     private List<Info> getCorpusCityFilterDocuments(List<String> cities){
 
         List <Info> docs = null;
@@ -187,15 +205,32 @@ public class IRMaster {
         return docs;
     }
 
-    private int getAvdl(){
-
-        Iterator it = DataProvider.getInstance().getDocumentIndexer().iterator();
-        int total = 0;
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
+    public DocumentTermInfo getDocumentInfoByDocumentID(String documentId) {
+        DocumentTermInfo docInfo = null;
+        DocumentSegmentFile docPost = new DocumentSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "docPost.post",null,new SegmentDocumentReader());
+        String indexedData = DataProvider.getInstance().getDocumentIndexer().getValue(documentId);
+        if (indexedData != null){
+            String [] splitedIndexData = indexedData.split(" ");
+            docPost.read(new Term(documentId,null),Integer.parseInt(splitedIndexData[1]));
+            docInfo = ((DocumentTermInfo)((List<Info>)docPost.getData().values().toArray()[0]).get(0));
         }
+        return docInfo;
+    }
 
-        return (total/DataProvider.getInstance().getDocumentIndexer().size());
+    public TermDocumentInfo getTermInfoByTermID(String termId,String docId) {
+        TermDocumentInfo termInfo = null;
+        String indexedData = DataProvider.getInstance().getTermIndexer().getValue(termId);
+        if (indexedData != null){
+            String [] splitedIndexData = indexedData.split(" ");
+            TermSegmentFile termPost = new TermSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + splitedIndexData[0],null,new SegmentTermReader());
+            termPost.read(new Term(termId,null),Integer.parseInt(splitedIndexData[1]));
+            for (TermDocumentInfo info : ((Collection<TermDocumentInfo>)termPost.getData().values().toArray()[0])) {
+                if (info.getDocumentID().equals(docId)){
+                    termInfo = info;
+                    break;
+                }
+            }
+        }
+        return termInfo;
     }
 }

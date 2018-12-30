@@ -2,6 +2,8 @@ package Model;
 
 
 import IO.DataProvider;
+import MapReduce.Parse.DocumentTermInfo;
+import MapReduce.Parse.TermDocumentInfo;
 import TextOperations.Stemmer;
 import org.omg.CORBA.DATA_CONVERSION;
 
@@ -221,5 +223,20 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         this.irsplinter = new IRMaster(stemmer);
     }
 
+    @Override
+    public List<String> getDocumentEntitiesByDocumentID(String id) {
+        DocumentTermInfo info = this.irsplinter.getDocumentInfoByDocumentID(id);
+        if (info != null)
+            return info.getEntities();
+        return null;
+    }
 
+    @Override
+    public int getTermDocumentFrequencyByID(String termId,String docId) {
+        TermDocumentInfo info = this.irsplinter.getTermInfoByTermID(termId,docId);
+        if (info != null){
+            return info.getFrequency();
+        }
+        return 0;
+    }
 }

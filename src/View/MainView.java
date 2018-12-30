@@ -47,6 +47,7 @@ public class MainView implements IView {
 
     public ListView lvCountriesFilter;
     public ListView lvQueries;
+    public ListView lvQueriesResults;
 
     private Alert alert;
 
@@ -67,16 +68,22 @@ public class MainView implements IView {
         this.tfQueries.textProperty().bindBidirectional(this.viewModel.strQueryProperty());
         this.lvCountriesFilter.itemsProperty().bindBidirectional(this.viewModel.observableListViewItemsProperty());
         this.lvQueries.itemsProperty().bindBidirectional(this.viewModel.observableQueriesListViewItemsProperty());
+        this.lvQueriesResults.itemsProperty().bindBidirectional(this.viewModel.observableQueriesResultListViewItemsProperty());
         this.cbStemmer.selectedProperty().bindBidirectional(this.viewModel.bStemmingProperty());
         this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
         this.tbl_Dictionary.itemsProperty().bind(this.viewModel.observableTableVIewProperty());
 
         this.lvCountriesFilter.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        this.lvQueries.getSelectionModel().selectedItemProperty()
-                .addListener(new ChangeListener<String>() {
+        this.lvQueries.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
                     public void changed(ObservableValue<? extends String> observable,String oldValue, String newValue) {
                         getQueryResultListById(newValue);
+                    }
+                });
+
+        this.lvQueriesResults.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+                    public void changed(ObservableValue<? extends String> observable,String oldValue, String newValue) {
+                        getDocumentEntitiesByDocumentID(newValue);
                     }
                 });
 
@@ -216,12 +223,18 @@ public class MainView implements IView {
         this.viewModel.getCountries();
     }
 
-    private void getQueryResultListById(String id){
-        this.viewModel.getQueryResultById(id);
-    }
-
     public void saveResults(ActionEvent actionEvent) {
         String path=OpenQuerySavedPath();
         this.viewModel.saveQueryResults(path);
     }
+
+    private void getQueryResultListById(String id){
+        this.viewModel.getQueryResultById(id);
+    }
+
+    private void getDocumentEntitiesByDocumentID(String id) {
+        this.viewModel.getDocumentEntitiesByDocumentID(id);
+    }
+
+
 }

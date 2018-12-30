@@ -67,8 +67,8 @@ public class BM25Ranker implements IRanker {
     }
 
     private Double calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info){
-        int wordDocumentFrequncy = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
+        int wordDocumentFrequency = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getDocumentID()).split(" ")[2]);
-        return (queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequncy));
+        return (queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequency));
     }
 }

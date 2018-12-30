@@ -27,9 +27,18 @@ public class ViewModel extends Observable implements Observer {
 
     private SimpleObjectProperty<ObservableList<String>> observableListViewItems;
     private SimpleObjectProperty<ObservableList<String>> observableQueriesListViewItems;
+    private SimpleObjectProperty<ObservableList<String>> observableQueriesResultListViewItems;
 
     private SimpleObjectProperty observableTableVIew;
 
+
+    public ObservableList<String> getObservableQueriesResultListViewItems() {
+        return observableQueriesResultListViewItems.get();
+    }
+
+    public SimpleObjectProperty<ObservableList<String>> observableQueriesResultListViewItemsProperty() {
+        return observableQueriesResultListViewItems;
+    }
 
     public ViewModel(IInvertedIndexModel model) {
 
@@ -41,6 +50,7 @@ public class ViewModel extends Observable implements Observer {
         this.bSemantic = new SimpleBooleanProperty(false);
         this.observableListViewItems = new SimpleObjectProperty<ObservableList<String>>();
         this.observableQueriesListViewItems = new SimpleObjectProperty<ObservableList<String>>();
+        this.observableQueriesResultListViewItems = new SimpleObjectProperty<ObservableList<String>>();
         this.observableTableVIew = new SimpleObjectProperty();
     }
 
@@ -183,11 +193,27 @@ public class ViewModel extends Observable implements Observer {
     public void getQueryResultById(String id) {
         ObservableList<String> lst = FXCollections.observableArrayList();
         lst.setAll(this.model.getQueriesResultById(id));
-        this.observableListViewItems.setValue(lst);
+        this.observableQueriesResultListViewItems.setValue(lst);
     }
 
     public void saveQueryResults(String path) {
-this.model.saveQueryResults(path);
+        this.model.saveQueryResults(path);
+
+    }
+
+    public void getDocumentEntitiesByDocumentID(String id) {
+        ObservableList<TermIndexerData> lst = FXCollections.observableArrayList();
+        List<String> lstEntities = this.model.getDocumentEntitiesByDocumentID(id);
+        if (lstEntities != null){
+            for (String entity : lstEntities) {
+                int frequency = this.model.getTermDocumentFrequencyByID(entity,id);
+                lst.add(new TermIndexerData(entity,frequency));
+            }
+        }
+        this.observableTableVIew.setValue(lst);
+
+
+
 
     }
 }

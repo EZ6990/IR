@@ -21,22 +21,23 @@
       <CheckBox fx:id="cbStemmer" layoutX="86.0" layoutY="160.0" mnemonicParsing="false" text="Stemming" />
       <Button fx:id="btnClear" layoutX="175.0" layoutY="200.0" mnemonicParsing="false" onAction="#Clear" text="Clear" />
       <Button fx:id="btnLoad" layoutX="265.0" layoutY="200.0" mnemonicParsing="false" onAction="#LoadIndexers" text="Load" />
-      <Button fx:id="btnViewDictionary" layoutX="713.0" layoutY="410.0" mnemonicParsing="false" onAction="#ShowDictionary" prefHeight="25.0" prefWidth="102.0" text="View Dictionary" />
-      <Button fx:id="btnViewLanguages" layoutX="495.0" layoutY="442.0" mnemonicParsing="false" onAction="#ShowLanguages" prefHeight="25.0" prefWidth="102.0" text="View Languages" />
+      <Button fx:id="btnViewDictionary" layoutX="712.0" layoutY="344.0" mnemonicParsing="false" onAction="#ShowDictionary" prefHeight="25.0" prefWidth="102.0" text="View Dictionary" />
+      <Button fx:id="btnViewLanguages" layoutX="500.0" layoutY="376.0" mnemonicParsing="false" onAction="#ShowLanguages" prefHeight="25.0" prefWidth="102.0" text="View Languages" />
       <TextField fx:id="tfQueries" layoutX="86.0" layoutY="249.0" prefHeight="25.0" prefWidth="217.0" promptText="Location of desired posting location..." />
       <Label layoutX="14.0" layoutY="253.0" prefHeight="17.0" prefWidth="43.0" text="search" />
       <Button fx:id="dcQueriesPath" layoutX="323.0" layoutY="249.0" mnemonicParsing="false" onAction="#SetQueriesPath" text="browse..." />
       <Button fx:id="btnSearch" layoutX="172.0" layoutY="281.0" mnemonicParsing="false" onAction="#Search" text="Search" />
       <CheckBox fx:id="cbSemantic" layoutX="88.0" layoutY="285.0" mnemonicParsing="false" text="Semantic" />
-      <ListView fx:id="lvCountriesFilter" layoutX="446.0" prefHeight="400.0" prefWidth="200" />
-      <ListView fx:id="lvQueries" layoutX="86.0" layoutY="326.0" prefHeight="200.0" prefWidth="217.0" />
-      <Button layoutX="487.0" layoutY="410.0" mnemonicParsing="false" onAction="#ShowCountries" text="View Contries Filter" />
-      <TableView fx:id="tbl_Dictionary" layoutX="663.0" layoutY="-2.0" prefHeight="400.0" prefWidth="200.0">
+      <ListView fx:id="lvCountriesFilter" layoutX="451.0" layoutY="0.0" prefHeight="333.0" prefWidth="200" />
+      <ListView fx:id="lvQueries" layoutX="3.0" layoutY="335.0" prefHeight="229.0" prefWidth="215.0" />
+      <ListView fx:id="lvQueriesResults" layoutX="233.0" layoutY="335.0" prefHeight="229.0" prefWidth="215.0" />
+      <Button layoutX="492.0" layoutY="344.0" mnemonicParsing="false" onAction="#ShowCountries" text="View Contries Filter" />
+      <TableView fx:id="tbl_Dictionary" layoutX="663.0" layoutY="0.0" prefHeight="333.0" prefWidth="200.0">
         <columns>
           <TableColumn fx:id="colTerm" prefWidth="101.0" text="Term" />
           <TableColumn fx:id="colFrequency" prefWidth="98.0" text="Frequency" />
         </columns>
       </TableView>
-      <Button fx:id="b_saveResults" layoutX="316.0" layoutY="294.0" mnemonicParsing="false" onAction="#saveResults" text="Save Results" />
+      <Button fx:id="b_saveResults" layoutX="183.0" layoutY="569.0" mnemonicParsing="false" onAction="#saveResults" text="Save Results" />
    </children>
 </AnchorPane>

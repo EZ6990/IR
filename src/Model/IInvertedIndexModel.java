@@ -27,4 +27,8 @@ public interface IInvertedIndexModel{
     List<String> getQueriesResultById(String id);
 
     void saveQueryResults(String path);
+
+    List<String> getDocumentEntitiesByDocumentID(String id);
+
+    int getTermDocumentFrequencyByID(String termId,String docId);
 }

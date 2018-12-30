@@ -9,6 +9,10 @@ public class TermIndexerData {
         this.term = term;
         this.frequency = Integer.parseInt(frequnency);
     }
+    public TermIndexerData(String term, int frequnency) {
+        this.term = term;
+        this.frequency = frequnency;
+    }
 
     public String getTerm() {
         return term;
