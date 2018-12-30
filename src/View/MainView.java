@@ -3,6 +3,8 @@ package View;
 import ViewModel.ViewModel;
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.Observable;
 
 public class MainView implements IView {
-
 
 
     private Stage stage;
@@ -42,6 +43,7 @@ public class MainView implements IView {
     public TableColumn colFrequency;
 
     public ListView lvCountriesFilter;
+    public ListView lvQueries;
 
     private Alert alert;
 
@@ -61,11 +63,21 @@ public class MainView implements IView {
         this.tfPostOutputPath.textProperty().bindBidirectional(this.viewModel.strPostingLocationProperty());
         this.tfQueries.textProperty().bindBidirectional(this.viewModel.strQueryProperty());
         this.lvCountriesFilter.itemsProperty().bindBidirectional(this.viewModel.observableListViewItemsProperty());
+        this.lvQueries.itemsProperty().bindBidirectional(this.viewModel.observableListViewItemsProperty());
         this.cbStemmer.selectedProperty().bindBidirectional(this.viewModel.bStemmingProperty());
         this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
         this.tbl_Dictionary.itemsProperty().bind(this.viewModel.observableTableVIewProperty());
 
         this.lvCountriesFilter.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        this.lvQueries.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<String>() {
+                    public void changed(ObservableValue<? extends String> observable,String oldValue, String newValue) {
+                        // change the label text value to the newly selected
+                        // item.
+                        getQueryResultListById(newValue);
+                    }
+                });
 
         this.btnClear.disableProperty().bind(new BooleanBinding() {
             {
@@ -186,5 +198,9 @@ public class MainView implements IView {
 
     public void ShowCountries(ActionEvent actionEvent) {
         this.viewModel.getCountries();
+    }
+
+    private void getQueryResultListById(String id){
+        this.viewModel.getQueryResultById(id);
     }
 }

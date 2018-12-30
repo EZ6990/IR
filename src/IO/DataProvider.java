@@ -2,11 +2,12 @@ package IO;
 
 import MapReduce.Index.CityIndexer;
 import MapReduce.Index.DocumentIndexer;
-import MapReduce.Index.Indexer;
 import MapReduce.Index.TermIndexer;
 import MapReduce.Parse.CountryInfo;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataProvider {
@@ -19,6 +20,7 @@ public class DataProvider {
     private String postLocation;
     private String queriesLocation;
     private String prefixPost;
+    private HashMap<String,List<String>> queriesResult;
     private CountryInMemoryDB CountryDB;
     private ConcurrentHashMap<String,String> FP104;
     private ConcurrentHashMap<String,String> FP105;
@@ -44,6 +46,7 @@ public class DataProvider {
             this.corpusLocation = null;
             this.postLocation = null;
             this.prefixPost = null;
+            this.queriesResult = new HashMap<String,List<String>>();
             this.FP104 = new ConcurrentHashMap<>();
             this.FP105 = new ConcurrentHashMap<>();
         } catch (IOException e) {
@@ -156,5 +159,17 @@ public class DataProvider {
             Instance = new DataProvider();
         }
         return Instance;
+    }
+
+    public void addRankedDocumentsForQuery(String query, List<String> docs) {
+        this.queriesResult.put(query,docs);
+    }
+
+    public void clearQueriesResult() {
+        this.queriesResult.clear();
+    }
+
+    public HashMap<String, List<String>> getQueriesResult() {
+        return this.queriesResult;
     }
 }

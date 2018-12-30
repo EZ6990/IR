@@ -162,6 +162,20 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         return lstCountries;
     }
 
+    @Override
+    public void clearQueriesResult() {
+        DataProvider.getInstance().clearQueriesResult();
+    }
+
+    public Set<String> getQueriesResult() {
+        return DataProvider.getInstance().getQueriesResult().keySet();
+    }
+
+    @Override
+    public List<String> getQueriesResultById(String id) {
+        return DataProvider.getInstance().getQueriesResult().get(id);
+    }
+
     private void initializeMaster(){
         DataProvider provider = DataProvider.getInstance();
         provider.setStopWordsLocation(this.strCorpusLocation);
@@ -197,4 +211,6 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         }
         this.irsplinter = new IRMaster(stemmer);
     }
+
+
 }

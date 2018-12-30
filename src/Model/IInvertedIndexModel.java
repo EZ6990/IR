@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public interface IInvertedIndexModel{
 
@@ -18,9 +19,10 @@ public interface IInvertedIndexModel{
     public void setStemmer(boolean selected);
     public long getTimeToFinish();
     int getDocumentDictionaryLength();
-
     void SearchQueries(File f,List<String> Cities);
     void SearchQuery(String text,List<String> Cities);
-
     List<String> getCountries();
+    void clearQueriesResult();
+    Set<String> getQueriesResult();
+    List<String> getQueriesResultById(String id);
 }

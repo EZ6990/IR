@@ -25,6 +25,7 @@ public class ViewModel extends Observable implements Observer {
     private SimpleBooleanProperty bStemming;
     private SimpleBooleanProperty bSemantic;
     private SimpleObjectProperty<ObservableList<String>> observableListViewItems;
+    private SimpleObjectProperty<ObservableList<String>> observableQueriesListViewItems;
 
     private SimpleObjectProperty observableTableVIew;
 
@@ -38,6 +39,7 @@ public class ViewModel extends Observable implements Observer {
         this.bStemming = new SimpleBooleanProperty(false);
         this.bSemantic = new SimpleBooleanProperty(false);
         this.observableListViewItems = new SimpleObjectProperty<ObservableList<String>>();
+        this.observableQueriesListViewItems = new SimpleObjectProperty<ObservableList<String>>();
         this.observableTableVIew = new SimpleObjectProperty();
     }
 
@@ -103,6 +105,7 @@ public class ViewModel extends Observable implements Observer {
             notifyObservers(arg);
         }
     }
+
     public void getTermTF(){
         ObservableList<TermIndexerData> lst = FXCollections.observableArrayList();
         for (Map.Entry<String,String> pair: this.model.getTermTF().entrySet())
@@ -118,7 +121,6 @@ public class ViewModel extends Observable implements Observer {
 
         new Thread(() -> {this.model.StartInvertedIndex();}).start();
     }
-
 
     public void Clear(String location) {
         this.model.setPostLocation(location);
@@ -150,17 +152,32 @@ public class ViewModel extends Observable implements Observer {
     }
 
     public void Search(List<String> Cities) {
+        this.model.clearQueriesResult();
         String text = getStrQuery();
         File f = new File(text);
         if (f.exists())
             this.model.SearchQueries(f,Cities);
         else
             this.model.SearchQuery(text,Cities);
+
+        ObservableList<String> lst = FXCollections.observableArrayList();
+        lst.setAll(this.model.getQueriesResult());
+        this.observableQueriesListViewItems.setValue(new SortedList<String>(lst,String.CASE_INSENSITIVE_ORDER));
     }
 
     public void getCountries() {
         ObservableList<String> lst = FXCollections.observableArrayList();
         lst.setAll(this.model.getCountries());
         this.observableListViewItems.setValue(new SortedList<String>(lst,String.CASE_INSENSITIVE_ORDER));
+    }
+
+    public Set<String> getQueriesID(){
+        return DataProvider.getInstance().getQueriesResult().keySet();
+    }
+
+    public void getQueryResultById(String id) {
+        ObservableList<String> lst = FXCollections.observableArrayList();
+        lst.setAll(this.model.getQueriesResultById(id));
+        this.observableListViewItems.setValue(lst);
     }
 }
