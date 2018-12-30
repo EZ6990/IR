@@ -155,7 +155,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             while(it.hasNext()){
                 Map.Entry pair = (Map.Entry)it.next();
                 lstCountries.add(pair.getKey().toString());
-                it.remove();
+               // it.remove();
             }
         }
 

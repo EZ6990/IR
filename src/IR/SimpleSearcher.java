@@ -25,7 +25,7 @@ public class SimpleSearcher implements ISearcher {
                 TermSegmentFile tsf = new TermSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + IndexerValue[0], new SegmentTermWriter(), new SegmentTermReader());
                 //String[] splitedV=IndexerValue.split(" ");
                 tsf.read(atdi.getTerm(), Integer.parseInt(IndexerValue[1]));
-                if (docs.size() > 0)
+                if (docs!=null && docs.size() > 0)
                     retain(tsf.getData(), docs, termData);
                 if (tsf.getData().get(termData).size() != 0)
                     searchedDocs.put(atdi, tsf);

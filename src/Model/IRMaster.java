@@ -193,8 +193,8 @@ public class IRMaster {
         int total = 0;
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
-            total += Integer.parseInt(pair.getValue().toString().split(" ")[1]);
-            it.remove();
+            total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
+            //it.remove();
         }
 
         return (total/DataProvider.getInstance().getDocumentIndexer().size());

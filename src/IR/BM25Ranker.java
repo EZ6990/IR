@@ -41,11 +41,11 @@ public class BM25Ranker implements IRanker {
                     for (Info info : lstTermInfo){
                         if (info instanceof AbstractTermDocumentInfo) {
                             //sum rank foreach term in doc
-                            AbstractTermDocumentInfo termDocumentInfo = (TermDocumentInfo) info;
-                            Double rank = documentRank.get(((TermDocumentInfo) info).getTerm().getData());
-                            double value = calculate(queryTerm,termDocumentInfo);
+                            AbstractTermDocumentInfo ATermDocumentInfo = (AbstractTermDocumentInfo) info;
+                            Double rank = documentRank.get(ATermDocumentInfo.getTerm().getData());
+                            double value = calculate(queryTerm,ATermDocumentInfo);
                             rank = (rank == null ? value : rank + value);
-                            documentRank.put(((TermDocumentInfo) info).getDocumentID(),rank);
+                            documentRank.put(ATermDocumentInfo.getDocumentID(),rank);
                         }
                     }
                 }
@@ -57,7 +57,7 @@ public class BM25Ranker implements IRanker {
         Collections.sort(lstDucomentRank, new Comparator<Map.Entry<String, Double>>() {
             @Override
             public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
-                return ((o1.getValue() - o2.getValue()) < 0 ? -1 : 1);
+                return (Double.compare(o1.getValue() , o2.getValue()));
             }
         });
 
@@ -68,7 +68,7 @@ public class BM25Ranker implements IRanker {
 
     private Double calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info){
         int wordDocumentFrequncy = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
-        int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getTerm().getData()).split(" ")[1]);
+        int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getDocumentID()).split(" ")[2]);
         return (queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl)))))*(Math.log((M + 1)/wordDocumentFrequncy));
     }
 }
