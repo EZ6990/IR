@@ -49,7 +49,7 @@ public class IRMaster {
 
     private StopWords stopWords;
     private Stemmer stemmer;
-
+    private List<QueryResult> queryResultList;
 
     public IRMaster(Stemmer stemmer) {
         this.files_queue = new ConcurrentLinkedQueue<File>();
@@ -66,13 +66,13 @@ public class IRMaster {
         this.parsers = new Thread[1];
         this.runnable_parsers = new Runnable[1];
 
-        this.document_reader_producer = new Semaphore(5000,true);
-        this.text_operation_consumer =  new Semaphore(0,true);
-        this.text_operation_producer = new Semaphore(10000,true);
-        this.master_parser_consumer = new Semaphore(0,true);
-        this.master_parser_producer = new Semaphore(30000,true);
-        this.segment_file_consumer = new Semaphore(0,true);
-
+        this.document_reader_producer = new Semaphore(5000, true);
+        this.text_operation_consumer = new Semaphore(0, true);
+        this.text_operation_producer = new Semaphore(10000, true);
+        this.master_parser_consumer = new Semaphore(0, true);
+        this.master_parser_producer = new Semaphore(30000, true);
+        this.segment_file_consumer = new Semaphore(0, true);
+        this.queryResultList = new ArrayList<>();
 
         if (!(DataProvider.getInstance().getQueriesLocation() == null)) {
             this.files_queue.add(new File(DataProvider.getInstance().getQueriesLocation()));
@@ -87,8 +87,7 @@ public class IRMaster {
         long start = System.currentTimeMillis();
         System.out.println("Start : " + LocalTime.now());
 
-        if (query != null)
-        {
+        if (query != null) {
             this.document_reader_producer.acquire();
             this.document_queue.add(new Document("","","","",query,""));
             this.text_operation_consumer.release();
@@ -129,41 +128,48 @@ public class IRMaster {
             this.text_operators[i].start();
         }
     }
+
     private void StartParsers() {
         IFilter ignore = (this.stopWords.intersection(new RulesWords()));
-        for (int i = 0; i < this.parsers.length ; i++) {
-            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue,this.tdi_queue,this.text_operation_producer,this.master_parser_consumer,this.master_parser_producer,this.segment_file_consumer,this.stemmer,ignore)));
+        for (int i = 0; i < this.parsers.length; i++) {
+            this.parsers[i] = new Thread((this.runnable_parsers[i] = new MasterParser(this.tokenized_queue, this.tdi_queue, this.text_operation_producer, this.master_parser_consumer, this.master_parser_producer, this.segment_file_consumer, this.stemmer, ignore)));
             this.parsers[i].start();
         }
     }
+
     private void WaitReaders() throws InterruptedException {
-        for (int i = 0; i < this.doc_readers.length ; i++) {
+        for (int i = 0; i < this.doc_readers.length; i++) {
             this.doc_readers[i].join();
         }
         ReaderFinished();
     }
+
     private void WaitTextOperators() throws InterruptedException {
-        for (int i = 0; i < this.text_operators.length ; i++) {
+        for (int i = 0; i < this.text_operators.length; i++) {
             this.text_operators[i].join();
         }
         TextOperatorsFinished();
     }
+
     private void WaitParsers() throws InterruptedException {
-        for (int i = 0; i < this.parsers.length ; i++) {
+        for (int i = 0; i < this.parsers.length; i++) {
             this.parsers[i].join();
         }
         ParsersFinished();
     }
-    private void ReaderFinished(){
-        this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker","","","","",""));
+
+    private void ReaderFinished() {
+        this.document_queue.add(new Document("DannyAndTalSendTheirRegardsYouFucker", "", "", "", "", ""));
         this.text_operation_consumer.release();
         System.out.println("Finished Read Files : " + LocalTime.now());
     }
+
     private void TextOperatorsFinished() {
           this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker","",null,null,null));
         this.master_parser_consumer.release();
         System.out.println("Finished Text Operations : " + LocalTime.now());
     }
+
     private void ParsersFinished() {
 //        for (int i = 0; i < this.runnable_segments.length ; i++) {
 //            ((SegmentFiles)this.runnable_segments[i]).Stop();
