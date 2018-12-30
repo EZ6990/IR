@@ -34,7 +34,7 @@ public class DocumentReader implements Runnable {
             try {
                 reader = xmlReaderFactory.getXMLReader(this.readerType,f);
                 while(reader.hasNext()) {
-                    System.out.println("Document Reader Producer : " + this.document_reader_producer.availablePermits());
+                    //System.out.println("Document Reader Producer : " + this.document_reader_producer.availablePermits());
                     this.document_reader_producer.acquire();
                     Document document = reader.getNextDocument();
                     if (document.getRepresentativeCountry().length() > 0){

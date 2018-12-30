@@ -8,6 +8,7 @@ import MapReduce.Parse.AbstractTermDocumentInfo;
 import MapReduce.Parse.CityTDI;
 import MapReduce.Parse.DocumentTermInfo;
 
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -18,6 +19,7 @@ public class SegmentFiles implements Runnable {
     private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> TDIQueue;
     private int numOfDocs;
     private ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue;
+    private int i;
 
     public void setThreadID(int threadID) {
         this.ThreadID = threadID;
@@ -37,7 +39,7 @@ public class SegmentFiles implements Runnable {
         this.numOfDocs = 10000;
         this.bStop = false;
         this.ThreadID = 0;
-
+        this.i = 0;
         this.destSegmentFilesQueue = destSegmentFilesQueue;
         this.master_parser_producer = master_parser_producer;
         this.segments_file_consumer = segments_file_consumer;
@@ -60,7 +62,7 @@ public class SegmentFiles implements Runnable {
         HashMap<String, TermSegmentFile> tsfa = new HashMap<String, TermSegmentFile>();
         int index = 0;
         for (String s : Letters) {
-            tsfa.put(s, new TermSegmentFile(postLocation + "\\" + prefix + "" + this.ThreadID + "_" + index++ + ".txt", new SegmentTermWriter(), null));
+            tsfa.put(s, new TermSegmentFile(postLocation + "\\" + prefix + "" + this.ThreadID + i + "_" + index++ + ".txt", new SegmentTermWriter(), null));
         }
 
         DocumentSegmentFile dsf = new DocumentSegmentFile(postLocation + "\\" + prefix + "docs.txt", new SegmentDocumentWriter(), null);
@@ -75,7 +77,7 @@ public class SegmentFiles implements Runnable {
                 e.printStackTrace();
             }
             HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
-            //System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
+           // System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
             if (map.containsKey("DannyAndTalSendTheirRegardsYouFucker")) {
                 this.TDIQueue.add(map);
                 this.segments_file_consumer.release();
@@ -85,7 +87,7 @@ public class SegmentFiles implements Runnable {
             DocumentTermInfo dti = new DocumentTermInfo(((AbstractTermDocumentInfo) (map.values().toArray()[0])).getDocumentID());
             dti.setNumOfDifferentWords(map.size());
             setEntities(dti, map);
-            //System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
+           // System.out.println("Start ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             long start = System.currentTimeMillis();
             for (String s : map.keySet()) {
                 AbstractTermDocumentInfo tdi = map.get(s);
@@ -131,7 +133,7 @@ public class SegmentFiles implements Runnable {
                 }
                 index = 0;
                 for (String s : Letters) {
-                    tsfa.put(s, new TermSegmentFile(postLocation + "\\" + prefix + this.ThreadID + "_" + index++ + ".txt", new SegmentTermWriter(), null));
+                    tsfa.put(s, new TermSegmentFile(postLocation + "\\" + prefix + this.ThreadID+i++ + "_" + index++ + ".txt", new SegmentTermWriter(), null));
                 }
                 csf = new CitySegmentFile(postLocation + "\\" + prefix + "city.txt", new SegmentCityWriter(), null);
                 dsf = new DocumentSegmentFile(postLocation + "\\" + prefix + "docs.txt", new SegmentDocumentWriter(), null);
@@ -141,7 +143,7 @@ public class SegmentFiles implements Runnable {
         try {
             //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
-            //System.out.println("IM Here");
+            System.out.println("IM Here");
             //System.out.println(tsf.getPath() + " " + tsf.data.size());
             for (int i = 0; i < Letters.length; i++) {
                 TermSegmentFile tsf = tsfa.get(Letters[i]);
@@ -175,10 +177,9 @@ public class SegmentFiles implements Runnable {
         for (int i = 0; i < 5; i++) {
             AbstractTermDocumentInfo tmp = (AbstractTermDocumentInfo) enties.poll();
 
-            if (tmp != null ) {
+            if (tmp != null) {
                 String data = tmp.getTerm().getData();
                 if (data.charAt(0) >= 'A' && data.charAt(0) <= 'Z')
-                    //if uppercase
                     entities += data;
             }
         }
