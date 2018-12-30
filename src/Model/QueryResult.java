@@ -28,7 +28,7 @@ public class QueryResult {
         for (int i = 0; i < docno.size(); i++) {
             chunk.append(queryId+" "+iter+" "+docno.get(i)+" "+rank+" "+sim+" "+run_id);
         }
-        chunk.append(queryId+" "+iter+" "+docno+" "+rank+" "+sim+" "+run_id);
+
         output.write(chunk.toString());
     }
 }
