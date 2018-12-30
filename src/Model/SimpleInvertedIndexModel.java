@@ -21,9 +21,11 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     private boolean bStemmer;
     private Master splinter;
-    private IRMaster irsplinter;
-    private long TimeToInvertIndex;
 
+
+    private IRMaster irsplinter;
+
+    private long TimeToInvertIndex;
     public SimpleInvertedIndexModel(){
         this.splinter = null;
     }
@@ -129,6 +131,11 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void saveQueryResults(String path) {
+
     }
 
     @Override

@@ -37,5 +37,6 @@
           <TableColumn fx:id="colFrequency" prefWidth="98.0" text="Frequency" />
         </columns>
       </TableView>
+      <Button fx:id="b_saveResults" layoutX="316.0" layoutY="294.0" mnemonicParsing="false" onAction="#saveResults" text="Save Results" />
    </children>
 </AnchorPane>

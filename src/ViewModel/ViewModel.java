@@ -185,4 +185,9 @@ public class ViewModel extends Observable implements Observer {
         lst.setAll(this.model.getQueriesResultById(id));
         this.observableListViewItems.setValue(lst);
     }
+
+    public void saveQueryResults(String path) {
+this.model.saveQueryResults(path);
+
+    }
 }
