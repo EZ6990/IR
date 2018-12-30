@@ -25,4 +25,6 @@ public interface IInvertedIndexModel{
     void clearQueriesResult();
     Set<String> getQueriesResult();
     List<String> getQueriesResultById(String id);
+
+    void saveQueryResults(String path);
 }

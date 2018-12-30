@@ -11,6 +11,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -23,6 +24,7 @@ import java.util.Observable;
 public class MainView implements IView {
 
 
+    public Button b_saveResults;
     private Stage stage;
     private ViewModel viewModel;
 
@@ -164,7 +166,14 @@ public class MainView implements IView {
 
         return "";
     }
+    public String OpenQuerySavedPath() {
+        FileChooser fc = new FileChooser();
+        File selected = fc.showOpenDialog(new Stage());
+        if (selected != null)
+            return selected.getAbsolutePath();
 
+        return "";
+    }
     public void SetCorpusPath(ActionEvent actionEvent) {
         String  location = OpenFolderChooser();
         this.tfCorpusInputPath.textProperty().setValue(location);
@@ -209,5 +218,10 @@ public class MainView implements IView {
 
     private void getQueryResultListById(String id){
         this.viewModel.getQueryResultById(id);
+    }
+
+    public void saveResults(ActionEvent actionEvent) {
+        String path=OpenQuerySavedPath();
+        this.viewModel.saveQueryResults(path);
     }
 }
