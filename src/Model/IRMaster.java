@@ -106,7 +106,7 @@ public class IRMaster {
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
-            DataProvider.getInstance().addRankedDocumentsForQuery(thisQuery.values().toArray()[0].toString(),ranker.returnRankedDocs(searcher.search(thisQuery,getCorpusCityFilterDocuments(Filter))));
+            DataProvider.getInstance().addRankedDocumentsForQuery(((AbstractTermDocumentInfo)thisQuery.values().toArray()[0]).getDocumentID(),ranker.returnRankedDocs(searcher.search(thisQuery,getCorpusCityFilterDocuments(Filter))));
         }
 
 
@@ -194,7 +194,6 @@ public class IRMaster {
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
             total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
-            //it.remove();
         }
 
         return (total/DataProvider.getInstance().getDocumentIndexer().size());

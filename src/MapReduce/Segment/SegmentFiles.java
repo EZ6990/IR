@@ -168,22 +168,20 @@ public class SegmentFiles implements Runnable {
     }
 
     private void setEntities(DocumentTermInfo dti, HashMap<String, AbstractTermDocumentInfo> map) {
-        String entities = "";
         Queue enties = new PriorityQueue((o1, o2) -> ((AbstractTermDocumentInfo) o1).getFrequency() - ((AbstractTermDocumentInfo) o2).getFrequency());
-        for (AbstractTermDocumentInfo atdi :
-                map.values()) {
+        for (AbstractTermDocumentInfo atdi : map.values()) {
             enties.add(atdi);
         }
-        for (int i = 0; i < 5; i++) {
-            AbstractTermDocumentInfo tmp = (AbstractTermDocumentInfo) enties.poll();
-
-            if (tmp != null) {
-                String data = tmp.getTerm().getData();
-                if (data.charAt(0) >= 'A' && data.charAt(0) <= 'Z')
-                    entities += data;
+        if (enties.size() > 0) {
+            for (int i = 0; i < 5; i++) {
+                AbstractTermDocumentInfo tmp = (AbstractTermDocumentInfo) enties.poll();
+                if (tmp != null) {
+                    String data = tmp.getTerm().getData();
+                    if (data.charAt(0) >= 'A' && data.charAt(0) <= 'Z')
+                        dti.addEntities(data);
+                }
             }
         }
-        dti.setEntities(entities);
     }
 
     public void Stop() {
