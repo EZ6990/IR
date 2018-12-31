@@ -32,7 +32,9 @@ public class TermSegmentFile extends SegmentFile {
         String[] line =lst.get(position).trim().split(";")[1].split("\\|");
         for (int i=0;i<line.length;i++)
         {
-           TermDocumentInfo tdi=new TermDocumentInfo(key,line[i].split(" ")[0]);
+           String[] splits=line[i].split(" ");
+           TermDocumentInfo tdi=new TermDocumentInfo(key,splits[0]);
+           tdi.setFrequency(Integer.parseInt(splits[1]));
            add(key.getData(),tdi);
         }
 
