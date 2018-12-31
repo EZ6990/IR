@@ -5,12 +5,9 @@ import IO.DataProvider;
 import MapReduce.Parse.DocumentTermInfo;
 import MapReduce.Parse.TermDocumentInfo;
 import TextOperations.Stemmer;
-import org.omg.CORBA.DATA_CONVERSION;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 public class SimpleInvertedIndexModel extends Observable implements IInvertedIndexModel {
@@ -139,7 +136,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     public void saveQueryResults(String path) {
         File file=new File(path);
         try {
-            this.irsplinter.printQueriesToPath(file);
+            this.irsplinter.printQueriesToFile(file);
         } catch (IOException e) {
             e.printStackTrace();
         }

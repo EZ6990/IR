@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class QueryResult {
@@ -32,11 +33,13 @@ public class QueryResult {
 
     public void writeToPath(File f) throws IOException {
 
-        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+        BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f,true),  StandardCharsets.UTF_8));
         StringBuilder chunk = new StringBuilder();
-        for (int i = 0; i < docno.size(); i++) {
-            chunk.append(queryId+" "+iter+" "+docno.get(i)+" "+rank+" "+sim+" "+run_id);
-            chunk.append("\n");
+        List <String>ans=this.docno.subList(0,this.docno.size() >= 50 ? 50 : this.docno.size());
+        //ans.sort(String::compareTo);
+        for (int i = 0; i < ans.size(); i++) {
+            chunk.append(queryId+" "+iter+" "+ans.get(i)+" "+rank+" "+sim+" "+run_id);
+            chunk.append("\r\n");
 
         }
 

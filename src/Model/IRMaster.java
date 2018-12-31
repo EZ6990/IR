@@ -245,11 +245,12 @@ public class IRMaster {
         return termInfo;
     }
 
-    public void printQueriesToPath(File file) throws IOException {
+    public void printQueriesToFile(File file) throws IOException {
         this.queryResultList.sort((o1, o2) -> o1.getQueryId().compareTo(o2.getQueryId()));
         for (QueryResult qr :
-                queryResultList)
+                queryResultList) {
             qr.writeToPath(file);
+        }
     }
 
     public List<QueryResult> getQueriesSearched() {
