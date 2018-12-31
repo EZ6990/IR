@@ -105,7 +105,7 @@ public class IRMaster {
         WaitParsers();
 
 
-        IRanker ranker = new BM25Ranker(0.2, (float) 0.5, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
+        IRanker ranker = new BM25Ranker(0.2, (float) 0.27, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
