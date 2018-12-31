@@ -142,8 +142,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void SearchQuery(String text,List<String> Cities) {
-        initializeIRMaster();
         DataProvider.getInstance().setQueriesLocation(null);
+        initializeIRMaster();
         try {
             this.irsplinter.start(text,Cities);
         } catch (InterruptedException e) {

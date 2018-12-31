@@ -89,7 +89,7 @@ public class IRMaster {
 
         if (query != null) {
             this.document_reader_producer.acquire();
-            this.document_queue.add(new Document("","","","",query,""));
+            this.document_queue.add(new Document("","1","","",query,""));
             this.text_operation_consumer.release();
             //ReaderFinished();
         }
