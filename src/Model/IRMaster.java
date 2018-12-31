@@ -19,6 +19,7 @@ import TextOperations.*;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,15 +30,15 @@ public class IRMaster {
     private ConcurrentLinkedQueue<File> files_queue;
     private ConcurrentLinkedQueue<Document> document_queue;
     private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
-    private ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue;
+    private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> tdi_queue;
 
-    private Thread [] doc_readers;
-    private Thread [] text_operators;
-    private Thread [] parsers;
+    private Thread[] doc_readers;
+    private Thread[] text_operators;
+    private Thread[] parsers;
 
-    private Runnable [] runnable_doc_readers;
-    private Runnable [] runnable_text_operators;
-    private Runnable [] runnable_parsers;
+    private Runnable[] runnable_doc_readers;
+    private Runnable[] runnable_text_operators;
+    private Runnable[] runnable_parsers;
 
 
     private Semaphore document_reader_producer;
@@ -55,7 +56,7 @@ public class IRMaster {
         this.files_queue = new ConcurrentLinkedQueue<File>();
         this.document_queue = new ConcurrentLinkedQueue<Document>();
         this.tokenized_queue = new ConcurrentLinkedQueue<TokenizedDocument>();
-        this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
+        this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>>();
 
         this.doc_readers = new Thread[1];
         this.runnable_doc_readers = new Runnable[1];
@@ -89,7 +90,7 @@ public class IRMaster {
 
         if (query != null) {
             this.document_reader_producer.acquire();
-            this.document_queue.add(new Document("","","","",query,""));
+            this.document_queue.add(new Document("", "", "", "", query, ""));
             this.text_operation_consumer.release();
             //ReaderFinished();
         }
@@ -104,27 +105,32 @@ public class IRMaster {
         WaitParsers();
 
 
-        IRanker ranker = new BM25Ranker(0.2,(float)0.5,getAvdl(),DataProvider.getInstance().getDocumentIndexer().size());
+        IRanker ranker = new BM25Ranker(0.2, (float) 0.5, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
-            DataProvider.getInstance().addRankedDocumentsForQuery(((AbstractTermDocumentInfo)thisQuery.values().toArray()[0]).getDocumentID(),ranker.returnRankedDocs(searcher.search(thisQuery,getCorpusCityFilterDocuments(Filter))));
+            // DataProvider.getInstance().addRankedDocumentsForQuery(((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID(), ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter))));
+            List<String> resultList = ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter)));
+            String queryNum = ((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID();
+            QueryResult result = new QueryResult(queryNum, 0, 0, 0, "0", resultList);
+            this.queryResultList.add(result);
+
         }
 
 
-
-
     }
-    private void StartReaders(){
-        for (int i = 0; i < this.doc_readers.length ; i++) {
-            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue,this.document_queue,this.document_reader_producer,this.text_operation_consumer, XMLReader.Type.QUERY)));
+
+    private void StartReaders() {
+        for (int i = 0; i < this.doc_readers.length; i++) {
+            this.doc_readers[i] = new Thread((this.runnable_doc_readers[i] = new DocumentReader(this.files_queue, this.document_queue, this.document_reader_producer, this.text_operation_consumer, XMLReader.Type.QUERY)));
             this.doc_readers[i].start();
         }
     }
-    private void StartTextOperators(){
-        for (int i = 0; i < this.text_operators.length ; i++) {
-            this.text_operators[i] = new Thread((this.runnable_text_operators[i] = new TextOperations(this.document_queue,this.tokenized_queue,new Tokenize(),this.stopWords,this.document_reader_producer,this.text_operation_consumer,this.text_operation_producer,this.master_parser_consumer)));
+
+    private void StartTextOperators() {
+        for (int i = 0; i < this.text_operators.length; i++) {
+            this.text_operators[i] = new Thread((this.runnable_text_operators[i] = new TextOperations(this.document_queue, this.tokenized_queue, new Tokenize(), this.stopWords, this.document_reader_producer, this.text_operation_consumer, this.text_operation_producer, this.master_parser_consumer)));
             this.text_operators[i].start();
         }
     }
@@ -165,7 +171,7 @@ public class IRMaster {
     }
 
     private void TextOperatorsFinished() {
-          this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker","",null,null,null));
+        this.tokenized_queue.add(new TokenizedDocument("DannyAndTalSendTheirRegardsYouFucker", "", null, null, null));
         this.master_parser_consumer.release();
         System.out.println("Finished Text Operations : " + LocalTime.now());
     }
@@ -182,29 +188,28 @@ public class IRMaster {
     }
 
 
-
-    private int getAvdl(){
+    private int getAvdl() {
 
         Iterator it = DataProvider.getInstance().getDocumentIndexer().iterator();
         int total = 0;
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
             total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
         }
 
-        return (total/DataProvider.getInstance().getDocumentIndexer().size());
+        return (total / DataProvider.getInstance().getDocumentIndexer().size());
     }
 
-    private List<Info> getCorpusCityFilterDocuments(List<String> cities){
+    private List<Info> getCorpusCityFilterDocuments(List<String> cities) {
 
-        List <Info> docs = null;
-        CitySegmentFile cityPost = new CitySegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityPost.post",null,new SegmentCityReader());
+        List<Info> docs = null;
+        CitySegmentFile cityPost = new CitySegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityPost.post", null, new SegmentCityReader());
         if (cities != null && cities.size() > 0) {
             docs = new ArrayList<Info>();
             CityIndexer cityIndexer = DataProvider.getInstance().getCityIndexer();
             for (String city : cities)
-                cityPost.read(new Term(city,this.stemmer),Integer.parseInt(cityIndexer.getValue(city).split(" ")[0]));
-            for (List<Info> lstInfo : cityPost.getData().values()){
+                cityPost.read(new Term(city, this.stemmer), Integer.parseInt(cityIndexer.getValue(city).split(" ")[0]));
+            for (List<Info> lstInfo : cityPost.getData().values()) {
                 docs.addAll(lstInfo);
             }
         }
@@ -213,30 +218,41 @@ public class IRMaster {
 
     public DocumentTermInfo getDocumentInfoByDocumentID(String documentId) {
         DocumentTermInfo docInfo = null;
-        DocumentSegmentFile docPost = new DocumentSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "docPost.post",null,new SegmentDocumentReader());
+        DocumentSegmentFile docPost = new DocumentSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "docPost.post", null, new SegmentDocumentReader());
         String indexedData = DataProvider.getInstance().getDocumentIndexer().getValue(documentId);
-        if (indexedData != null){
-            String [] splitedIndexData = indexedData.split(" ");
-            docPost.read(new Term(documentId,null),Integer.parseInt(splitedIndexData[1]));
-            docInfo = ((DocumentTermInfo)((List<Info>)docPost.getData().values().toArray()[0]).get(0));
+        if (indexedData != null) {
+            String[] splitedIndexData = indexedData.split(" ");
+            docPost.read(new Term(documentId, null), Integer.parseInt(splitedIndexData[1]));
+            docInfo = ((DocumentTermInfo) ((List<Info>) docPost.getData().values().toArray()[0]).get(0));
         }
         return docInfo;
     }
 
-    public TermDocumentInfo getTermInfoByTermID(String termId,String docId) {
+    public TermDocumentInfo getTermInfoByTermID(String termId, String docId) {
         TermDocumentInfo termInfo = null;
         String indexedData = DataProvider.getInstance().getTermIndexer().getValue(termId);
-        if (indexedData != null){
-            String [] splitedIndexData = indexedData.split(" ");
-            TermSegmentFile termPost = new TermSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + splitedIndexData[0],null,new SegmentTermReader());
-            termPost.read(new Term(termId,null),Integer.parseInt(splitedIndexData[1]));
-            for (TermDocumentInfo info : ((Collection<TermDocumentInfo>)termPost.getData().values().toArray()[0])) {
-                if (info.getDocumentID().equals(docId)){
+        if (indexedData != null) {
+            String[] splitedIndexData = indexedData.split(" ");
+            TermSegmentFile termPost = new TermSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + splitedIndexData[0], null, new SegmentTermReader());
+            termPost.read(new Term(termId, null), Integer.parseInt(splitedIndexData[1]));
+            for (TermDocumentInfo info : ((Collection<TermDocumentInfo>) termPost.getData().values().toArray()[0])) {
+                if (info.getDocumentID().equals(docId)) {
                     termInfo = info;
                     break;
                 }
             }
         }
         return termInfo;
+    }
+
+    public void printQueriesToPath(File file) throws IOException {
+        this.queryResultList.sort((o1, o2) -> o1.getQueryId().compareTo(o2.getQueryId()));
+        for (QueryResult qr :
+                queryResultList)
+            qr.writeToPath(file);
+    }
+
+    public List<QueryResult> getQueriesSearched() {
+        return this.queryResultList;
     }
 }

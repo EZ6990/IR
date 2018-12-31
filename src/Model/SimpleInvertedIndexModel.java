@@ -137,6 +137,12 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void saveQueryResults(String path) {
+        File file=new File(path);
+        try {
+            this.irsplinter.printQueriesToPath(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -177,14 +183,28 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     public Set<String> getQueriesResult() {
-        return DataProvider.getInstance().getQueriesResult().keySet();
+     //   return DataProvider.getInstance().getQueriesResult().keySet();
+        List<QueryResult> qs=this.irsplinter.getQueriesSearched();
+        Set<String> set=new LinkedHashSet<>();
+        for(QueryResult qr:qs)
+            set.add(qr.getQueryId());
+        return set;
     }
 
     @Override
     public List<String> getQueriesResultById(String id) {
-        List<String> docs = DataProvider.getInstance().getQueriesResult().get(id);
+        List<QueryResult> qs=this.irsplinter.getQueriesSearched();
+        List<String>ans=new ArrayList<>();
+        for (QueryResult qr :
+                qs) {
+            if (qr.getQueryId().equals(id)){
+            List<String> docs=qr.getDocs();
+                ans=docs.subList(0,docs.size() >= 50 ? 50 : docs.size());
 
-        return docs.subList(0,docs.size() >= 50 ? 50 : docs.size());
+            }
+        }
+        return ans;
+
     }
 
     private void initializeMaster(){
