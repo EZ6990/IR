@@ -113,7 +113,7 @@ public class IRMaster {
             // DataProvider.getInstance().addRankedDocumentsForQuery(((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID(), ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter))));
             List<String> resultList = ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter)));
             String queryNum = ((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID();
-            QueryResult result = new QueryResult(queryNum, 0, 0, 0, "0", resultList);
+            QueryResult result = new QueryResult(queryNum, 0, 0, 0, "td", resultList);
             this.queryResultList.add(result);
 
         }
