@@ -113,6 +113,8 @@ public class MainView implements IView {
         this.colFrequency.setCellValueFactory(
                 new PropertyValueFactory<TermIndexerData, String>("frequency")
         );
+        this.tfPostOutputPath.setText("d:\\documents\\users\\koyfdan\\Downloads\\New folder");
+        this.tfQueries.setText("d:\\documents\\users\\koyfdan\\Downloads\\queries.txt");
     }
 
 

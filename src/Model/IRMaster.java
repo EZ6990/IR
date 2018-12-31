@@ -105,7 +105,7 @@ public class IRMaster {
         WaitParsers();
 
 
-        IRanker ranker = new BM25Ranker(0.2, (float) 0.27, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
+        IRanker ranker = new BM25Ranker(1, 0.75, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
@@ -247,6 +247,7 @@ public class IRMaster {
 
     public void printQueriesToFile(File file) throws IOException {
         this.queryResultList.sort((o1, o2) -> o1.getQueryId().compareTo(o2.getQueryId()));
+        file.delete();
         for (QueryResult qr :
                 queryResultList) {
             qr.writeToPath(file);
