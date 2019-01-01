@@ -75,7 +75,7 @@ public class SemanticDatamuse {
             HTTPWebRequest request;
             request = new HTTPWebRequest();
 
-            JSONObject jsonDetails = request.post(this.webServiceURL + "?rel_jjb=" + URLEncoder.encode(str,"UTF-8") + "&topics=" + URLEncoder.encode(topic,"UTF-8") + "&max=10"  );
+            JSONObject jsonDetails = request.post(this.webServiceURL + "?rel_jjb=" + URLEncoder.encode(str,"UTF-8") + "&topics=" + URLEncoder.encode(topic,"UTF-8") + "&max=3"  );
             JSONArray queryResult = jsonDetails.getJSONArray("result");
             if (!queryResult.isEmpty()) {
                 result = new ArrayList<DatamuseObject>();

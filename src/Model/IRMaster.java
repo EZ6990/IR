@@ -104,9 +104,11 @@ public class IRMaster {
                 for (String word : doc.getText().split(" ")) {
                     if (word.length() > 0){
                         List<DatamuseObject> lstApi = DataProvider.getInstance().getQueryTopicSemantic(word,Arrays.asList(doc.getNarrative().split(" ")));
-                        StringBuilder semantic = new StringBuilder("");
-                        lstApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));
-                        doc.setText(doc.getText() + semantic.toString());
+                        if (lstApi != null) {
+                            StringBuilder semantic = new StringBuilder("");
+                            lstApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));
+                            doc.setText(doc.getText() + semantic.toString());
+                        }
                     }
                 }
                 lst.add(doc);
