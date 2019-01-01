@@ -1,11 +1,14 @@
 package IO;
 
+import IO.Segments.SemanticDatamuse;
+import IR.TokenizedQuery;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Index.DocumentIndexer;
 import MapReduce.Index.TermIndexer;
 import MapReduce.Parse.CountryInfo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +25,7 @@ public class DataProvider {
     private String prefixPost;
     private HashMap<String,List<String>> queriesResult;
     private CountryInMemoryDB CountryDB;
+    private SemanticDatamuse semantic;
     private ConcurrentHashMap<String,String> FP104;
     private ConcurrentHashMap<String,String> FP105;
 
@@ -42,6 +46,7 @@ public class DataProvider {
         this.ConfigFilePath = "";
         try {
             this.CountryDB = new CountryInMemoryDB("https://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies");
+            this.semantic = new SemanticDatamuse("http://api.datamuse.com/words");
             this.stopWordsLocation = null;
             this.corpusLocation = null;
             this.postLocation = null;
@@ -59,6 +64,12 @@ public class DataProvider {
             country = this.CountryDB.getCountryByCapital(CapitalName);
         }
         return country;
+    }
+
+    public List<DatamuseObject> getQuerySemantic(TokenizedQuery query){
+        List<String> strQuery = new ArrayList<>();
+        query.getTokenizedText().forEach(token -> strQuery.add(token.getWord()));
+        return this.semantic.getSimilarMeaningWords(strQuery);
     }
 
     public void setStopWordsLocation(String stopWordsLocation) {

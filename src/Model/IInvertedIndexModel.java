@@ -17,6 +17,7 @@ public interface IInvertedIndexModel{
     public List<String> getLanguage();
     public HashMap<String,String> getTermTF();
     public void setStemmer(boolean selected);
+    public void setSemantic(boolean selected);
     public long getTimeToFinish();
     int getDocumentDictionaryLength();
     void SearchQueries(File f,List<String> Cities);

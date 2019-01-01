@@ -1,5 +1,6 @@
 package MapReduce.Parse.Parsers;
 
+import IO.AbstractTokenizedDocument;
 import MapReduce.Parse.CountryInfo;
 import IO.DataProvider;
 import MapReduce.Parse.Term;
@@ -15,7 +16,7 @@ public class CountryParser extends AbstractParser {
 
     private CountryInfo country = null;
     private int index;
-    public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+    public CountryParser(HashMap<String, AbstractTermDocumentInfo> map, AbstractTokenizedDocument doc, Stemmer stemmer) {
         super(map, doc,stemmer);
         this.index = 0;
     }

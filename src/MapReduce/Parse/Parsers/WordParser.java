@@ -1,5 +1,6 @@
 package MapReduce.Parse.Parsers;
 
+import IO.AbstractTokenizedDocument;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import TextOperations.*;
 
@@ -10,7 +11,7 @@ public class WordParser extends AbstractParser {
 
     private IFilter ignore;
 
-    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer, IFilter ignore) {
+    public WordParser(HashMap<String, AbstractTermDocumentInfo> map, AbstractTokenizedDocument doc, Stemmer stemmer, IFilter ignore) {
         super(map, doc, stemmer);
         this.ignore = ignore;
     }

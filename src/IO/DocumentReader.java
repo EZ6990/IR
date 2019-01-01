@@ -11,13 +11,13 @@ import java.util.concurrent.Semaphore;
 public class DocumentReader implements Runnable {
 
     private ConcurrentLinkedQueue<File> files_queue;
-    private ConcurrentLinkedQueue<Document> document_queue;
+    private ConcurrentLinkedQueue<AbstractDocument> document_queue;
     private Semaphore document_reader_producer;
     private Semaphore text_operation_consumer;
     private XMLReaderFactory xmlReaderFactory;
     private XMLReader.Type readerType;
 
-    public DocumentReader(ConcurrentLinkedQueue<File> files_queue, ConcurrentLinkedQueue<Document> document_queue, Semaphore document_reader_producer,Semaphore text_operation_consumer,XMLReader.Type readerType){
+    public DocumentReader(ConcurrentLinkedQueue<File> files_queue, ConcurrentLinkedQueue<AbstractDocument> document_queue, Semaphore document_reader_producer,Semaphore text_operation_consumer,XMLReader.Type readerType){
         this.files_queue = files_queue;
         this.document_queue = document_queue;
         this.document_reader_producer = document_reader_producer;
@@ -36,12 +36,14 @@ public class DocumentReader implements Runnable {
                 while(reader.hasNext()) {
                     //System.out.println("Document Reader Producer : " + this.document_reader_producer.availablePermits());
                     this.document_reader_producer.acquire();
-                    Document document = reader.getNextDocument();
-                    if (document.getRepresentativeCountry().length() > 0){
-                        DataProvider.getInstance().getFP104().put(document.getID(),document.getRepresentativeCountry());
-                    }
-                    if (document.getLanguage().length() > 0){
-                        DataProvider.getInstance().getFP105().put(document.getID(),document.getLanguage());
+                    AbstractDocument document = reader.getNextDocument();
+                    if (this.readerType.equals(XMLReader.Type.DOCUMENT)) {
+                        if (((Document)document).getRepresentativeCountry().length() > 0) {
+                            DataProvider.getInstance().getFP104().put(document.getID(), ((Document)document).getRepresentativeCountry());
+                        }
+                        if (((Document)document).getLanguage().length() > 0) {
+                            DataProvider.getInstance().getFP105().put(document.getID(), ((((Document)document).getLanguage())));
+                        }
                     }
                     this.document_queue.add(document);
                     //System.out.println("Text Operation Consumer : " + this.text_operation_consumer.availablePermits());

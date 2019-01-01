@@ -1,31 +1,24 @@
 package TextOperations;
 
-public class Document {
+import IO.AbstractDocument;
 
-    private String path;
-    private String ID;
+public class Document extends AbstractDocument {
+
     private String Country;
     private String Date;
-    private String Text;
     private String Language;
 
 
 
     public Document(String path, String ID, String Country, String date, String text,String language) {
-        this.path = path;
-        this.ID = ID;
+        super(ID,text,path);
         this.Country = Country;
         this.Date = date;
-        this.Text = text;
         this.Language = language;
     }
 
     public String getPath() {
         return path;
-    }
-
-    public String getID() {
-        return ID;
     }
 
     public String getRepresentativeCountry() {
@@ -34,10 +27,6 @@ public class Document {
 
     public String getDate() {
         return Date;
-    }
-
-    public String getText() {
-        return Text;
     }
 
     public String getLanguage() {

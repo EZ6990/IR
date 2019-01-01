@@ -19,6 +19,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private String strQueriesLocation;
 
     private boolean bStemmer;
+    private boolean bSemantic;
     private Master splinter;
 
 
@@ -108,6 +109,11 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     @Override
     public void setStemmer(boolean selected) {
         this.bStemmer = selected;
+    }
+
+    @Override
+    public void setSemantic(boolean selected) {
+        this.bSemantic = selected;
     }
 
     @Override
@@ -237,7 +243,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             stemmer = null;
             provider.setPrefixPost("no_stem_");
         }
-        this.irsplinter = new IRMaster(stemmer);
+        this.irsplinter = new IRMaster(stemmer,this.bSemantic);
     }
 
     @Override

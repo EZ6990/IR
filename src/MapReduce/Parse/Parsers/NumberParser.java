@@ -1,5 +1,6 @@
 package MapReduce.Parse.Parsers;
 
+import IO.AbstractTokenizedDocument;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import TextOperations.Stemmer;
 import TextOperations.Token;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 public class NumberParser extends AbstractParser {
 
 
-    public NumberParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+    public NumberParser(HashMap<String, AbstractTermDocumentInfo> map, AbstractTokenizedDocument doc, Stemmer stemmer) {
         super(map, doc, stemmer);
     }
 

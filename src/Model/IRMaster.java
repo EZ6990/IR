@@ -1,11 +1,9 @@
 package Model;
 
-import IO.DataProvider;
-import IO.DocumentReader;
+import IO.*;
 import IO.Segments.SegmentCityReader;
 import IO.Segments.SegmentDocumentReader;
 import IO.Segments.SegmentTermReader;
-import IO.XMLReader;
 import IR.BM25Ranker;
 import IR.IRanker;
 import IR.SimpleSearcher;
@@ -28,8 +26,8 @@ import java.util.concurrent.Semaphore;
 public class IRMaster {
 
     private ConcurrentLinkedQueue<File> files_queue;
-    private ConcurrentLinkedQueue<Document> document_queue;
-    private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
+    private ConcurrentLinkedQueue<AbstractDocument> document_queue;
+    private ConcurrentLinkedQueue<AbstractTokenizedDocument> tokenized_queue;
     private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> tdi_queue;
 
     private Thread[] doc_readers;
@@ -52,10 +50,10 @@ public class IRMaster {
     private Stemmer stemmer;
     private List<QueryResult> queryResultList;
 
-    public IRMaster(Stemmer stemmer) {
+    public IRMaster(Stemmer stemmer,boolean bSemantic) {
         this.files_queue = new ConcurrentLinkedQueue<File>();
-        this.document_queue = new ConcurrentLinkedQueue<Document>();
-        this.tokenized_queue = new ConcurrentLinkedQueue<TokenizedDocument>();
+        this.document_queue = new ConcurrentLinkedQueue<AbstractDocument>();
+        this.tokenized_queue = new ConcurrentLinkedQueue<AbstractTokenizedDocument>();
         this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>>();
 
         this.doc_readers = new Thread[1];
@@ -98,7 +96,6 @@ public class IRMaster {
         StartReaders();
         StartTextOperators();
         StartParsers();
-
 
         WaitReaders();
         WaitTextOperators();

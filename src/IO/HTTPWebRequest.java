@@ -20,6 +20,7 @@ public class HTTPWebRequest {
         while (scan.hasNext())
             json += scan.nextLine();
         scan.close();
+        conn.disconnect();
         json += "}";
         return new JSONObject(json);
     }

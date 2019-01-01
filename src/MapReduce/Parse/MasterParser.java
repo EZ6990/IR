@@ -1,5 +1,6 @@
 package MapReduce.Parse;
 
+import IO.AbstractTokenizedDocument;
 import MapReduce.Parse.Parsers.*;
 import TextOperations.IFilter;
 import TextOperations.Stemmer;
@@ -11,7 +12,7 @@ import java.util.concurrent.Semaphore;
 
 public class MasterParser implements Runnable{
 
-    private ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue;
+    private ConcurrentLinkedQueue<AbstractTokenizedDocument> tokennized_queue;
     private ConcurrentLinkedQueue<HashMap<String, AbstractTermDocumentInfo>> tdi_queue;
 
     private Semaphore text_operation_producer;
@@ -21,7 +22,7 @@ public class MasterParser implements Runnable{
     private Stemmer stemmer;
     private IFilter ignore;
 
-    public MasterParser(ConcurrentLinkedQueue<TokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer,Stemmer stemmer,IFilter ignore){
+    public MasterParser(ConcurrentLinkedQueue<AbstractTokenizedDocument> tokennized_queue,ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue,Semaphore text_operation_producer,Semaphore master_parser_consumer,Semaphore master_parser_producer,Semaphore segment_file_consumer,Stemmer stemmer,IFilter ignore){
         this.tokennized_queue = tokennized_queue;
         this.tdi_queue = tdi_queue;
 
@@ -43,7 +44,7 @@ public class MasterParser implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            TokenizedDocument doc = this.tokennized_queue.poll();
+            AbstractTokenizedDocument doc = this.tokennized_queue.poll();
 
             if (doc.getPath().equals("DannyAndTalSendTheirRegardsYouFucker")){
                 this.tokennized_queue.add(doc);

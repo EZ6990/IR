@@ -1,5 +1,6 @@
 package MapReduce.Parse.Parsers;
 
+import IO.AbstractTokenizedDocument;
 import MapReduce.Parse.Term;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import MapReduce.Parse.TermDocumentInfo;
@@ -13,13 +14,13 @@ import java.util.List;
 public abstract class AbstractParser {
 
     protected HashMap<String, AbstractTermDocumentInfo> map;
-    protected TokenizedDocument document;
+    protected AbstractTokenizedDocument document;
     private List<Token> txt;
     private int index;
     protected Stemmer stemmer;
 
 
-    public AbstractParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc,Stemmer stemmer) {
+    public AbstractParser(HashMap<String, AbstractTermDocumentInfo> map, AbstractTokenizedDocument doc, Stemmer stemmer) {
         this.map = map;
         this.document = doc;
         this.txt = doc.getTokenizedText();

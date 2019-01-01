@@ -1,8 +1,6 @@
 package Model;
 
-import IO.DataProvider;
-import IO.DocumentReader;
-import IO.XMLReader;
+import IO.*;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Index.DocumentIndexer;
 import MapReduce.Index.TermIndexer;
@@ -34,8 +32,8 @@ public class Master {
 
     private long TimeToInvertIndex;
     private ConcurrentLinkedQueue<File> files_queue;
-    private ConcurrentLinkedQueue<Document> document_queue;
-    private ConcurrentLinkedQueue<TokenizedDocument> tokenized_queue;
+    private ConcurrentLinkedQueue<AbstractDocument> document_queue;
+    private ConcurrentLinkedQueue<AbstractTokenizedDocument> tokenized_queue;
     private ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>> tdi_queue;
 
     private ConcurrentLinkedQueue<SegmentFile> destSegmentFilesQueue;
@@ -71,8 +69,8 @@ public class Master {
 
     public Master(Stemmer stemmer) {
         this.files_queue = new ConcurrentLinkedQueue<File>();
-        this.document_queue = new ConcurrentLinkedQueue<Document>();
-        this.tokenized_queue = new ConcurrentLinkedQueue<TokenizedDocument>();
+        this.document_queue = new ConcurrentLinkedQueue<AbstractDocument>();
+        this.tokenized_queue = new ConcurrentLinkedQueue<AbstractTokenizedDocument>();
         this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
         this.destSegmentFilesQueue = new ConcurrentLinkedQueue<SegmentFile>();
 

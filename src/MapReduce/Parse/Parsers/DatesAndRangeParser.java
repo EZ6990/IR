@@ -1,5 +1,6 @@
 package MapReduce.Parse.Parsers;
 
+import IO.AbstractTokenizedDocument;
 import MapReduce.Parse.AbstractTermDocumentInfo;
 import TextOperations.Stemmer;
 import TextOperations.Token;
@@ -10,7 +11,7 @@ public class DatesAndRangeParser extends AbstractParser {
     private HashMap<String, String> monthDates;
     private HashMap<String, String> dayDates;
 
-    public DatesAndRangeParser(HashMap<String, AbstractTermDocumentInfo> map, TokenizedDocument doc, Stemmer stemmer) {
+    public DatesAndRangeParser(HashMap<String, AbstractTermDocumentInfo> map, AbstractTokenizedDocument doc, Stemmer stemmer) {
         super(map, doc,stemmer);
         monthDates = new HashMap<>();
         dayDates = new HashMap<>();

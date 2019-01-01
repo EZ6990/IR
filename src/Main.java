@@ -1,4 +1,5 @@
 
+import IO.Segments.SemanticDatamuse;
 import Model.SimpleInvertedIndexModel;
 import View.IView;
 import ViewModel.ViewModel;
@@ -7,6 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -33,7 +38,5 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+    public static void main(String[] args) throws IOException {launch(args);}
 }
