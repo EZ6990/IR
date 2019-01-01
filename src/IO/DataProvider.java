@@ -69,8 +69,11 @@ public class DataProvider {
     public List<DatamuseObject> getQuerySimilarWordSemantic(List<String> query){
         return this.semantic.getSimilarMeaningWords(query);
     }
-    public List<DatamuseObject> getQueryTopicSemantic(String word,List<String> topic){
-        return this.semantic.getAdjectivesWords(word,topic);
+    public List<DatamuseObject> getQueryTopicSemantic(String word,List<String> topic,String code){
+        return this.semantic.getTopicWords(word,topic,code);
+    }
+    public List<DatamuseObject> getQueryTriggerSemantic(String word,List<String> topic){
+        return this.semantic.getTriggerWords(word,topic);
     }
 
     public void setStopWordsLocation(String stopWordsLocation) {

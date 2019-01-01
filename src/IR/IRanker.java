@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface IRanker {
 
-    public List<String> returnRankedDocs(HashMap<AbstractTermDocumentInfo, SegmentFile> termDocuments);
+    public List<String> returnRankedDocs(HashMap<AbstractTermDocumentInfo, SegmentFile> termDocuments,HashMap<String,Double> weight);
 
 }

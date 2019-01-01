@@ -3,23 +3,28 @@ package MapReduce.Parse;
 
 import TextOperations.Stemmer;
 
-public class Term{
+public class Term {
 
     private String data;
+    private String stemmedData;
     private Stemmer stemmer;
 
     public Term(String name,Stemmer stemmer){
         this.data = name;
         this.stemmer = stemmer;
+        this.stemmedData = null;
+        if (this.stemmer != null);
+            this.stemmedData = this.stemmer.stemString(this.data.trim());
     }
 
     public String getData() {
-        if (this.stemmer != null)
-            return this.stemmer.stemString(this.data);
-        return this.data.trim();
+        return this.stemmedData == null ? this.data : stemmedData;
     }
 
     public void setData(String termData) {
-        data=termData;
+        if (this.stemmedData == null)
+            this.data  = termData;
+        else
+            this.stemmedData = termData;
     }
 }
