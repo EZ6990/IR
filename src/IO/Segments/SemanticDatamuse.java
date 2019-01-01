@@ -65,7 +65,7 @@ public class SemanticDatamuse {
         return result;
     }
 
-    public List<DatamuseObject> getAdjectivesWords(String str,List<String> lstTopic) {
+    public List<DatamuseObject> getTopicWords(String str,List<String> lstTopic,String code) {
         List<DatamuseObject> result = null;
         try {
             String topic = lstTopic.get(0);
@@ -75,7 +75,32 @@ public class SemanticDatamuse {
             HTTPWebRequest request;
             request = new HTTPWebRequest();
 
-            JSONObject jsonDetails = request.post(this.webServiceURL + "?rel_jjb=" + URLEncoder.encode(str,"UTF-8") + "&topics=" + URLEncoder.encode(topic,"UTF-8") + "&max=3"  );
+            JSONObject jsonDetails = request.post(this.webServiceURL + "?rel_" + code + "=" + URLEncoder.encode(str,"UTF-8") + "&topics=" + URLEncoder.encode(topic,"UTF-8") + "&max=3");
+            JSONArray queryResult = jsonDetails.getJSONArray("result");
+            if (!queryResult.isEmpty()) {
+                result = new ArrayList<DatamuseObject>();
+                for (Object obj : queryResult) {
+                    JSONObject data = (JSONObject) obj;
+                    result.add(new DatamuseObject(data));
+                }
+            }
+        }catch (Exception e){
+            result = null;
+        }
+        return result;
+    }
+
+    public List<DatamuseObject> getTriggerWords(String str,List<String> lstTopic) {
+        List<DatamuseObject> result = null;
+        try {
+            String topic = lstTopic.get(0);
+            for (int i = 1; i < lstTopic.size(); i++) {
+                topic += "+" + lstTopic.get(i);
+            }
+            HTTPWebRequest request;
+            request = new HTTPWebRequest();
+
+            JSONObject jsonDetails = request.post(this.webServiceURL + "?rel_trg=" + URLEncoder.encode(str,"UTF-8") + "&topics=" + URLEncoder.encode(topic,"UTF-8") + "&max=3"  );
             JSONArray queryResult = jsonDetails.getJSONArray("result");
             if (!queryResult.isEmpty()) {
                 result = new ArrayList<DatamuseObject>();

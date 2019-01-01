@@ -9,6 +9,7 @@ import TextOperations.Stemmer;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class SimpleInvertedIndexModel extends Observable implements IInvertedIndexModel {
 
@@ -135,6 +136,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             this.irsplinter.start(null,Cities,this.bSemantic);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -156,6 +159,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         try {
             this.irsplinter.start(text,Cities,this.bSemantic);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
     }

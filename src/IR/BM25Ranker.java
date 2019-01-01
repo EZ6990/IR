@@ -26,7 +26,7 @@ public class BM25Ranker implements IRanker {
     }
 
     @Override
-    public List<String> returnRankedDocs(HashMap<AbstractTermDocumentInfo, SegmentFile> termDocuments) {
+    public List<String> returnRankedDocs(HashMap<AbstractTermDocumentInfo, SegmentFile> termDocuments,HashMap<String,Double> weight) {
 
         Collection <SegmentFile>files = termDocuments.values();
 
@@ -45,7 +45,7 @@ public class BM25Ranker implements IRanker {
                             //sum rank foreach term in doc
                             AbstractTermDocumentInfo ATermDocumentInfo = (AbstractTermDocumentInfo) info;
                             BigDecimal rank = documentRank.get(ATermDocumentInfo.getDocumentID());
-                            BigDecimal value = calculate(queryTerm,ATermDocumentInfo);
+                            BigDecimal value = calculate(queryTerm,ATermDocumentInfo,weight);
                             rank = (rank == null ? value : rank.add(value));
                             documentRank.put(ATermDocumentInfo.getDocumentID(),rank);
                         }
@@ -68,10 +68,16 @@ public class BM25Ranker implements IRanker {
         return ans;
     }
 
-    private BigDecimal calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info){
+    private BigDecimal calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info,HashMap<String,Double> weight){
+
+
+        double wordWeight = 1;
         int wordDocumentFrequency = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getDocumentID()).split(" ")[2]);
-        BigDecimal x = new BigDecimal(queryTerm.getFrequency()).multiply(new BigDecimal(k + 1)).multiply(new BigDecimal(info.getFrequency()));
+
+        if (weight != null)
+            wordWeight = weight.get(info.getTerm().getData().toUpperCase());
+        BigDecimal x = new BigDecimal(queryTerm.getFrequency()).multiply(new BigDecimal(k + 1)).multiply(new BigDecimal(info.getFrequency())).multiply(new BigDecimal(wordWeight));
         BigDecimal y = new BigDecimal(info.getFrequency()).add(new BigDecimal(k).multiply(new BigDecimal(1 - b)).add(new BigDecimal(b).multiply(new BigDecimal(documentSize).divide(new BigDecimal(avdl),32,RoundingMode.HALF_UP))));
         BigDecimal log = new BigDecimal(Math.log10((new BigDecimal(M + 1).divide((new BigDecimal(wordDocumentFrequency)),32,RoundingMode.HALF_UP)).doubleValue()));
 
