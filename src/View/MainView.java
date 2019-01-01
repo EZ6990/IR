@@ -113,8 +113,8 @@ public class MainView implements IView {
         this.colFrequency.setCellValueFactory(
                 new PropertyValueFactory<TermIndexerData, String>("frequency")
         );
-        this.tfPostOutputPath.setText("d:\\documents\\users\\koyfdan\\Downloads\\New folder");
-        this.tfQueries.setText("d:\\documents\\users\\koyfdan\\Downloads\\queries.txt");
+        //this.tfPostOutputPath.setText("C:\\University\\אחזור\\post");
+        //this.tfQueries.setText("C:\\University\\אחזור\\queries.txt");
     }
 
 
@@ -227,6 +227,7 @@ public class MainView implements IView {
 
     public void saveResults(ActionEvent actionEvent) {
         String path=OpenQuerySavedPath();
+        //String path="C:\\University\\אחזור\\result.txt";
         this.viewModel.saveQueryResults(path);
     }
 

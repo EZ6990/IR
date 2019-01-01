@@ -105,7 +105,7 @@ public class IRMaster {
         WaitParsers();
 
 
-        IRanker ranker = new BM25Ranker(1, 0.75, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
+        IRanker ranker = new BM25Ranker(1, 0.5, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
         while (!this.tdi_queue.isEmpty()) {
@@ -188,7 +188,7 @@ public class IRMaster {
     }
 
 
-    private int getAvdl() {
+    private double getAvdl() {
 
         Iterator it = DataProvider.getInstance().getDocumentIndexer().iterator();
         int total = 0;
@@ -197,7 +197,7 @@ public class IRMaster {
             total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
         }
 
-        return (total / DataProvider.getInstance().getDocumentIndexer().size());
+        return ((double)total / (double)DataProvider.getInstance().getDocumentIndexer().size());
     }
 
     private List<Info> getCorpusCityFilterDocuments(List<String> cities) {

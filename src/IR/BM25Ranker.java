@@ -15,10 +15,10 @@ public class BM25Ranker implements IRanker {
 
     private final double k;
     private final double b;
-    private final int avdl;
+    private final double avdl;
     private final int M;
 
-    public BM25Ranker(double k, double b, int avdl,int M){
+    public BM25Ranker(double k, double b, double avdl,int M){
         this.k = k;
         this.b = b;
         this.avdl = avdl;
@@ -44,7 +44,7 @@ public class BM25Ranker implements IRanker {
                         if (info instanceof AbstractTermDocumentInfo) {
                             //sum rank foreach term in doc
                             AbstractTermDocumentInfo ATermDocumentInfo = (AbstractTermDocumentInfo) info;
-                            BigDecimal rank = documentRank.get(ATermDocumentInfo.getTerm().getData());
+                            BigDecimal rank = documentRank.get(ATermDocumentInfo.getDocumentID());
                             BigDecimal value = calculate(queryTerm,ATermDocumentInfo);
                             rank = (rank == null ? value : rank.add(value));
                             documentRank.put(ATermDocumentInfo.getDocumentID(),rank);
@@ -66,7 +66,6 @@ public class BM25Ranker implements IRanker {
         ArrayList<String> ans = new ArrayList();
         lstDucomentRank.forEach(stringDoubleEntry -> {
             ans.add(stringDoubleEntry.getKey());
-            System.out.println(stringDoubleEntry.toString());
         });
         return ans;
     }
@@ -74,13 +73,11 @@ public class BM25Ranker implements IRanker {
     private BigDecimal calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info){
         int wordDocumentFrequency = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getDocumentID()).split(" ")[2]);
-        BigDecimal x = new BigDecimal(queryTerm.getFrequency());
-        x.multiply(new BigDecimal(k + 1));
-        x.multiply(new BigDecimal(info.getFrequency()));
-        BigDecimal y = new BigDecimal(info.getFrequency());
-        y.add((new BigDecimal(k)).multiply((new BigDecimal(1 - b)).add((new BigDecimal(b)).multiply((new BigDecimal(documentSize)).divide(new BigDecimal(avdl), RoundingMode.HALF_UP)))));
-        BigDecimal log = new BigDecimal(Math.log10(((new BigDecimal(M + 1)).divide((new BigDecimal(wordDocumentFrequency)),RoundingMode.HALF_UP)).doubleValue()));
+        BigDecimal x = new BigDecimal(queryTerm.getFrequency()).multiply(new BigDecimal(k + 1)).multiply(new BigDecimal(info.getFrequency()));
+        BigDecimal y = new BigDecimal(info.getFrequency()).add(new BigDecimal(k).multiply(new BigDecimal(1 - b)).add(new BigDecimal(b).multiply(new BigDecimal(documentSize).divide(new BigDecimal(avdl),32,RoundingMode.HALF_UP))));
+        BigDecimal log = new BigDecimal(Math.log10((new BigDecimal(M + 1).divide((new BigDecimal(wordDocumentFrequency)),32,RoundingMode.HALF_UP)).doubleValue()));
 
-        return x.divide(y,RoundingMode.HALF_UP).multiply(log);
+//      return new BigDecimal((queryTerm.getFrequency())*(((k + 1)*(info.getFrequency()))/(info.getFrequency() + k*(1 - b + (b*(documentSize/avdl))))))*(Math.log10((M + 1)/wordDocumentFrequency)));
+        return x.divide(y,32,RoundingMode.HALF_UP).multiply(log);
     }
 }
