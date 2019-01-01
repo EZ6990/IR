@@ -24,7 +24,7 @@ public class XMLDocumentReader extends XMLReader {
         this.doc = Jsoup.parse(fis, null, "", Parser.xmlParser()).getElementsByTag("DOC");
     }
 
-    public TextOperations.Document getNextDocument() {
+    public AbstractDocument getNextDocument() {
 
         String path = "";
         String ID = "";

@@ -6,6 +6,7 @@ import IO.Segments.SegmentDocumentReader;
 import IO.Segments.SegmentTermReader;
 import IR.BM25Ranker;
 import IR.IRanker;
+import IR.Query;
 import IR.SimpleSearcher;
 import MapReduce.Index.CityIndexer;
 import MapReduce.Parse.*;
@@ -50,7 +51,7 @@ public class IRMaster {
     private Stemmer stemmer;
     private List<QueryResult> queryResultList;
 
-    public IRMaster(Stemmer stemmer,boolean bSemantic) {
+    public IRMaster(Stemmer stemmer) {
         this.files_queue = new ConcurrentLinkedQueue<File>();
         this.document_queue = new ConcurrentLinkedQueue<AbstractDocument>();
         this.tokenized_queue = new ConcurrentLinkedQueue<AbstractTokenizedDocument>();
@@ -81,7 +82,7 @@ public class IRMaster {
         this.stemmer = stemmer;
     }
 
-    public void start(String query, List<String> Filter) throws InterruptedException {
+    public void start(String query, List<String> Filter,boolean bSemantic) throws InterruptedException {
 
         long start = System.currentTimeMillis();
         System.out.println("Start : " + LocalTime.now());
@@ -94,10 +95,33 @@ public class IRMaster {
         }
 
         StartReaders();
+        WaitReaders();
+
+        if (bSemantic) {
+            List<AbstractDocument> lst = new ArrayList<>();
+            while (this.document_queue.size() > 1) {
+                Query doc = (Query) this.document_queue.poll();
+                for (String word : doc.getText().split(" ")) {
+                    if (word.length() > 0){
+                        List<DatamuseObject> lstApi = DataProvider.getInstance().getQueryTopicSemantic(word,Arrays.asList(doc.getNarrative().split(" ")));
+                        StringBuilder semantic = new StringBuilder("");
+                        lstApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));
+                        doc.setText(doc.getText() + semantic.toString());
+                    }
+                }
+                lst.add(doc);
+            }
+
+            for (AbstractDocument doc : lst) {
+                this.document_queue.add(doc);
+            }
+            this.document_queue.add(this.document_queue.poll());
+        }
+
         StartTextOperators();
         StartParsers();
 
-        WaitReaders();
+
         WaitTextOperators();
         WaitParsers();
 

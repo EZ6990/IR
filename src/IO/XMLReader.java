@@ -30,7 +30,7 @@ public abstract class XMLReader {
 
     protected abstract void initializeReader() throws IOException;
 
-    public abstract TextOperations.Document getNextDocument();
+    public abstract AbstractDocument getNextDocument();
 
     public boolean hasNext(){
         return this.doc.size() > 0;

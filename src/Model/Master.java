@@ -74,14 +74,14 @@ public class Master {
         this.tdi_queue = new ConcurrentLinkedQueue<HashMap<String,AbstractTermDocumentInfo>>();
         this.destSegmentFilesQueue = new ConcurrentLinkedQueue<SegmentFile>();
 
-        this.doc_readers = new Thread[1];
-        this.runnable_doc_readers = new Runnable[1];
+        this.doc_readers = new Thread[2];
+        this.runnable_doc_readers = new Runnable[2];
 
-        this.text_operators = new Thread[7];
-        this.runnable_text_operators = new Runnable[7];
+        this.text_operators = new Thread[8];
+        this.runnable_text_operators = new Runnable[8];
 
-        this.parsers = new Thread[20];
-        this.runnable_parsers = new Runnable[20];
+        this.parsers = new Thread[12];
+        this.runnable_parsers = new Runnable[12];
 
         this.segments = new Thread[2];
         this.runnable_segments = new Runnable[2];
@@ -89,13 +89,13 @@ public class Master {
         this.segment_posting= new Thread[3];
         this.runnable_segment_posting = new Runnable[3];
 
-        this.document_reader_producer = new Semaphore(7000,true);
+        this.document_reader_producer = new Semaphore(10000,true);
         this.text_operation_consumer=  new Semaphore(0,true);
         this.text_operation_producer = new Semaphore(10000,true);
         this.master_parser_consumer = new Semaphore(0,true);
         this.master_parser_producer = new Semaphore(40000,true);
         this.segment_file_consumer = new Semaphore(0,true);
-        this.segment_file_producer = new Semaphore(100,true);
+        this.segment_file_producer = new Semaphore(150,true);
         this.segment_writer_consumer = new Semaphore(0,true);
 
 

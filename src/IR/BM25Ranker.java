@@ -64,9 +64,7 @@ public class BM25Ranker implements IRanker {
         });
 
         ArrayList<String> ans = new ArrayList();
-        lstDucomentRank.forEach(stringDoubleEntry -> {
-            ans.add(stringDoubleEntry.getKey());
-        });
+        lstDucomentRank.forEach(stringDoubleEntry -> ans.add(stringDoubleEntry.getKey()));
         return ans;
     }
 

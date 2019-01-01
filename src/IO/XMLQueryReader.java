@@ -1,5 +1,6 @@
 package IO;
 
+import IR.Query;
 import TextOperations.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -26,14 +27,13 @@ public class XMLQueryReader extends XMLReader {
     }
 
     @Override
-    public Document getNextDocument() {
+    public AbstractDocument getNextDocument() {
 
         String path = "";
         String ID = "";
-        String date = "";
         String Text = "";
-        String Country = "";
-        String Language = "";
+        String Description = "";
+        String Narrative = "";
 
 
         Element XMLDocument = this.doc.first();
@@ -43,13 +43,15 @@ public class XMLQueryReader extends XMLReader {
         if (XMLDocument != null) {
             String data = XMLDocument.getElementsByTag("num").text().split("\\r\\n\\r\\n")[0].substring(8);
             ID = data.substring(0,data.indexOf(' ')).trim();
-            Text = this.doc.first().getElementsByTag("title").text().split("\\r\\n\\r\\n")[0].trim();
+            Text = XMLDocument.getElementsByTag("title").text().split("\\r\\n\\r\\n")[0].trim();
+            Description = XMLDocument.getElementsByTag("desc").text().substring(15).split("\\r\\n\\r\\n")[0].trim();
+            Narrative = XMLDocument.getElementsByTag("narr").text().substring(13);
         }
 
         this.doc = this.doc.next();
 
 
-        return new TextOperations.Document(path,ID,Country,date,Text,Language);
+        return new Query(ID,Text,path,Description,Narrative);
 
     }
 }

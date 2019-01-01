@@ -57,5 +57,15 @@ public class DatamuseObject {
         }catch (org.json.JSONException e){this.tags = null;}
     }
 
+    public String getWord() {
+        return word;
+    }
 
+    public int getScore() {
+        return score;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
 }

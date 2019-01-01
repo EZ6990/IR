@@ -174,6 +174,7 @@ public class ViewModel extends Observable implements Observer {
         this.model.clearQueriesResult();
         String text = getStrQuery();
         File f = new File(text);
+        this.model.setSemantic(isbSemantic());
         if (f.exists())
             this.model.SearchQueries(f,Cities);
         else

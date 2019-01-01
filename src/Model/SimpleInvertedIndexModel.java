@@ -132,7 +132,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         DataProvider.getInstance().setQueriesLocation(this.strQueriesLocation);
         initializeIRMaster();
         try {
-            this.irsplinter.start(null,Cities);
+            this.irsplinter.start(null,Cities,this.bSemantic);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -154,7 +154,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         DataProvider.getInstance().setQueriesLocation(null);
         initializeIRMaster();
         try {
-            this.irsplinter.start(text,Cities);
+            this.irsplinter.start(text,Cities,this.bSemantic);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -243,7 +243,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             stemmer = null;
             provider.setPrefixPost("no_stem_");
         }
-        this.irsplinter = new IRMaster(stemmer,this.bSemantic);
+        this.irsplinter = new IRMaster(stemmer);
     }
 
     @Override

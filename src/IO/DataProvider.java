@@ -66,10 +66,11 @@ public class DataProvider {
         return country;
     }
 
-    public List<DatamuseObject> getQuerySemantic(TokenizedQuery query){
-        List<String> strQuery = new ArrayList<>();
-        query.getTokenizedText().forEach(token -> strQuery.add(token.getWord()));
-        return this.semantic.getSimilarMeaningWords(strQuery);
+    public List<DatamuseObject> getQuerySimilarWordSemantic(List<String> query){
+        return this.semantic.getSimilarMeaningWords(query);
+    }
+    public List<DatamuseObject> getQueryTopicSemantic(String word,List<String> topic){
+        return this.semantic.getAdjectivesWords(word,topic);
     }
 
     public void setStopWordsLocation(String stopWordsLocation) {
