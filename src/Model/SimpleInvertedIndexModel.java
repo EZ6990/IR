@@ -8,6 +8,7 @@ import TextOperations.Stemmer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -27,7 +28,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private IRMaster irsplinter;
 
     private long TimeToInvertIndex;
-    public SimpleInvertedIndexModel(){
+
+    public SimpleInvertedIndexModel() {
         this.splinter = null;
     }
 
@@ -48,7 +50,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     @Override
     public void ClearInvertedIndex() {
         File postDir = new File(this.strPostLocation);
-        for (File f:postDir.listFiles()){
+        for (File f : postDir.listFiles()) {
             f.delete();
         }
         this.splinter = null;
@@ -74,14 +76,13 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     @Override
     public void LoadDictionary() {
         DataProvider provider = DataProvider.getInstance();
-        provider.setStopWordsLocation(this.strCorpusLocation);
-        provider.setCorpusLocation(this.strStopWordsLocation);
+        provider.setStopWordsLocation(this.strStopWordsLocation);
+        provider.setCorpusLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);
 
         if (this.bStemmer) {
             provider.setPrefixPost("stem_");
-        }
-        else{
+        } else {
             provider.setPrefixPost("no_stem_");
         }
 
@@ -119,7 +120,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public long getTimeToFinish() {
-        return this.TimeToInvertIndex/1000;
+        return this.TimeToInvertIndex / 1000;
     }
 
     @Override
@@ -128,12 +129,12 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     @Override
-    public void SearchQueries(File f,List<String> Cities) {
+    public void SearchQueries(File f, List<String> Cities) {
         this.strQueriesLocation = f.getAbsolutePath();
         DataProvider.getInstance().setQueriesLocation(this.strQueriesLocation);
         initializeIRMaster();
         try {
-            this.irsplinter.start(null,Cities,this.bSemantic);
+            this.irsplinter.start(null, Cities, this.bSemantic);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -143,7 +144,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     @Override
     public void saveQueryResults(String path) {
-        File file=new File(path);
+        File file = new File(path);
         try {
             this.irsplinter.printQueriesToFile(file);
         } catch (IOException e) {
@@ -153,11 +154,11 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     @Override
-    public void SearchQuery(String text,List<String> Cities) {
+    public void SearchQuery(String text, List<String> Cities) {
         DataProvider.getInstance().setQueriesLocation(null);
         initializeIRMaster();
         try {
-            this.irsplinter.start(text,Cities,this.bSemantic);
+            this.irsplinter.start(text, Cities, this.bSemantic);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -172,13 +173,12 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
             for (String value : DataProvider.getInstance().getFP104().values())
                 if (!lstCountries.contains(value))
                     lstCountries.add(value);
-        }
-        else {
+        } else {
             Iterator it = DataProvider.getInstance().getCityIndexer().iterator();
-            while(it.hasNext()){
-                Map.Entry pair = (Map.Entry)it.next();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
                 lstCountries.add(pair.getKey().toString());
-               // it.remove();
+                // it.remove();
             }
         }
 
@@ -191,23 +191,23 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     public Set<String> getQueriesResult() {
-     //   return DataProvider.getInstance().getQueriesResult().keySet();
-        List<QueryResult> qs=this.irsplinter.getQueriesSearched();
-        Set<String> set=new LinkedHashSet<>();
-        for(QueryResult qr:qs)
+        //   return DataProvider.getInstance().getQueriesResult().keySet();
+        List<QueryResult> qs = this.irsplinter.getQueriesSearched();
+        Set<String> set = new LinkedHashSet<>();
+        for (QueryResult qr : qs)
             set.add(qr.getQueryId());
         return set;
     }
 
     @Override
     public List<String> getQueriesResultById(String id) {
-        List<QueryResult> qs=this.irsplinter.getQueriesSearched();
-        List<String>ans=new ArrayList<>();
+        List<QueryResult> qs = this.irsplinter.getQueriesSearched();
+        List<String> ans = new ArrayList<>();
         for (QueryResult qr :
                 qs) {
-            if (qr.getQueryId().equals(id)){
-            List<String> docs=qr.getDocs();
-                ans=docs.subList(0,docs.size() >= 50 ? 50 : docs.size());
+            if (qr.getQueryId().equals(id)) {
+                List<String> docs = qr.getDocs();
+                ans = docs.subList(0, docs.size() >= 50 ? 50 : docs.size());
 
             }
         }
@@ -215,36 +215,47 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
 
     }
 
-    private void initializeMaster(){
+    private void initializeMaster() {
         DataProvider provider = DataProvider.getInstance();
-        provider.setStopWordsLocation(this.strCorpusLocation);
-        provider.setCorpusLocation(this.strStopWordsLocation);
+        provider.setCorpusLocation(this.strCorpusLocation);
+        provider.setStopWordsLocation(this.strStopWordsLocation);
         provider.setPostLocation(this.strPostLocation);
         Stemmer stemmer = null;
-
+        try {
+            saveStopWords();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (this.bStemmer) {
             stemmer = new Stemmer();
             provider.setPrefixPost("stem_");
-        }
-        else{
+        } else {
             stemmer = null;
             provider.setPrefixPost("no_stem_");
         }
         this.splinter = new Master(stemmer);
     }
 
-    private void initializeIRMaster(){
+    private void saveStopWords() throws IOException {
+        File f = new File(this.strCorpusLocation);
+        Files.copy(f.toPath(),new File(this.strPostLocation + "\\stop_words.posts").toPath());
+        //f.renameTo(new File(this.strPostLocation + "\\stop_words.posts"));
+    }
+
+    private void initializeIRMaster() {
         DataProvider provider = DataProvider.getInstance();
-        provider.setStopWordsLocation(this.strCorpusLocation);
-        provider.setCorpusLocation(this.strStopWordsLocation);
+        File f = new File(this.strPostLocation + "\\stop_words.posts");
+        if(f.exists() && !f.isDirectory()) {
+             provider.setStopWordsLocation(this.strPostLocation + "\\stop_words.posts");
+        }
+        provider.setCorpusLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);
         Stemmer stemmer = null;
 
         if (this.bStemmer) {
             stemmer = new Stemmer();
             provider.setPrefixPost("stem_");
-        }
-        else{
+        } else {
             stemmer = null;
             provider.setPrefixPost("no_stem_");
         }
@@ -260,9 +271,9 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     @Override
-    public int getTermDocumentFrequencyByID(String termId,String docId) {
-        TermDocumentInfo info = this.irsplinter.getTermInfoByTermID(termId,docId);
-        if (info != null){
+    public int getTermDocumentFrequencyByID(String termId, String docId) {
+        TermDocumentInfo info = this.irsplinter.getTermInfoByTermID(termId, docId);
+        if (info != null) {
             return info.getFrequency();
         }
         return 0;
