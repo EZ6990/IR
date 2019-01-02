@@ -203,14 +203,6 @@ public class MainView implements IView {
 
         return "";
     }
-    public String OpenQuerySavedPath() {
-        FileChooser fc = new FileChooser();
-        File selected = fc.showOpenDialog(new Stage());
-        if (selected != null)
-            return selected.getAbsolutePath();
-
-        return "";
-    }
     public void SetCorpusPath(ActionEvent actionEvent) {
         String  location = OpenFolderChooser();
         this.tfCorpusInputPath.textProperty().setValue(location);
@@ -256,8 +248,8 @@ public class MainView implements IView {
     }
 
     public void saveResults(ActionEvent actionEvent) {
-        //String path=OpenQuerySavedPath();
-        String path="D:\\documents\\users\\koyfdan\\Downloads\\results.txt";
+        String path=OpenFolderChooser();
+        path = path + "\\results.txt";
         this.viewModel.saveQueryResults(path);
     }
 

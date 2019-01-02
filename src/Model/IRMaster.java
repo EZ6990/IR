@@ -153,21 +153,12 @@ public class IRMaster {
                         };
                         Future<List<DatamuseObject>> future4 = executor4.submit(callable4);
 
-//                        ExecutorService executor5 = Executors.newSingleThreadExecutor();
-//                        Callable<List<DatamuseObject>> callable5 = new Callable<List<DatamuseObject>>() {
-//                            @Override
-//                            public List<DatamuseObject> call() {
-//                                return DataProvider.getInstance().getQueryTopicSemantic(word,topics,"gen");
-//                            }
-//                        };
-//                        Future<List<DatamuseObject>> future5 = executor5.submit(callable5);
 
                         List<DatamuseObject> lstApi = new ArrayList<>();
                         List<DatamuseObject> lstSynApi = future1.get();
                         List<DatamuseObject> lstTrgApi = future2.get();
                         List<DatamuseObject> lstSpcApi = future3.get();
                         List<DatamuseObject> lstGenApi = future4.get();
-                        //List<DatamuseObject> lstMlApi =  DataProvider.getInstance().getQuerySimilarWordSemantic(Arrays.asList(map.get(doc.getID())))
 
                         if (lstSynApi != null)
                             lstApi.addAll(lstSynApi);
@@ -177,8 +168,6 @@ public class IRMaster {
                             lstApi.addAll(lstSpcApi);
                         if (lstGenApi != null)
                             lstApi.addAll(lstGenApi);
-//                        if (lstMlApi != null)
-//                            lstApi.addAll(lstMlApi);
 
                         StringBuilder semantic = new StringBuilder("");
                         lstApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));

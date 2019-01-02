@@ -129,27 +129,24 @@ public class DataProvider {
     }
 
     public void LoadTermIndex() {
-        if (this.termIndexer == null)
-            this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "termIndexer.index");
 
+        this.termIndexer = new TermIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "termIndexer.index");
         this.termIndexer.read();
 
         System.out.println("Done Load Term Indexer");
     }
 
     public void LoadCityIndexer() {
-        if (this.cityIndexer == null)
-            this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityIndexer.index");
 
+        this.cityIndexer = new CityIndexer(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityIndexer.index");
         this.cityIndexer.read();
 
         System.out.println("Done Load City Indexer");
     }
 
     public void LoadDocumentIndexer() {
-        if (this.documentIndexer == null)
-            this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() +"\\" + DataProvider.getInstance().getPrefixPost() + "documentIndexer.index");
 
+        this.documentIndexer = new DocumentIndexer(DataProvider.getInstance().getPostLocation() +"\\" + DataProvider.getInstance().getPrefixPost() + "documentIndexer.index");
         this.documentIndexer.read();
 
         System.out.println("Done Load Document Indexer");
