@@ -26,7 +26,7 @@ public class SegmentCityWriter implements SegmentWriter {
             output.flush();
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 }

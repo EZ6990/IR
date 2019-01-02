@@ -42,7 +42,7 @@ public class MasterParser implements Runnable{
             try {
                 this.master_parser_consumer.acquire();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             AbstractTokenizedDocument doc = this.tokennized_queue.poll();
 
@@ -73,7 +73,7 @@ public class MasterParser implements Runnable{
                     this.tdi_queue.add(map);
                     this.segment_file_consumer.release();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 //System.out.println("END ID: " + doc.getID() + "  Time:" + LocalTime.now());
             } //else

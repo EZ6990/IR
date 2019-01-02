@@ -59,7 +59,7 @@ public class CityIndexer extends Indexer{
             output.flush();
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         citySegmentFile.delete();

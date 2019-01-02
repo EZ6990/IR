@@ -26,7 +26,7 @@ public class SegmentFilesWriter implements Runnable {
             try {
                 this.segment_writer_consumer.acquire();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             SegmentFile file = filesQueue.poll();
             if (file.getPath().equals("DannyAndTalSendTheirRegardsYouFucker")){

@@ -12,7 +12,7 @@ public class SegmentDocumentReader implements SegmentReader {
         try {
             return Files.readAllLines(Paths.get(path));
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }

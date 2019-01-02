@@ -40,7 +40,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         try {
             this.splinter.start();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         this.TimeToInvertIndex = splinter.getTimeToInvertIndex();
         setChanged();
@@ -137,9 +137,9 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         try {
             this.irsplinter.start(null, Cities, this.bSemantic);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -149,7 +149,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         try {
             this.irsplinter.printQueriesToFile(file);
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
     }
@@ -161,9 +161,9 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         try {
             this.irsplinter.start(text, Cities, this.bSemantic);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -225,7 +225,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         try {
             saveStopWords();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         if (this.bStemmer) {
             stemmer = new Stemmer();

@@ -74,7 +74,7 @@ public class SegmentFiles implements Runnable {
                 //  System.out.println("Segment File Consumer : " + this.segments_file_consumer.availablePermits());
                 this.segments_file_consumer.acquire();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             HashMap<String, AbstractTermDocumentInfo> map = this.TDIQueue.poll();
            // System.out.println("Segment File Producer : " + this.master_parser_producer.availablePermits());
@@ -129,7 +129,7 @@ public class SegmentFiles implements Runnable {
                     this.segment_writer_consumer.release();
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 index = 0;
                 for (String s : Letters) {
@@ -162,7 +162,7 @@ public class SegmentFiles implements Runnable {
             this.segment_writer_consumer.release();
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

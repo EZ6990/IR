@@ -22,7 +22,7 @@ public class Stemmer {
                 return s;
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         this.m_mutex.release();
         return word;

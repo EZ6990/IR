@@ -43,7 +43,7 @@ public class TextOperations implements Runnable{
             try {
                 this.text_operation_consumer.acquire();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
 
             }
             AbstractDocument doc = this.document_queue.poll();
@@ -75,7 +75,7 @@ public class TextOperations implements Runnable{
                 //System.out.println("Text Operation Producer : " + this.text_operation_producer.availablePermits());
                 this.text_operation_producer.acquire();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             this.tokenized_queue.add(Adocument);
             this.master_parser_consumer.release();

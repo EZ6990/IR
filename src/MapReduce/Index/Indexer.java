@@ -34,7 +34,7 @@ public abstract class Indexer implements Iterable{
                 this.Index.put(tempData[0],tempData[1]);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -51,7 +51,7 @@ public abstract class Indexer implements Iterable{
             output.flush();
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

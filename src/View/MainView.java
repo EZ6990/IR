@@ -251,8 +251,10 @@ public class MainView implements IView {
 
     public void saveResults(ActionEvent actionEvent) {
         String path=OpenFolderChooser();
-        path = path + "\\results.txt";
-        this.viewModel.saveQueryResults(path);
+        if (!path.isEmpty()) {
+            path = path + "\\results.txt";
+            this.viewModel.saveQueryResults(path);
+        }
     }
 
     private void getQueryResultListById(String id){

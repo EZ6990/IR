@@ -55,7 +55,7 @@ public class DataProvider {
             this.FP104 = new ConcurrentHashMap<>();
             this.FP105 = new ConcurrentHashMap<>();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     public CountryInfo getCountryInfo(String CapitalName){

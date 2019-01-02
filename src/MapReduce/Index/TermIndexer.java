@@ -90,7 +90,7 @@ public class TermIndexer extends Indexer{
                     output.flush();
                     output.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 this.Index.putAll(chunkTermIndex);
 //                    System.out.println(LocalTime.now() + " Done Write Data To Disk On Letter:" + Letters[i]);
