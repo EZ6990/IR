@@ -91,6 +91,8 @@ public class PercentAndPriceParser extends AbstractParser {
                 }
             i++;
         }
+        if(s.trim().length() > 0)
+            putInMap(s);
     }
 
     private String convertNumberLessthanMill(String tokenStr) {

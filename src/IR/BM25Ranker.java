@@ -70,7 +70,6 @@ public class BM25Ranker implements IRanker {
 
     private BigDecimal calculate(AbstractTermDocumentInfo queryTerm, AbstractTermDocumentInfo info,HashMap<String,Double> weight){
 
-
         double wordWeight = 1;
         int wordDocumentFrequency = Integer.parseInt(DataProvider.getInstance().getTermIndexer().getValue(info.getTerm().getData()).split(" ")[3]);
         int documentSize = Integer.parseInt(DataProvider.getInstance().getDocumentIndexer().getValue(info.getDocumentID()).split(" ")[2]);
