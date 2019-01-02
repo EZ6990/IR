@@ -375,6 +375,8 @@ public class IRMaster {
     public TermDocumentInfo getTermInfoByTermID(String termId, String docId) {
         TermDocumentInfo termInfo = null;
         String indexedData = DataProvider.getInstance().getTermIndexer().getValue(termId);
+        if (indexedData == null)
+            indexedData = DataProvider.getInstance().getTermIndexer().getValue(termId.toLowerCase());
         if (indexedData != null) {
             String[] splitedIndexData = indexedData.split(" ");
             TermSegmentFile termPost = new TermSegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + splitedIndexData[0], null, new SegmentTermReader());

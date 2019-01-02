@@ -172,9 +172,6 @@ public class MainView implements IView {
                 this.btnViewLanguages.setVisible(false);
                 this.indexLoadedProperty.setValue(false);
             }
-            else if(((String)arg).equals("SEARCH_DONE")){
-                this.searchDone.setValue(true);
-            }
         }
 
     }
@@ -249,7 +246,9 @@ public class MainView implements IView {
         this.tfQueries.setText(location);
     }
     public void Search(ActionEvent actionEvent) {
+        this.searchDone.setValue(false);
         this.viewModel.Search(this.lvCountriesFilter.getSelectionModel().getSelectedItems());
+        this.searchDone.setValue(true);
     }
 
     public void ShowCountries(ActionEvent actionEvent) {
