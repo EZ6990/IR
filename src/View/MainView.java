@@ -81,7 +81,6 @@ public class MainView implements IView {
                 return (tfCorpusInputPath.getText().isEmpty() || tfPostOutputPath.getText().isEmpty());
             }
         });
-
         this.btnSearch.disableProperty().bind(new BooleanBinding() {
             {
                 super.bind(tfQueries.textProperty(),indexLoadedProperty);
@@ -109,7 +108,6 @@ public class MainView implements IView {
                         getQueryResultListById(newValue);
                     }
                 });
-
         this.lvQueriesResults.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
                     public void changed(ObservableValue<? extends String> observable,String oldValue, String newValue) {
                         getDocumentEntitiesByDocumentID(newValue);
@@ -214,6 +212,7 @@ public class MainView implements IView {
     }
 
     public void startInvertedIndex(ActionEvent actionEvent) {
+        this.indexLoadedProperty.setValue(false);
         this.viewModel.startInvertedIndex();
     }
 
@@ -222,7 +221,9 @@ public class MainView implements IView {
     }
 
     public void LoadIndexers(ActionEvent actionEvent) {
+        this.indexLoadedProperty.setValue(false);
         this.viewModel.LoadIndexers();
+
     }
 
     public void ShowDictionary(ActionEvent actionEvent) {
@@ -241,6 +242,7 @@ public class MainView implements IView {
         this.searchDone.setValue(false);
         this.viewModel.Search(this.lvCountriesFilter.getSelectionModel().getSelectedItems());
         this.searchDone.setValue(true);
+        this.lvQueries.getSelectionModel().clearSelection();
     }
 
     public void ShowCountries(ActionEvent actionEvent) {
