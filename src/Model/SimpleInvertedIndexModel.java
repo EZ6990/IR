@@ -50,9 +50,10 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     @Override
     public void ClearInvertedIndex() {
         File postDir = new File(this.strPostLocation);
-        for (File f : postDir.listFiles()) {
-            f.delete();
-        }
+        if (postDir.listFiles().length > 0)
+            for (File f : postDir.listFiles()) {
+                f.delete();
+            }
         this.splinter = null;
         setChanged();
         notifyObservers("CLEAR_DONE");
@@ -239,18 +240,18 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private void saveStopWords() throws IOException {
 
         File f = new File(DataProvider.getInstance().getStopWordsLocation());
-        File dest=new File(this.strPostLocation + "\\" + "stop_words.post");
-        if(!dest.exists()) {
+        File dest = new File(this.strPostLocation + "\\" + "stop_words.post");
+        if (!dest.exists() && f.exists()) {
             Files.copy(f.toPath(), dest.toPath());
         }
     }
 
     private void initializeIRMaster() {
         DataProvider provider = DataProvider.getInstance();
-        File f = new File(this.strPostLocation + "\\"+"stop_words.post");
+        File f = new File(this.strPostLocation + "\\" + "stop_words.post");
 
-        if(f.exists() && !f.isDirectory()) {
-             provider.setStopWordsLocation(f.getAbsolutePath());
+        if (f.exists() && !f.isDirectory()) {
+            provider.setStopWordsLocation(f.getAbsolutePath());
         }
         //provider.setCorpusLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);
