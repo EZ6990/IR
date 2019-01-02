@@ -24,14 +24,14 @@
       <Button fx:id="btnViewDictionary" layoutX="712.0" layoutY="344.0" mnemonicParsing="false" onAction="#ShowDictionary" prefHeight="25.0" prefWidth="102.0" text="View Dictionary" />
       <Button fx:id="btnViewLanguages" layoutX="500.0" layoutY="376.0" mnemonicParsing="false" onAction="#ShowLanguages" prefHeight="25.0" prefWidth="102.0" text="View Languages" />
       <TextField fx:id="tfQueries" layoutX="86.0" layoutY="249.0" prefHeight="25.0" prefWidth="217.0" promptText="Location of desired posting location..." />
-      <Label layoutX="14.0" layoutY="253.0" prefHeight="17.0" prefWidth="43.0" text="search" />
+      <Label fx:id="lbSerach" layoutX="14.0" layoutY="253.0" prefHeight="17.0" prefWidth="43.0" text="search" />
       <Button fx:id="dcQueriesPath" layoutX="323.0" layoutY="249.0" mnemonicParsing="false" onAction="#SetQueriesPath" text="browse..." />
       <Button fx:id="btnSearch" layoutX="172.0" layoutY="281.0" mnemonicParsing="false" onAction="#Search" text="Search" />
       <CheckBox fx:id="cbSemantic" layoutX="88.0" layoutY="285.0" mnemonicParsing="false" text="Semantic" />
       <ListView fx:id="lvCountriesFilter" layoutX="451.0" layoutY="0.0" prefHeight="333.0" prefWidth="200" />
       <ListView fx:id="lvQueries" layoutX="3.0" layoutY="335.0" prefHeight="229.0" prefWidth="215.0" />
       <ListView fx:id="lvQueriesResults" layoutX="233.0" layoutY="335.0" prefHeight="229.0" prefWidth="215.0" />
-      <Button layoutX="492.0" layoutY="344.0" mnemonicParsing="false" onAction="#ShowCountries" text="View Contries Filter" />
+      <Button fx:id="btnViewCitiesFilter" layoutX="492.0" layoutY="344.0" mnemonicParsing="false" onAction="#ShowCountries" text="View Cities Filter" />
       <TableView fx:id="tbl_Dictionary" layoutX="663.0" layoutY="0.0" prefHeight="333.0" prefWidth="200.0">
         <columns>
           <TableColumn fx:id="colTerm" prefWidth="101.0" text="Term" />

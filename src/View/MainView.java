@@ -1,33 +1,29 @@
 package View;
 
 import ViewModel.ViewModel;
-import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Observable;
 
 public class MainView implements IView {
 
 
-    public Button b_saveResults;
     private Stage stage;
     private ViewModel viewModel;
+    private SimpleBooleanProperty indexLoadedProperty;
+    private SimpleBooleanProperty searchDone;
 
+    public Label lbSerach;
     public CheckBox cbStemmer;
     public CheckBox cbSemantic;
     public Button btnViewLanguages;
@@ -37,6 +33,10 @@ public class MainView implements IView {
     public Button btnStart;
     public Button dcCorpusPath;
     public Button dcPostPath;
+    public Button btnSearch;
+    public Button dcQueriesPath;
+    public Button b_saveResults;
+    public Button btnViewCitiesFilter;
     public TextField tfCorpusInputPath;
     public TextField tfPostOutputPath;
     public TextField tfQueries;
@@ -53,7 +53,24 @@ public class MainView implements IView {
 
     public void initializeView(){
 
-        alert = new Alert(Alert.AlertType.INFORMATION);
+        this.indexLoadedProperty = new SimpleBooleanProperty(false);
+        this.searchDone = new SimpleBooleanProperty(false);
+        this.lbSerach.visibleProperty().bind(this.indexLoadedProperty);
+        this.lvCountriesFilter.visibleProperty().bind(this.indexLoadedProperty);
+        this.lvQueries.visibleProperty().bind(this.indexLoadedProperty);
+        this.lvQueriesResults.visibleProperty().bind(this.indexLoadedProperty);
+        this.dcQueriesPath.visibleProperty().bind(this.indexLoadedProperty);
+        this.tbl_Dictionary.visibleProperty().bind(this.indexLoadedProperty);
+        this.btnSearch.visibleProperty().bind(this.indexLoadedProperty);
+        this.cbSemantic.visibleProperty().bind(this.indexLoadedProperty);
+        this.btnViewDictionary.visibleProperty().bind(this.indexLoadedProperty);
+        this.btnViewCitiesFilter.visibleProperty().bind(this.indexLoadedProperty);
+
+        this.b_saveResults.visibleProperty().bind(this.searchDone);
+
+        this.tfQueries.visibleProperty().bind(this.indexLoadedProperty);
+
+        this.alert = new Alert(Alert.AlertType.INFORMATION);
         this.btnStart.disableProperty().bind(new BooleanBinding() {
             {
                 super.bind(tfCorpusInputPath.textProperty(),tfPostOutputPath.textProperty());
@@ -63,6 +80,18 @@ public class MainView implements IView {
                 return (tfCorpusInputPath.getText().isEmpty() || tfPostOutputPath.getText().isEmpty());
             }
         });
+
+        this.btnSearch.disableProperty().bind(new BooleanBinding() {
+            {
+                super.bind(tfQueries.textProperty(),indexLoadedProperty);
+            }
+            @Override
+            protected boolean computeValue() {
+                return (tfCorpusInputPath.getText().isEmpty() || tfPostOutputPath.getText().isEmpty());
+            }
+        });
+        this.btnSearch.visibleProperty().bind(this.indexLoadedProperty);
+
         this.tfCorpusInputPath.textProperty().bindBidirectional(this.viewModel.strCorpusLocationProperty());
         this.tfPostOutputPath.textProperty().bindBidirectional(this.viewModel.strPostingLocationProperty());
         this.tfQueries.textProperty().bindBidirectional(this.viewModel.strQueryProperty());
@@ -72,7 +101,6 @@ public class MainView implements IView {
         this.cbStemmer.selectedProperty().bindBidirectional(this.viewModel.bStemmingProperty());
         this.cbSemantic.selectedProperty().bindBidirectional(this.viewModel.bSemanticProperty());
         this.tbl_Dictionary.itemsProperty().bind(this.viewModel.observableTableVIewProperty());
-
         this.lvCountriesFilter.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         this.lvQueries.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -113,8 +141,8 @@ public class MainView implements IView {
         this.colFrequency.setCellValueFactory(
                 new PropertyValueFactory<TermIndexerData, String>("frequency")
         );
-        this.tfPostOutputPath.setText("d:\\documents\\users\\talmalu\\Documents\\Tal\\post");
-        this.tfQueries.setText("d:\\documents\\users\\talmalu\\Documents\\Tal\\queries.txt");
+        this.tfPostOutputPath.setText("D:\\documents\\users\\koyfdan\\Downloads\\output");
+        this.tfQueries.setText("D:\\documents\\users\\koyfdan\\Downloads\\queries.txt");
     }
 
 
@@ -133,16 +161,19 @@ public class MainView implements IView {
     public void update(Observable o, Object arg) {
         if (o == this.viewModel){
             if (((String)arg).equals("INVERTED_INDEX_DONE")){
-                this.btnViewDictionary.setVisible(true);
                 this.btnViewLanguages.setVisible(true);
+                this.indexLoadedProperty.setValue(true);
             }
             else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
                 this.btnViewLanguages.setVisible(false);
-                this.btnViewDictionary.setVisible(true);
+                this.indexLoadedProperty.setValue(true);
             }
             else if (((String)arg).equals("CLEAR_DONE")){
                 this.btnViewLanguages.setVisible(false);
-                this.btnViewDictionary.setVisible(false);
+                this.indexLoadedProperty.setValue(false);;
+            }
+            else if(((String)arg).equals("SEARCH_DONE")){
+                this.searchDone.setValue(true);
             }
         }
 
@@ -227,7 +258,7 @@ public class MainView implements IView {
 
     public void saveResults(ActionEvent actionEvent) {
         //String path=OpenQuerySavedPath();
-        String path="d:\\documents\\users\\talmalu\\Documents\\Tal\\results.txt";
+        String path="D:\\documents\\users\\koyfdan\\Downloads\\results.txt";
         this.viewModel.saveQueryResults(path);
     }
 
