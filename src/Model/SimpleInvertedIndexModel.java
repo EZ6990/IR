@@ -76,8 +76,8 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     @Override
     public void LoadDictionary() {
         DataProvider provider = DataProvider.getInstance();
-        provider.setStopWordsLocation(this.strStopWordsLocation);
         provider.setCorpusLocation(this.strCorpusLocation);
+        provider.setStopWordsLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);
 
         if (this.bStemmer) {
@@ -218,7 +218,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private void initializeMaster() {
         DataProvider provider = DataProvider.getInstance();
         provider.setCorpusLocation(this.strCorpusLocation);
-        provider.setStopWordsLocation(this.strStopWordsLocation);
+        provider.setStopWordsLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);
         Stemmer stemmer = null;
         try {
@@ -237,18 +237,22 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     }
 
     private void saveStopWords() throws IOException {
-        File f = new File(this.strCorpusLocation);
-        Files.copy(f.toPath(),new File(this.strPostLocation + "\\stop_words.posts").toPath());
-        //f.renameTo(new File(this.strPostLocation + "\\stop_words.posts"));
+
+        File f = new File(DataProvider.getInstance().getStopWordsLocation());
+        File dest=new File(this.strPostLocation + "\\" + "stop_words.post");
+        if(!dest.exists()) {
+            Files.copy(f.toPath(), dest.toPath());
+        }
     }
 
     private void initializeIRMaster() {
         DataProvider provider = DataProvider.getInstance();
-        File f = new File(this.strPostLocation + "\\stop_words.posts");
+        File f = new File(this.strPostLocation + "\\"+"stop_words.post");
+
         if(f.exists() && !f.isDirectory()) {
-             provider.setStopWordsLocation(this.strPostLocation + "\\stop_words.posts");
+             provider.setStopWordsLocation(this.strPostLocation);
         }
-        provider.setCorpusLocation(this.strCorpusLocation);
+        //provider.setCorpusLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);
         Stemmer stemmer = null;
 
