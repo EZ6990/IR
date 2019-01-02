@@ -1,6 +1,8 @@
 
 import IO.Segments.SemanticDatamuse;
+import MapReduce.Index.TermIndexer;
 import Model.SimpleInvertedIndexModel;
+import TextOperations.Stemmer;
 import View.IView;
 import ViewModel.ViewModel;
 import javafx.application.Application;
@@ -38,5 +40,23 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) throws IOException {launch(args);}
+    public static void main(String[] args) throws IOException {
+        launch(args);
+//        TermIndexer stemterm = new TermIndexer("d:\\documents\\users\\talmalu\\Documents\\Tal\\post\\stem_termIndexer.index");
+//        TermIndexer nostemterm = new TermIndexer("d:\\documents\\users\\talmalu\\Documents\\Tal\\post\\no_stem_termIndexer.index");
+//
+//        stemterm.read();
+//        int totalstemterm = 0;
+//        for (String val :stemterm.getTermNumberOfOccurrenceMap().values()){
+//            totalstemterm += Integer.parseInt(val);
+//        }
+//
+//        nostemterm.read();
+//        int totalnostemterm = 0;
+//        for (String val :nostemterm.getTermNumberOfOccurrenceMap().values()){
+//            totalnostemterm += Integer.parseInt(val);
+//        }
+
+
+    }
 }

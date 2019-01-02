@@ -13,8 +13,12 @@ public class Term {
         this.data = name;
         this.stemmer = stemmer;
         this.stemmedData = null;
-        if (this.stemmer != null);
-            this.stemmedData = this.stemmer.stemString(this.data.trim());
+        if (this.stemmer != null) {
+         if(this.data.length()>0 && this.data.charAt(0)>='A' && this.data.charAt(0)<='Z')
+            this.stemmedData = (this.stemmer.stemString(this.data.trim().toLowerCase())).toUpperCase();
+         else
+             this.stemmedData =this.stemmer.stemString(this.data.trim());
+        }
     }
 
     public String getData() {
@@ -23,7 +27,7 @@ public class Term {
 
     public void setData(String termData) {
         if (this.stemmedData == null)
-            this.data  = termData;
+            this.data = termData;
         else
             this.stemmedData = termData;
     }

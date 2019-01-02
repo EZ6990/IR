@@ -81,14 +81,14 @@ public class IRMaster {
         this.stemmer = stemmer;
     }
 
-    public void start(String query, List<String> Filter,boolean bSemantic) throws InterruptedException, ExecutionException {
+    public void start(String query, List<String> Filter, boolean bSemantic) throws InterruptedException, ExecutionException {
 
         long start = System.currentTimeMillis();
         System.out.println("Start : " + LocalTime.now());
 
         if (query != null) {
             this.document_reader_producer.acquire();
-            this.document_queue.add(new Document("","1","","",query,""));
+            this.document_queue.add(new Document("", "1", "", "", query, ""));
             this.text_operation_consumer.release();
             //ReaderFinished();
         }
@@ -97,27 +97,31 @@ public class IRMaster {
         WaitReaders();
 
         List<AbstractDocument> lst = null;
-        HashMap<String,String> map = null;
+        HashMap<String, String> map = null;
+
+
         if (bSemantic) {
             lst = new ArrayList<>();
             map = new HashMap<>();
             while (this.document_queue.size() > 1) {
                 Query doc = (Query) this.document_queue.poll();
-                map.put(doc.getID(),doc.getText().toUpperCase());
-                List <String> desc = Arrays.asList(doc.getDescription().split(" "));
-                List <String> narr = Arrays.asList(doc.getNarrative().split(" "));
-                List <String> topics = new ArrayList<>();
+                map.put(doc.getID(), doc.getText().toUpperCase());
+                List<String> desc = Arrays.asList(doc.getDescription().split(" "));
+                List<String> narr = Arrays.asList(doc.getNarrative().split(" "));
+                List<String> topics = new ArrayList<>();
                 for (String word : desc) {
                     if (narr.contains(word))
                         topics.add(word);
                 }
+
+
                 for (String word : doc.getText().split(" ")) {
-                    if (word.length() > 0){
+                    if (word.length() > 0) {
                         ExecutorService executor1 = Executors.newSingleThreadExecutor();
                         Callable<List<DatamuseObject>> callable1 = new Callable<List<DatamuseObject>>() {
                             @Override
                             public List<DatamuseObject> call() {
-                                return DataProvider.getInstance().getQueryTopicSemantic(word,topics,"syn");
+                                return DataProvider.getInstance().getQueryTopicSemantic(word, topics, "syn");
                             }
                         };
                         Future<List<DatamuseObject>> future1 = executor1.submit(callable1);
@@ -126,7 +130,7 @@ public class IRMaster {
                         Callable<List<DatamuseObject>> callable2 = new Callable<List<DatamuseObject>>() {
                             @Override
                             public List<DatamuseObject> call() {
-                                return DataProvider.getInstance().getQueryTopicSemantic(word,topics,"trg");
+                                return DataProvider.getInstance().getQueryTopicSemantic(word, topics, "trg");
                             }
                         };
                         Future<List<DatamuseObject>> future2 = executor2.submit(callable2);
@@ -135,7 +139,7 @@ public class IRMaster {
                         Callable<List<DatamuseObject>> callable3 = new Callable<List<DatamuseObject>>() {
                             @Override
                             public List<DatamuseObject> call() {
-                                return DataProvider.getInstance().getQueryTopicSemantic(word,topics,"spc");
+                                return DataProvider.getInstance().getQueryTopicSemantic(word, topics, "spc");
                             }
                         };
                         Future<List<DatamuseObject>> future3 = executor3.submit(callable3);
@@ -144,7 +148,7 @@ public class IRMaster {
                         Callable<List<DatamuseObject>> callable4 = new Callable<List<DatamuseObject>>() {
                             @Override
                             public List<DatamuseObject> call() {
-                                return DataProvider.getInstance().getQueryTopicSemantic(word,topics,"gen");
+                                return DataProvider.getInstance().getQueryTopicSemantic(word, topics, "gen");
                             }
                         };
                         Future<List<DatamuseObject>> future4 = executor4.submit(callable4);
@@ -163,7 +167,7 @@ public class IRMaster {
                         List<DatamuseObject> lstTrgApi = future2.get();
                         List<DatamuseObject> lstSpcApi = future3.get();
                         List<DatamuseObject> lstGenApi = future4.get();
-                        //List<DatamuseObject> lstMlApi =  future5.get();
+                        //List<DatamuseObject> lstMlApi =  DataProvider.getInstance().getQuerySimilarWordSemantic(Arrays.asList(map.get(doc.getID())))
 
                         if (lstSynApi != null)
                             lstApi.addAll(lstSynApi);
@@ -176,20 +180,51 @@ public class IRMaster {
 //                        if (lstMlApi != null)
 //                            lstApi.addAll(lstMlApi);
 
-                            StringBuilder semantic = new StringBuilder("");
-                            lstApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));
-                            doc.setText(doc.getText() + semantic.toString());
+                        StringBuilder semantic = new StringBuilder("");
+                        lstApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));
+                        doc.setText(doc.getText() + semantic.toString());
                     }
                 }
+//                List<DatamuseObject> lstMlApi =  DataProvider.getInstance().getQuerySimilarWordSemantic(Arrays.asList(map.get(doc.getID())));
+//                if (lstMlApi != null) {
+//                    StringBuilder semantic = new StringBuilder("");
+//                    lstMlApi.forEach(obj -> semantic.append(" ").append(obj.getWord()));
+//                    doc.setText(doc.getText() + semantic.toString());
+//                }
+                doc.setText(doc.getText() + " " + (doc.getDescription()));
                 lst.add(doc);
             }
-
 
 
             for (AbstractDocument doc : lst) {
                 this.document_queue.add(doc);
             }
             this.document_queue.add(this.document_queue.poll());
+        } else {
+            lst = new ArrayList<>();
+
+            while (this.document_queue.size() > 1) {
+                Query doc = (Query) this.document_queue.poll();
+                //map.put(doc.getID(), doc.getText().toUpperCase());
+                List<String> desc = Arrays.asList(doc.getDescription().split(" "));
+                List<String> narr = Arrays.asList(doc.getNarrative().split(" "));
+                List<String> topics = new ArrayList<>();
+                for (String word : desc) {
+                    if (narr.contains(word))
+                        topics.add(word);
+                }
+                lst.add(doc);
+                String ans = "";
+//                for (String s : topics)
+//                    ans += s+" ";
+                doc.setText(doc.getText() + " " + (doc.getDescription()));
+            }
+
+            for (AbstractDocument docs : lst) {
+                this.document_queue.add(docs);
+            }
+            this.document_queue.add(this.document_queue.poll());
+
         }
 
         StartTextOperators();
@@ -207,18 +242,18 @@ public class IRMaster {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
             //thisQuery.forEach((key,value) -> System.out.println(key + " " + value));
             // DataProvider.getInstance().addRankedDocumentsForQuery(((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID(), ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter))));
-            HashMap<String,Double> weight = null;
+            HashMap<String, Double> weight = null;
             if (bSemantic) {
-                weight = new HashMap<String,Double>();
+                weight = new HashMap<String, Double>();
                 for (AbstractTermDocumentInfo value : thisQuery.values()) {
                     if (map.get(value.getDocumentID()).contains(value.getTerm().getData().toUpperCase()))
-                        weight.put(value.getTerm().getData().toUpperCase(),(double)1);
-                     else
-                        weight.put(value.getTerm().getData().toUpperCase(),(double)0.49);
+                        weight.put(value.getTerm().getData().toUpperCase(), (double) 1);
+                    else
+                        weight.put(value.getTerm().getData().toUpperCase(), (double) 0.49);
                 }
             }
 
-            List<String> resultList = ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter)),weight);
+            List<String> resultList = ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter)), weight);
             String queryNum = ((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID();
             QueryResult result = new QueryResult(queryNum, 0, 0, 0, "td", resultList);
             this.queryResultList.add(result);
@@ -304,7 +339,7 @@ public class IRMaster {
             total += Integer.parseInt(pair.getValue().toString().split(" ")[2]);
         }
 
-        return ((double)total / (double)DataProvider.getInstance().getDocumentIndexer().size());
+        return ((double) total / (double) DataProvider.getInstance().getDocumentIndexer().size());
     }
 
     private List<Info> getCorpusCityFilterDocuments(List<String> cities) {
