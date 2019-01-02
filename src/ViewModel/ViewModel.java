@@ -149,6 +149,14 @@ public class ViewModel extends Observable implements Observer {
     public void LoadIndexers() {
         this.model.setPostLocation(getStrPostingLocation());
         this.model.setStemmer(isbStemming());
+        ObservableList<String> emptyCities = FXCollections.observableArrayList();
+        ObservableList<String> emptyQueries = FXCollections.observableArrayList();
+        ObservableList<String> emptyResult = FXCollections.observableArrayList();
+        ObservableList<TermIndexerData> emptyEntities = FXCollections.observableArrayList();
+        this.observableListViewItems.setValue(emptyCities);
+        this.observableQueriesListViewItems.setValue(emptyQueries);
+        this.observableQueriesResultListViewItems.setValue(emptyResult);
+        this.observableTableVIew.setValue(emptyEntities);
         this.model.LoadDictionary();
     }
     
@@ -184,8 +192,13 @@ public class ViewModel extends Observable implements Observer {
             this.model.SearchQuery(text,Cities);
 
         ObservableList<String> lst = FXCollections.observableArrayList();
+        ObservableList<String> emptyResult = FXCollections.observableArrayList();
+        ObservableList<TermIndexerData> emptyEntities = FXCollections.observableArrayList();
         lst.setAll(this.model.getQueriesResult());
         this.observableQueriesListViewItems.setValue(lst);
+        this.observableQueriesResultListViewItems.setValue(FXCollections.observableArrayList());
+        this.observableQueriesResultListViewItems.setValue(emptyResult);
+        this.observableTableVIew.setValue(emptyEntities);
     }
 
     public void getCountries() {
