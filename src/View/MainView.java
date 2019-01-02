@@ -1,6 +1,7 @@
 package View;
 
 import ViewModel.ViewModel;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -141,8 +142,6 @@ public class MainView implements IView {
         this.colFrequency.setCellValueFactory(
                 new PropertyValueFactory<TermIndexerData, String>("frequency")
         );
-        this.tfPostOutputPath.setText("D:\\documents\\users\\koyfdan\\Downloads\\output");
-        this.tfQueries.setText("D:\\documents\\users\\koyfdan\\Downloads\\queries.txt");
     }
 
 
@@ -163,6 +162,7 @@ public class MainView implements IView {
             if (((String)arg).equals("INVERTED_INDEX_DONE")){
                 this.btnViewLanguages.setVisible(true);
                 this.indexLoadedProperty.setValue(true);
+                Platform.runLater(() -> displayInformationAlert(this.viewModel.updateTimeToFinish(),this.viewModel.getDocsDictionaryLength(),this.viewModel.getTermDictionaryLength()));
             }
             else if (((String)arg).equals("LOAD_INVERTED_INDEX_DONE")){
                 this.btnViewLanguages.setVisible(false);
