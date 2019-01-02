@@ -27,6 +27,16 @@ public class NumberParser extends AbstractParser {
         Double theNumber;
         boolean isTrillion;
         double valueNumber;
+
+
+        if (size == 1 && (theNumber = isNumber(get(0))) != null){
+                valueNumber = theNumber.doubleValue();
+                s = "" + valueNumber;
+                s = convertNumber(s, false);
+                putInMap(s);
+                return;
+        }
+
         while (i < size - 1) {
 
             s = "";

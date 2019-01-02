@@ -22,7 +22,7 @@
       <Button fx:id="btnClear" layoutX="175.0" layoutY="200.0" mnemonicParsing="false" onAction="#Clear" text="Clear" />
       <Button fx:id="btnLoad" layoutX="265.0" layoutY="200.0" mnemonicParsing="false" onAction="#LoadIndexers" text="Load" />
       <Button fx:id="btnViewDictionary" layoutX="712.0" layoutY="344.0" mnemonicParsing="false" onAction="#ShowDictionary" prefHeight="25.0" prefWidth="102.0" text="View Dictionary" />
-      <Button fx:id="btnViewLanguages" layoutX="500.0" layoutY="376.0" mnemonicParsing="false" onAction="#ShowLanguages" prefHeight="25.0" prefWidth="102.0" text="View Languages" />
+      <Button fx:id="btnViewLanguages" layoutX="500.0" layoutY="376.0" mnemonicParsing="false" onAction="#ShowLanguages" prefHeight="25.0" prefWidth="102.0" text="View Languages" visible="false"/>
       <TextField fx:id="tfQueries" layoutX="86.0" layoutY="249.0" prefHeight="25.0" prefWidth="217.0" promptText="Location of desired posting location..." />
       <Label fx:id="lbSerach" layoutX="14.0" layoutY="253.0" prefHeight="17.0" prefWidth="43.0" text="search" />
       <Button fx:id="dcQueriesPath" layoutX="323.0" layoutY="249.0" mnemonicParsing="false" onAction="#SetQueriesPath" text="browse..." />

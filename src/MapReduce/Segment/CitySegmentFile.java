@@ -37,8 +37,8 @@ public class CitySegmentFile extends SegmentFile {
         for (int i = 1; i < data.length; i++) {
             String [] termDocumentData = data[i].split("\\|");
             CityTDI cityInfo = new CityTDI(term,termDocumentData[0],countryInfo[0],countryInfo[1],countryInfo[2]);
-            for (String location : data[i].split("\\|"))
-                cityInfo.addLocation(Integer.parseInt(location));
+            for (int j = 1; j < termDocumentData.length; j++)
+                cityInfo.addLocation(Integer.parseInt(termDocumentData[j]));
             this.add(term.getData(),cityInfo);
         }
     }

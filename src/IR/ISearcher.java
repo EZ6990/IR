@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface ISearcher {
 
-    HashMap<AbstractTermDocumentInfo, SegmentFile> search(HashMap<String, AbstractTermDocumentInfo> parsedQuery, List<Info> docs);
+    HashMap<AbstractTermDocumentInfo, SegmentFile> search(HashMap<String, AbstractTermDocumentInfo> parsedQuery, List<String> docs);
 }

@@ -22,6 +22,10 @@ public class PercentAndPriceParser extends AbstractParser {
         Token token, nextToken;
         String tokenStr, nextTokenStr;
 
+        if(size==1 && (get(0).toString().endsWith("$")||get(0).toString().endsWith("%"))) {
+            putInMap(get(0).toString());
+            return;
+        }
         while (i < size - 1) {
             s = "";
             token = get(i);

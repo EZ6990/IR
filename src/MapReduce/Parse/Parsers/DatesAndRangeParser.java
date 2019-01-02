@@ -69,6 +69,7 @@ public class DatesAndRangeParser extends AbstractParser {
         Token token, nextToken;
         String tokenStr, nextTokenStr;
         Double theNumber;
+
         while (i < size - 1) {
             s = "";
             token = get(i);

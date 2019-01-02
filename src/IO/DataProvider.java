@@ -78,7 +78,6 @@ public class DataProvider {
 
     public void setStopWordsLocation(String stopWordsLocation) {
         this.stopWordsLocation = stopWordsLocation;
-        this.stopWordsLocation += "\\" + "stop_words.txt";
     }
 
     public void setCorpusLocation(String corpusLocation) {

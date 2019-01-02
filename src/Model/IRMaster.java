@@ -88,7 +88,7 @@ public class IRMaster {
 
         if (query != null) {
             this.document_reader_producer.acquire();
-            this.document_queue.add(new Document("", "1", "", "", query, ""));
+            this.document_queue.add(new Query("1", query,"", "", ""));
             this.text_operation_consumer.release();
             //ReaderFinished();
         }
@@ -238,6 +238,8 @@ public class IRMaster {
         IRanker ranker = new BM25Ranker(0.2, 0.35, getAvdl(), DataProvider.getInstance().getDocumentIndexer().size());
         SimpleSearcher searcher = new SimpleSearcher();
         HashMap<AbstractTermDocumentInfo, SegmentFile> queryToRank;
+        List<String> cityFilter = getCorpusCityFilterDocuments(Filter);
+
         while (!this.tdi_queue.isEmpty()) {
             HashMap<String, AbstractTermDocumentInfo> thisQuery = this.tdi_queue.poll();
             //thisQuery.forEach((key,value) -> System.out.println(key + " " + value));
@@ -253,7 +255,7 @@ public class IRMaster {
                 }
             }
 
-            List<String> resultList = ranker.returnRankedDocs(searcher.search(thisQuery, getCorpusCityFilterDocuments(Filter)), weight);
+            List<String> resultList = ranker.returnRankedDocs(searcher.search(thisQuery, cityFilter), weight);
             String queryNum = ((AbstractTermDocumentInfo) thisQuery.values().toArray()[0]).getDocumentID();
             QueryResult result = new QueryResult(queryNum, 0, 0, 0, "td", resultList);
             this.queryResultList.add(result);
@@ -342,18 +344,18 @@ public class IRMaster {
         return ((double) total / (double) DataProvider.getInstance().getDocumentIndexer().size());
     }
 
-    private List<Info> getCorpusCityFilterDocuments(List<String> cities) {
+    private List<String> getCorpusCityFilterDocuments(List<String> cities) {
 
-        List<Info> docs = null;
+        List<String> docs = null;
         CitySegmentFile cityPost = new CitySegmentFile(DataProvider.getInstance().getPostLocation() + "\\" + DataProvider.getInstance().getPrefixPost() + "cityPost.post", null, new SegmentCityReader());
         if (cities != null && cities.size() > 0) {
-            docs = new ArrayList<Info>();
+            docs = new ArrayList<String>();
             CityIndexer cityIndexer = DataProvider.getInstance().getCityIndexer();
             for (String city : cities)
-                cityPost.read(new Term(city, this.stemmer), Integer.parseInt(cityIndexer.getValue(city).split(" ")[0]));
-            for (List<Info> lstInfo : cityPost.getData().values()) {
-                docs.addAll(lstInfo);
-            }
+                cityPost.read(new Term(city, this.stemmer), Integer.parseInt(cityIndexer.getValue(city).split(" ")[1]));
+            for (Map.Entry<String, List<Info>> pair : cityPost.getData().entrySet())
+                for (Info info : pair.getValue())
+                    docs.add(((CityTDI) info).getDocumentID());
         }
         return docs;
     }

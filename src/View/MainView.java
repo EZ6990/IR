@@ -87,7 +87,7 @@ public class MainView implements IView {
             }
             @Override
             protected boolean computeValue() {
-                return (tfCorpusInputPath.getText().isEmpty() || tfPostOutputPath.getText().isEmpty());
+                return (tfQueries.getText().isEmpty() || indexLoadedProperty.equals(false));
             }
         });
         this.btnSearch.visibleProperty().bind(this.indexLoadedProperty);
@@ -170,7 +170,7 @@ public class MainView implements IView {
             }
             else if (((String)arg).equals("CLEAR_DONE")){
                 this.btnViewLanguages.setVisible(false);
-                this.indexLoadedProperty.setValue(false);;
+                this.indexLoadedProperty.setValue(false);
             }
             else if(((String)arg).equals("SEARCH_DONE")){
                 this.searchDone.setValue(true);

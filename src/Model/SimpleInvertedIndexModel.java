@@ -77,7 +77,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     public void LoadDictionary() {
         DataProvider provider = DataProvider.getInstance();
         provider.setCorpusLocation(this.strCorpusLocation);
-        provider.setStopWordsLocation(this.strCorpusLocation);
+        provider.setStopWordsLocation(this.strCorpusLocation + "\\" + "stop_words.txt");
         provider.setPostLocation(this.strPostLocation);
 
         if (this.bStemmer) {
@@ -218,7 +218,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
     private void initializeMaster() {
         DataProvider provider = DataProvider.getInstance();
         provider.setCorpusLocation(this.strCorpusLocation);
-        provider.setStopWordsLocation(this.strCorpusLocation);
+        provider.setStopWordsLocation(this.strCorpusLocation + "\\" + "stop_words.txt");
         provider.setPostLocation(this.strPostLocation);
         Stemmer stemmer = null;
         try {
@@ -250,7 +250,7 @@ public class SimpleInvertedIndexModel extends Observable implements IInvertedInd
         File f = new File(this.strPostLocation + "\\"+"stop_words.post");
 
         if(f.exists() && !f.isDirectory()) {
-             provider.setStopWordsLocation(this.strPostLocation);
+             provider.setStopWordsLocation(f.getAbsolutePath());
         }
         //provider.setCorpusLocation(this.strCorpusLocation);
         provider.setPostLocation(this.strPostLocation);

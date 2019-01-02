@@ -143,7 +143,6 @@ public class SegmentFiles implements Runnable {
         try {
             //System.out.println("END ID: " + dti.getDocumentName() + "  Time:" + LocalTime.now());
             //System.out.println("Term Writer Consumer : " + this.segment_writer_consumer.availablePermits());
-            System.out.println("IM Here");
             //System.out.println(tsf.getPath() + " " + tsf.data.size());
             for (int i = 0; i < Letters.length; i++) {
                 TermSegmentFile tsf = tsfa.get(Letters[i]);

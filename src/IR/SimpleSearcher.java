@@ -4,7 +4,9 @@ import IO.DataProvider;
 import IO.Segments.SegmentTermReader;
 import IO.Segments.SegmentTermWriter;
 import MapReduce.Parse.AbstractTermDocumentInfo;
+import MapReduce.Parse.DocumentTermInfo;
 import MapReduce.Parse.Info;
+import MapReduce.Parse.TermDocumentInfo;
 import MapReduce.Segment.SegmentFile;
 import MapReduce.Segment.TermSegmentFile;
 import java.util.*;
@@ -13,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimpleSearcher implements ISearcher {
 
     @Override
-    public HashMap<AbstractTermDocumentInfo, SegmentFile> search(HashMap<String, AbstractTermDocumentInfo> parsedQuery, List<Info> docs) {
+    public HashMap<AbstractTermDocumentInfo, SegmentFile> search(HashMap<String, AbstractTermDocumentInfo> parsedQuery, List<String> docs) {
         Collection<AbstractTermDocumentInfo> values = parsedQuery.values();
         HashMap<AbstractTermDocumentInfo, SegmentFile> searchedDocs = new HashMap<>();
         for (AbstractTermDocumentInfo atdi : values) {
@@ -35,12 +37,16 @@ public class SimpleSearcher implements ISearcher {
         return searchedDocs;
     }
 
-    private void retain(ConcurrentHashMap<String, List<Info>> data, List<Info> docs, String termData) {
+    private void retain(ConcurrentHashMap<String, List<Info>> data, List<String> docs, String termData) {
         List<Info> tmp = new ArrayList<>();
         List<Info> allDocs = data.get(termData);
-        for (Info docInfo : docs) {
-            if (allDocs.contains(docInfo))
-                tmp.add(docInfo);
+        for (String docInfo : docs) {
+            for (Info doc : allDocs) {
+                if (((TermDocumentInfo)doc).getDocumentID().equals(docInfo)){
+                    tmp.add(doc);
+                    break;
+                }
+            }
         }
         //List<Info> allDocs = data.get(termData);
         //docs.retainAll(allDocs);
