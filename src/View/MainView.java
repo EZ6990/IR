@@ -214,6 +214,7 @@ public class MainView implements IView {
     }
 
     public void startInvertedIndex(ActionEvent actionEvent) {
+        this.indexLoadedProperty.setValue(false);
         this.viewModel.startInvertedIndex();
     }
 
